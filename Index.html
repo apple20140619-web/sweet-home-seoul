@@ -1,0 +1,1388 @@
+<!-- SweetHome Seoul Guide v1.0 | Final single-file HTML -->
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SweetHome Seoul Guide v1.0</title>
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            margin: 0; padding: 0; background: #f8f9fa;
+            color: #2d3436; line-height: 1.5;
+        }
+        header {
+            background: linear-gradient(135deg, #6c5ce7, #a29bfe);
+            color: white;
+            text-align: center;
+            padding: 2rem 1rem 1rem;
+        }
+        header h1 { margin: 0; font-size: 1.6rem; font-weight: 700; }
+        header p { margin: 0.4rem 0 1rem; opacity: 0.9; font-size: 0.9rem; }
+        .tabs {
+            display: flex;
+            background: rgba(0,0,0,0.15);
+            border-radius: 12px;
+            padding: 4px;
+            margin: 0 1rem;
+        }
+        .tab-btn {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: rgba(255,255,255,0.7);
+            padding: 0.5rem 0.3rem;
+            font-size: 0.82rem;
+            font-weight: bold;
+            border-radius: 9px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .tab-btn.active { background: white; color: #6c5ce7; }
+        .panel { display: none; }
+        .panel.active { display: block; }
+        .container { max-width: 600px; margin: 0 auto; padding: 1rem; }
+
+        /* 行程 */
+        .important-note {
+            background: #ffeaa7;
+            border-left: 5px solid #fdcb6e;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+        .day-card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            margin-bottom: 1.2rem;
+            overflow: hidden;
+            border: 1px solid #e0e0e0;
+        }
+        .day-header {
+            background: #f1f2f6;
+            padding: 0.9rem 1rem;
+            font-size: 1.05rem;
+            font-weight: bold;
+            color: #6c5ce7;
+            border-bottom: 1px solid #e0e0e0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .day-card.collapsed .spot-item,
+        .day-card.collapsed .trans-box-standalone { display: none; }
+        .day-header { cursor: pointer; user-select: none; }
+        .day-header span:first-child {
+            flex: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            min-width: 0;
+        }
+        .day-chevron {
+            font-size: 0.75rem;
+            transition: transform 0.2s;
+            flex-shrink: 0;
+            color: #b2bec3;
+            margin: 0 4px;
+        }
+        .day-tag { flex-shrink: 0; }
+        .day-card.collapsed .day-chevron { transform: rotate(-90deg); }
+        .day-tag {
+            background: #ff7675;
+            color: white;
+            font-size: 0.7rem;
+            padding: 0.2rem 0.6rem;
+            border-radius: 20px;
+            white-space: nowrap;
+        }
+        .spot-item { padding: 1rem; border-bottom: 1px dashed #eee; }
+        .spot-item:last-child { border-bottom: none; }
+        .spot-time { font-size: 0.8rem; color: #b2bec3; font-weight: bold; }
+        .trans-box {
+            background: #f8fafc;
+            border-radius: 8px;
+            padding: 0.6rem 0.8rem;
+            margin: 0.5rem 0 0.7rem;
+            font-size: 0.8rem;
+            border: 1px solid #e2e8f0;
+        }
+        .trans-row { display: flex; justify-content: space-between; margin-bottom: 3px; }
+        .trans-row:last-child { margin-bottom: 0; }
+        .t-metro { color: #6c5ce7; font-weight: bold; }
+        .t-taxi { color: #27ae60; font-weight: bold; }
+        .t-walk { color: #e67e22; font-weight: bold; }
+        .spot-title { font-size: 1rem; font-weight: 700; margin: 0.25rem 0; }
+        .spot-desc { font-size: 0.875rem; color: #636e72; margin-bottom: 0.7rem; }
+
+        /* 美食卡片 */
+        .section-label {
+            font-size: 0.78rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #b2bec3;
+            margin: 1.2rem 0 0.5rem;
+            padding-left: 0.2rem;
+        }
+        .food-card {
+            background: white;
+            border-radius: 16px;
+            padding: 1.1rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.03);
+            border: 1px solid #ffe3e3;
+        }
+        .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.4rem; }
+        .food-title { font-size: 1rem; font-weight: bold; margin: 0; }
+        .food-sub { font-size: 0.78rem; color: #b2bec3; margin-top: 0.2rem; }
+        .tag {
+            font-size: 0.68rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 10px;
+            color: white;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+        .tag.meal { background: #fd79a8; }
+        .tag.snack { background: #fab1a0; }
+        .tag.store { background: #55efc4; color: #2d3436; }
+        .tag.sweet { background: #ff9f43; }
+        .tag.bakery { background: #1dd1a1; }
+        .tag.light { background: #74b9ff; }
+        .walk-time { font-size: 0.78rem; color: #ff7675; font-weight: bold; margin-bottom: 0.6rem; }
+        .food-desc {
+            font-size: 0.85rem;
+            color: #636e72;
+            margin-bottom: 0.7rem;
+            background: #fff9f9;
+            padding: 0.5rem 0.6rem;
+            border-radius: 8px;
+            border-left: 3px solid #ff7675;
+        }
+        .nav-btn {
+            display: block;
+            text-align: center;
+            background: #03C75A;
+            color: white;
+            text-decoration: none;
+            padding: 0.45rem;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            transition: background 0.2s;
+        }
+        .nav-btn:hover { background: #02a84a; }
+        footer { text-align: center; padding: 1.5rem 1rem; font-size: 0.8rem; color: #b2bec3; }
+
+        .show-addr-btn {
+            flex: 1;
+            background: #ff7675;
+            color: white;
+            border: none;
+            padding: 0.45rem;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .show-addr-btn:hover { background: #d63031; }
+
+        .addr-modal {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            background: rgba(0,0,0,0.6);
+            z-index: 9999;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            visibility: hidden;
+            opacity: 0;
+            transition: opacity 0.25s, visibility 0.25s;
+        }
+        .addr-modal.show { visibility: visible; opacity: 1; }
+
+        .addr-popup {
+            background: white;
+            width: 100%;
+            border-radius: 28px 28px 0 0;
+            padding: 2rem 1.5rem 2.5rem;
+            text-align: center;
+            position: relative;
+            animation: slideUp 0.25s ease;
+        }
+        @keyframes slideUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+        .addr-close {
+            position: absolute;
+            top: 1rem;
+            right: 1.2rem;
+            font-size: 1rem;
+            color: #b2bec3;
+            cursor: pointer;
+            background: #f1f2f6;
+            width: 2rem;
+            height: 2rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .addr-icon { font-size: 2.5rem; margin-bottom: 0.4rem; }
+        .addr-label {
+            font-size: 0.75rem;
+            color: #b2bec3;
+            font-weight: bold;
+            letter-spacing: 2px;
+            margin-bottom: 0.8rem;
+        }
+        .addr-korean {
+            font-size: 2rem;
+            font-weight: 900;
+            color: #2d3436;
+            line-height: 1.3;
+            margin-bottom: 0.4rem;
+            word-break: keep-all;
+        }
+        .addr-detail {
+            font-size: 1rem;
+            color: #636e72;
+            margin-bottom: 1.2rem;
+        }
+        .addr-hint {
+            display: inline-block;
+            background: #fff5f5;
+            color: #ff7675;
+            font-size: 0.9rem;
+            font-weight: bold;
+            padding: 0.4rem 1.2rem;
+            border-radius: 20px;
+            border: 1.5px dashed #ff7675;
+        }
+    </style>
+
+<style>
+.embedded-illu-map{margin:1rem 0 1.2rem;background:white;border:1px solid #eadfd1;border-radius:18px;overflow:hidden;box-shadow:0 4px 10px rgba(0,0,0,.05)}
+.embedded-illu-map .mapbox{background:#fff8ec;overflow:hidden}
+.embedded-illu-map svg{display:block;width:100%;height:auto}
+.embedded-illu-map .road{fill:none;stroke:#e1d2c0;stroke-width:18;stroke-linecap:round;stroke-linejoin:round;opacity:.86}
+.embedded-illu-map .road.thin{stroke-width:9;opacity:.58}
+.embedded-illu-map .water{fill:#dff3ff;opacity:.85}
+.embedded-illu-map .park{fill:#e1f7df}
+.embedded-illu-map .zone{opacity:.16}
+.embedded-illu-map .block{fill:#fff;stroke:#f1e5d7;stroke-width:2;opacity:.9}
+.embedded-illu-map .walk{fill:none;stroke:#6c5ce7;stroke-width:2;stroke-dasharray:8 8;opacity:.20}
+.embedded-illu-map .pin{filter:drop-shadow(0 4px 8px rgba(0,0,0,.20))}
+.embedded-illu-map .label rect{fill:rgba(255,255,255,.96);stroke:#eadfd1;stroke-width:1.5;filter:drop-shadow(0 3px 8px rgba(0,0,0,.10))}
+.embedded-illu-map .label-title{font-size:12px;font-weight:900;fill:#2d3436}
+.embedded-illu-map .label-sub{font-size:9.5px;fill:#636e72}
+.embedded-illu-map .leader{stroke:#b7a895;stroke-width:1.7;stroke-dasharray:3 5;opacity:.65}
+.embedded-illu-map .maptext{font-size:16px;font-weight:900;fill:#b08d68;opacity:.7}
+.embedded-illu-map .legend{display:flex;gap:8px;flex-wrap:wrap;padding:9px 10px;border-top:1px solid #eee;background:#fff}
+.embedded-illu-map .legend span{font-size:.72rem;background:#f8f5ef;border:1px solid #eadfd1;border-radius:999px;padding:5px 8px;font-weight:800}
+.embedded-illu-map .note{font-size:.76rem;color:#636e72;padding:9px 10px;background:#fffdf8;border-top:1px dashed #eadfd1}
+.embedded-illu-title{padding:0.75rem 0.9rem;background:#fffdf8;border-bottom:1px dashed #eadfd1;font-size:.9rem;font-weight:900;color:#6c5ce7}
+@media (orientation: landscape) and (max-height: 520px){
+  .embedded-illu-map .mapbox{height:calc(100vh - 170px);min-height:300px;display:flex;align-items:center;justify-content:center}
+  .embedded-illu-map svg{width:auto;height:100%;max-width:100%}
+  .embedded-illu-map .legend{flex-wrap:nowrap;overflow:auto}
+  .embedded-illu-map .note{display:none}
+}
+</style>
+
+
+<style>
+/* iPhone Quick Look 友善版：不用 JavaScript 的真分頁 */
+.tab-radio{position:absolute;opacity:0;pointer-events:none}
+.css-tabs label{display:block;text-align:center}
+.css-tabs .tab-btn{cursor:pointer}
+#tab-itinerary:checked ~ header label[for="tab-itinerary"],
+#tab-nearby:checked ~ header label[for="tab-nearby"]{background:white;color:#6c5ce7}
+#tab-itinerary:checked ~ #panel-0{display:block}
+#tab-itinerary:checked ~ #panel-1{display:none}
+#tab-nearby:checked ~ #panel-0{display:none}
+#tab-nearby:checked ~ #panel-1{display:block}
+#panel-0{display:block}
+#panel-1{display:none}
+
+/* 原生收合 Day 卡片：保留原本一目瞭然 */
+.native-day{display:block}
+.native-day summary{list-style:none}
+.native-day summary::-webkit-details-marker{display:none}
+.native-day:not([open]) .spot-item,
+.native-day:not([open]) .trans-box-standalone{display:none}
+.native-day[open] .day-chevron{transform:rotate(90deg)}
+.native-day .day-chevron{display:inline-block;transition:transform .2s}
+
+/* 避免舊 JS 樣式干擾 */
+.day-card.collapsed .spot-item{display:block}
+.day-card.collapsed .trans-box-standalone{display:block}
+
+/* 插畫地圖嵌入尺寸 */
+.embedded-illu-map svg{width:100%;height:auto}
+@media (orientation: landscape) and (max-height:520px){
+  .embedded-illu-map .mapbox{height:calc(100vh - 170px);display:flex;align-items:center;justify-content:center}
+  .embedded-illu-map svg{width:auto;height:100%;max-width:100%}
+}
+</style>
+
+
+<style>
+html{scroll-behavior:smooth}
+.food-card:target{
+  animation: poiFlash 2.2s ease;
+  outline:4px solid rgba(108,92,231,.45);
+  scroll-margin-top:18px;
+}
+@keyframes poiFlash{
+  0%{box-shadow:0 0 0 0 rgba(108,92,231,.0)}
+  20%{box-shadow:0 0 0 8px rgba(108,92,231,.28)}
+  100%{box-shadow:0 0 0 0 rgba(108,92,231,.0)}
+}
+.embedded-illu-map svg a{cursor:pointer}
+.embedded-illu-map svg a .pin{filter:drop-shadow(0 4px 8px rgba(0,0,0,.24))}
+</style>
+
+<style>
+.driver-address-card{
+  margin:0.8rem 0 1.1rem;
+  background:#fff7f7;
+  border:2px solid #ffb3b3;
+  border-radius:18px;
+  padding:1rem;
+  text-align:center;
+  box-shadow:0 4px 10px rgba(255,118,117,.12);
+}
+.driver-address-title{
+  font-size:.85rem;
+  font-weight:900;
+  color:#ff7675;
+  margin-bottom:.45rem;
+}
+.driver-address-main{
+  font-size:1.9rem;
+  line-height:1.25;
+  font-weight:950;
+  color:#2d3436;
+  word-break:keep-all;
+}
+.driver-address-sub{
+  font-size:1rem;
+  color:#636e72;
+  margin-top:.25rem;
+}
+.driver-address-phrase{
+  display:inline-block;
+  margin-top:.8rem;
+  background:white;
+  border:1.5px dashed #ff7675;
+  border-radius:999px;
+  padding:.35rem 1rem;
+  color:#ff7675;
+  font-weight:900;
+}
+</style>
+
+
+<style>
+.family-guide-note{
+  background:#fff7e6;
+  border-left:5px solid #fdcb6e;
+  border-radius:12px;
+  padding:.85rem 1rem;
+  margin:.7rem 0 1rem;
+  font-size:.86rem;
+  color:#6b5b4b;
+}
+.choice-card{
+  background:white;
+  border:1px solid #ffe0b2;
+  border-radius:16px;
+  padding:1rem;
+  margin-bottom:1rem;
+  box-shadow:0 4px 8px rgba(0,0,0,.03);
+}
+.choice-top{
+  display:flex;
+  justify-content:space-between;
+  gap:.7rem;
+  align-items:flex-start;
+  margin-bottom:.45rem;
+}
+.choice-title{
+  font-size:1rem;
+  font-weight:900;
+  margin:0;
+  color:#2d3436;
+}
+.choice-sub{
+  font-size:.78rem;
+  color:#b08d68;
+  margin-top:.18rem;
+}
+.choice-tag{
+  flex-shrink:0;
+  background:#fff1d6;
+  color:#b36b00;
+  border:1px solid #ffd08a;
+  border-radius:999px;
+  padding:.22rem .55rem;
+  font-size:.72rem;
+  font-weight:900;
+  white-space:nowrap;
+}
+.choice-desc{
+  font-size:.85rem;
+  color:#636e72;
+  line-height:1.55;
+  margin:.55rem 0;
+}
+.choice-rec{
+  background:#fffaf0;
+  border-left:3px solid #ff9f43;
+  border-radius:8px;
+  padding:.5rem .65rem;
+  font-size:.83rem;
+  color:#6b5b4b;
+  margin:.6rem 0 .7rem;
+}
+.choice-card:target{
+  animation: poiFlash 2.2s ease;
+  outline:4px solid rgba(255,159,67,.38);
+  scroll-margin-top:18px;
+}
+</style>
+
+
+<style>
+.quick-picks{
+  margin:0.9rem 0 1.1rem;
+  background:#fffdf8;
+  border:1px solid #eadfd1;
+  border-radius:18px;
+  padding:.9rem;
+  box-shadow:0 4px 10px rgba(0,0,0,.035);
+}
+.quick-picks-title{
+  font-size:.88rem;
+  font-weight:950;
+  color:#6c5ce7;
+  margin-bottom:.55rem;
+}
+.quick-picks-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:.5rem;
+}
+.quick-pick{
+  display:block;
+  text-decoration:none;
+  background:white;
+  border:1px solid #eee0d0;
+  border-radius:14px;
+  padding:.55rem .65rem;
+  color:#2d3436;
+  font-size:.83rem;
+  font-weight:900;
+}
+.quick-pick small{
+  display:block;
+  margin-top:.16rem;
+  color:#8b7b6a;
+  font-size:.68rem;
+  font-weight:700;
+}
+.map-num{
+  font-size:10px;
+  font-weight:950;
+  fill:white;
+}
+.poi-num{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:1.35rem;
+  height:1.35rem;
+  border-radius:50%;
+  background:#6c5ce7;
+  color:white;
+  font-size:.72rem;
+  font-weight:950;
+  margin-right:.3rem;
+}
+@media(max-width:420px){
+  .quick-picks-grid{grid-template-columns:1fr}
+}
+</style>
+
+
+<style>
+.cover-card{
+  background:linear-gradient(135deg,#ffffff,#fff7f0);
+  border:1px solid #eadfd1;
+  border-radius:20px;
+  padding:1rem;
+  margin-bottom:1rem;
+  box-shadow:0 4px 10px rgba(0,0,0,.04);
+}
+.cover-title{font-size:1rem;font-weight:950;color:#6c5ce7;margin-bottom:.55rem}
+.cover-grid{display:grid;grid-template-columns:1fr;gap:.45rem;font-size:.86rem}
+.cover-item{background:white;border:1px solid #f0e5d8;border-radius:13px;padding:.55rem .7rem}
+.cover-item b{color:#2d3436}
+</style>
+
+</head>
+<body>
+<input class="tab-radio" type="radio" name="main-tabs" id="tab-itinerary" checked>
+<input class="tab-radio" type="radio" name="main-tabs" id="tab-nearby">
+
+<header>
+    <h1>🏠 Sweet Home・首爾生活圈攻略</h1>
+    <p>🇰🇷 Seoul Guide・6天5夜家庭旅行手冊</p>
+    <div class="tabs css-tabs">
+        <label class="tab-btn" for="tab-itinerary">📅 首爾行程表</label>
+        <label class="tab-btn" for="tab-nearby">🍜 生活圈指南</label>
+    </div>
+</header>
+
+<!-- ══════════ TAB 1：行程 ══════════ -->
+<div class="panel active" id="panel-0">
+<div class="container">
+</div>
+
+    <div class="important-note">
+        📌 <b>重要提醒：</b>最後一天早上 <b>09:45</b> 包車在民宿門口接送，請前一晚打包完畢！
+    </div>
+
+    <!-- DAY 1 -->
+    <details class="day-card native-day" name="itinerary-days">
+<summary class="day-header"><span>Day 1・機場 ➔ 民宿</span><span class="day-chevron">▶</span><span class="day-tag">包車直達</span></summary>
+        <div class="spot-item">
+            <div class="spot-time">交通方式</div>
+            <div class="spot-title">專屬預約包車直達</div>
+            <div class="trans-box">
+                <div class="trans-row"><span>🚐 車程時間</span><span>約 60 - 70 分鐘（視塞車而定）</span></div>
+            </div>
+            <div class="spot-desc">下飛機不用拉行李趕巴士或地鐵，包車直接載到民宿門口。</div>
+        </div>
+        <div class="spot-item">
+            <div class="spot-time">首晚補給</div>
+            <div class="spot-title">樂天瑪特三陽店 (Lotte Mart Samyang)</div>
+            <div class="spot-desc">🚶 民宿步行 5-7 分鐘<br>民宿附近採買零食、鮮乳與水果補給，辦理入住後輕鬆逛一圈。</div>
+            <a class="nav-btn" href="https://map.naver.com/v5/search/롯데마트%20삼양점">🗺 Naver 導航</a>
+        </div>
+        <div class="spot-item">
+            <div class="spot-time">宵夜 & 隨時補給</div>
+            <div class="spot-title">CU / GS25 便利商店</div>
+            <div class="spot-desc">🚶 民宿步行 2-5 分鐘，巷口轉角就有。<br>延世牛奶生乳包、香蕉牛奶、冰塊杯飲料，深夜補給最方便。</div>
+            <a class="nav-btn" href="https://map.naver.com/v5/search/삼양동%20편의점">🗺 Naver 導航</a>
+        </div>
+    </details>
+<!-- DAY 2 -->
+    <details class="day-card native-day" name="itinerary-days">
+<summary class="day-header"><span>Day 2・明洞 ➔ 南山首爾塔</span><span class="day-chevron">▶</span><span class="day-tag">浪漫漫步</span></summary>
+        <div class="spot-item">
+            <div class="spot-time">上午・民宿 ➔ 明洞商圈</div>
+            <div class="trans-box">
+                <div class="trans-row"><span class="t-metro">🚇 地鐵</span><span>⏱ 約35分</span></div>
+                <div class="trans-row"><span style="font-size:0.75rem;color:#636e72;">松泉站輕軌 ➔ 誠信女大站轉4號線 ➔ 明洞站</span></div>
+                <div class="trans-row"><span class="t-taxi">🚖 計程車（推薦）</span><span>⏱ 約25-30分｜₩12,000 (NT$285)</span></div>
+            </div>
+            <div class="spot-desc">帶老婆女兒體驗韓系彩妝、平價精緻飾品。午餐推薦明洞餃子或韓式炸雞！</div>
+            <a class="nav-btn" href="https://map.naver.com/v5/search/명동">🗺 明洞導航</a>
+        </div>
+        <div class="spot-item">
+            <div class="spot-time">傍晚・明洞 ➔ 南山纜車站</div>
+            <div class="trans-box">
+                <div class="trans-row"><span class="t-walk">🚶 步行＋電梯</span><span>⏱ 約15分</span></div>
+                <div class="trans-row"><span style="font-size:0.75rem;color:#636e72;">明洞站4號出口 ➔ 南山電梯（Namsan Ormi）➔ 纜車站</span></div>
+                <div class="trans-row"><span class="t-taxi">🚖 計程車（帶小孩推薦）</span><span>⏱ 約5-10分｜₩5,500 (NT$131)</span></div>
+            </div>
+            <div class="spot-desc">搭纜車上山，掛愛情鎖，鳥瞰璀璨首爾夜景。</div>
+            <a class="nav-btn" href="https://map.naver.com/v5/search/남산케이블카">🗺 南山纜車導航</a>
+        </div>
+        <div class="spot-item">
+            <div class="spot-time">夜間・南山 ➔ 民宿</div>
+            <div class="trans-box">
+                <div class="trans-row"><span class="t-taxi">🚖 計程車</span><span>⏱ 約25分｜₩13,000 (NT$310)</span></div>
+            </div>
+        </div>
+    </details>
+<!-- DAY 3 -->
+    <details class="day-card native-day" name="itinerary-days">
+<summary class="day-header"><span>Day 3・弘大（CORTIS 重點日）</span><span class="day-chevron">▶</span><span class="day-tag">CORTIS 重點日</span></summary>
+        <div class="spot-item">
+            <div class="spot-time">上午・民宿 ➔ 弘大 AK PLAZA</div>
+            <div class="trans-box">
+                <div class="trans-row"><span class="t-metro">🚇 地鐵（轉乘較多）</span><span>⏱ 約45-50分｜₩5,600 (NT$133)</span></div>
+                <div class="trans-row"><span style="font-size:0.75rem;color:#636e72;">松泉站輕軌 ➔ 普門站轉6號線 ➔ 新堂站轉2號線 ➔ 弘大入口站</span></div>
+                <div class="trans-row"><span class="t-taxi">🚖 計程車（極度推薦）</span><span>⏱ 約30-35分｜₩16,500 (NT$392)</span></div>
+            </div>
+            <div class="spot-desc">💡 地鐵轉乘多、樓梯多，全家直接打車省時省力。<br><br><b>【大女兒圓夢點】</b>2樓 CORTIS 官方周邊；4-5樓動漫專區與大耳狗主題咖啡廳！</div>
+            <a class="nav-btn" href="https://map.naver.com/v5/search/AK플라자%20홍대">🗺 AK PLAZA 導航</a>
+        </div>
+        <div class="spot-item">
+            <div class="spot-time">夜間</div>
+            <div class="spot-title">弘大步行街（街頭街舞表演）</div>
+            <div class="spot-desc">晚餐後在弘大商圈散步，觀賞熱鬧的街頭藝人表演，感受韓流流行前線。</div>
+            <a class="nav-btn" href="https://map.naver.com/v5/search/홍대거리">🗺 弘大步行街導航</a>
+        </div>
+        <div class="spot-item">
+            <div class="spot-time">夜間・弘大 ➔ 民宿</div>
+            <div class="trans-box">
+                <div class="trans-row"><span class="t-taxi">🚖 計程車</span><span>⏱ 約30分｜₩16,500 (NT$392)</span></div>
+            </div>
+            <div class="spot-desc">提著 CORTIS 周邊戰利品，直接打車回民宿最優雅。</div>
+        </div>
+    </details>
+<!-- DAY 4 -->
+    <details class="day-card native-day" name="itinerary-days">
+<summary class="day-header"><span>Day 4・江南 COEX</span><span class="day-chevron">▶</span><span class="day-tag">室內舒適</span></summary>
+        <div class="spot-item">
+            <div class="spot-time">上午・民宿 ➔ COEX</div>
+            <div class="trans-box">
+                <div class="trans-row"><span class="t-metro">🚇 地鐵（跨漢江）</span><span>⏱ 約55分｜₩6,400 (NT$152)</span></div>
+                <div class="trans-row"><span style="font-size:0.75rem;color:#636e72;">松泉站輕軌 ➔ 誠信女大站轉4號線 ➔ 東大門歷史文化公園轉2號線 ➔ 三成站</span></div>
+                <div class="trans-row"><span class="t-taxi">🚖 計程車</span><span>⏱ 約35-40分｜₩22,000 (NT$523)</span></div>
+            </div>
+            <div class="spot-desc">💡 COEX 星空圖書館、Ktown4u 周邊店、水族館全在同棟室內，景點間步行 3-5 分鐘。</div>
+        </div>
+        <div class="spot-item">
+            <div class="spot-time">Morning</div>
+            <div class="spot-title">COEX 星空圖書館</div>
+            <div class="spot-desc">巨大室內書牆，全家福打卡聖地。</div>
+            <a class="nav-btn" href="https://map.naver.com/v5/search/별마당%20도서관">🗺 Naver 導航</a>
+        </div>
+        <div class="spot-item">
+            <div class="spot-time">Afternoon</div>
+            <div class="spot-title">Ktown4u COEX Artium</div>
+            <div class="spot-desc"><b>【CORTIS 應援第二站】</b>弘大漏掉的周邊來這補。</div>
+            <a class="nav-btn" href="https://map.naver.com/v5/search/케이타운포유%20코엑스아티움">🗺 Naver 導航</a>
+        </div>
+        <div class="spot-item">
+            <div class="spot-time">Late Afternoon</div>
+            <div class="spot-title">COEX 水族館</div>
+            <div class="spot-desc">夢幻水中表演，兼顧小女兒的童趣體驗。</div>
+            <a class="nav-btn" href="https://map.naver.com/v5/search/코엑스%20아쿠아리움">🗺 Naver 導航</a>
+        </div>
+    </details>
+<!-- DAY 5 -->
+    <details class="day-card native-day" name="itinerary-days">
+<summary class="day-header"><span>Day 5・景福宮 ➔ 益善洞 ➔ 採購</span><span class="day-chevron">▶</span><span class="day-tag">回國前夜</span></summary>
+        <div class="spot-item">
+            <div class="spot-time">上午・民宿 ➔ 景福宮</div>
+            <div class="trans-box">
+                <div class="trans-row"><span class="t-taxi">🚖 計程車（推薦）</span><span>⏱ 約20-25分｜₩12,000 (NT$285)</span></div>
+                <div class="trans-row"><span class="t-metro">🚇 地鐵</span><span>⏱ 約40分｜₩5,600 (NT$133)</span></div>
+            </div>
+            <div class="spot-desc">換上傳統韓服，在宮殿間穿梭留下最美回憶。</div>
+            <a class="nav-btn" href="https://map.naver.com/v5/search/경복궁">🗺 景福宮導航</a>
+        </div>
+        <div class="spot-item">
+            <div class="spot-time">下午・景福宮 ➔ 益善洞</div>
+            <div class="trans-box">
+                <div class="trans-row"><span class="t-walk">🚶 散步</span><span>⏱ 約20分（兩地很近）</span></div>
+                <div class="trans-row"><span class="t-taxi">🚖 計程車</span><span>⏱ 約8-10分｜₩5,500 (NT$131)</span></div>
+            </div>
+            <div class="spot-desc">老韓屋文青巷弄，挑一家鬆餅咖啡廳享受下午茶。</div>
+            <a class="nav-btn" href="https://map.naver.com/v5/search/익선동%20한옥마을">🗺 益善洞導航</a>
+        </div>
+        <div class="spot-item">
+            <div class="spot-time">傍晚・益善洞 ➔ 樂天超市首爾站</div>
+            <div class="trans-box">
+                <div class="trans-row"><span class="t-taxi">🚖 計程車（超划算！）</span><span>⏱ 約12-15分｜₩7,000 (NT$166)</span></div>
+                <div class="trans-row"><span class="t-metro">🚇 地鐵</span><span>⏱ 約25分｜₩5,600 (NT$133)</span></div>
+                <div class="trans-row"><span style="font-size:0.75rem;color:#e67e22;">💡 這段4人打車費用跟地鐵幾乎一樣，直接打車最划算！</span></div>
+            </div>
+            <div class="spot-desc">伴手禮大作戰！泡麵、海苔、零食一次掃貨。</div>
+            <a class="nav-btn" href="https://map.naver.com/v5/search/롯데마트%20서울역점">🗺 樂天超市導航</a>
+        </div>
+        <div class="spot-item">
+            <div class="spot-time">夜間・樂天超市 ➔ 民宿</div>
+            <div class="trans-box">
+                <div class="trans-row"><span class="t-taxi">🚖 計程車（大包小包務必打車）</span><span>⏱ 約25分｜₩13,000 (NT$310)</span></div>
+            </div>
+        </div>
+    </details>
+<!-- DAY 6 -->
+    <details class="day-card native-day" name="itinerary-days">
+<summary class="day-header"><span>Day 6・優雅返航</span><span class="day-chevron">▶</span><span class="day-tag">快樂回家</span></summary>
+        <div class="spot-item">
+            <div class="spot-time">09:45 AM</div>
+            <div class="spot-title">民宿門口 ➔ 包車直達仁川機場</div>
+            <div class="trans-box">
+                <div class="trans-row"><span>🚐 車程時間</span><span>約 60 分鐘</span></div>
+            </div>
+            <div class="spot-desc">不需要趕地鐵，吃完早餐，包車準時接全家人出發，滿載戰利品平安回家！</div>
+        </div>
+    </details>
+</div>
+</div>
+
+<!-- ══════════ TAB 2：民宿周遭 ══════════ -->
+<div class="panel" id="panel-1">
+<div class="container">
+
+    <div class="important-note" style="background:#fff0f0;border-left-color:#ff7675;">
+        📍 Sweet Home 生活圈：以三陽洞 / 松泉站（Solsaem-ro）民宿為中心步行可達
+    </div>
+
+    <div class="section-label">🏠 民宿</div>
+
+    <div id="poi-home" class="food-card">
+        <div class="card-header"><a href="#nearby-map" style="float:right;font-size:.78rem;text-decoration:none;color:#6c5ce7;font-weight:800;">⬆ 回地圖</a>
+            <div><h2 class="food-title">我們的民宿</h2><div class="food-sub">인수봉로 6길 9-2, 서울 01183</div></div>
+            <span class="tag light">住宿地點</span>
+        </div>
+        <div class="food-desc">搭計程車或叫車時，直接出示韓文地址給司機即可。</div>
+        <div style="display:flex;gap:0.5rem;">
+            
+            <a class="nav-btn" style="flex:1;" href="https://map.naver.com/v5/search/%EC%9D%B8%EC%88%98%EB%B4%89%EB%A1%9C%206%EA%B8%B8%209-2">🗺 Naver 導航</a>
+        </div>
+    </div>
+<div id="driver-address" class="driver-address-card">
+        <div class="driver-address-title">🚕 給司機看的韓文地址</div>
+        <div class="driver-address-main">인수봉로 6길 9-2</div>
+        <div class="driver-address-sub">서울특별시 강북구 01183</div>
+        <div class="driver-address-phrase">여기로 가주세요 🙏</div>
+    </div>
+
+<div id="nearby-map" class="embedded-illu-map">
+        <div class="embedded-illu-title">🗺️ Sweet Home 生活圈地圖</div>
+        <div class="mapbox">
+<svg viewBox="0 0 980 720" preserveAspectRatio="xMidYMid meet" role="img" aria-label="民宿周遭自適應插畫地圖">
+<rect width="980" height="720" fill="#fff8ec"/>
+<ellipse class="zone" cx="230" cy="360" rx="210" ry="190" fill="#6c5ce7"/>
+<ellipse class="zone" cx="690" cy="190" rx="230" ry="150" fill="#ff9f43"/>
+<ellipse class="zone" cx="690" cy="545" rx="250" ry="160" fill="#0984e3"/>
+<ellipse class="park" cx="160" cy="120" rx="140" ry="80"/>
+<ellipse class="park" cx="820" cy="610" rx="150" ry="85"/>
+<path class="water" d="M-20,655 C150,600 270,700 420,646 C590,585 720,640 1000,585 L1000,760 L-20,760 Z"/>
+<g opacity=".9">
+<rect class="block" x="60" y="210" width="150" height="90" rx="18"/><rect class="block" x="260" y="115" width="160" height="105" rx="18"/><rect class="block" x="520" y="95" width="170" height="115" rx="18"/><rect class="block" x="730" y="150" width="170" height="105" rx="18"/><rect class="block" x="95" y="395" width="180" height="110" rx="18"/><rect class="block" x="355" y="360" width="180" height="130" rx="18"/><rect class="block" x="640" y="350" width="210" height="120" rx="18"/>
+</g>
+<path class="road" d="M70 560 C220 495 280 410 380 345 C500 268 615 235 900 165"/>
+<path class="road" d="M110 170 C280 230 445 270 635 285 C760 295 850 315 950 365"/>
+<path class="road" d="M165 690 C250 580 360 470 485 355 C600 250 700 155 820 65"/>
+<path class="road thin" d="M40 335 C210 320 380 330 560 365 C710 395 840 450 950 530"/>
+<path class="road thin" d="M315 45 C360 185 405 305 455 455 C495 575 535 650 590 740"/>
+<path class="road thin" d="M690 40 C655 190 620 315 590 455 C565 570 530 660 485 735"/>
+<circle class="walk" cx="260" cy="300" r="95"/><circle class="walk" cx="260" cy="300" r="180"/><circle class="walk" cx="260" cy="300" r="265"/>
+<text x="70" y="535" class="maptext">Solsaem-ro 周邊</text>
+<text x="640" y="135" class="maptext">三陽市場 / 美阿方向</text>
+<text x="80" y="110" class="maptext">住宅巷弄</text>
+<text x="278" y="398" class="maptext" style="font-size:12px;opacity:.5">5 / 10 / 15 分鐘圈</text>
+
+    <g class="label" transform="translate(300,286)">
+      <rect width="82" height="42" rx="13"/>
+      <text class="label-title" x="12" y="17">民宿</text>
+      <text class="label-sub" x="12" y="32">인수봉로 6길 9-2</text>
+    </g>
+    <line class="leader" x1="260" y1="300" x2="300" y2="307"/>
+    
+    <g class="label" transform="translate(430,210)">
+      <rect width="112" height="42" rx="13"/>
+      <text class="label-title" x="12" y="17">① CU/GS25</text>
+      <text class="label-sub" x="12" y="32">씨유 / GS25</text>
+    </g>
+    <line class="leader" x1="405" y1="238" x2="430" y2="231"/>
+    
+    <g class="label" transform="translate(385,86)">
+      <rect width="82" height="42" rx="13"/>
+      <text class="label-title" x="12" y="17">② 樂天瑪特</text>
+      <text class="label-sub" x="12" y="32">롯데마트 삼양점</text>
+    </g>
+    <line class="leader" x1="525" y1="105" x2="385" y2="107"/>
+    
+    <g class="label" transform="translate(625,350)">
+      <rect width="88" height="42" rx="13"/>
+      <text class="label-title" x="12" y="17">本粥&amp;拌飯</text>
+      <text class="label-sub" x="12" y="32">본죽 미아삼양점</text>
+    </g>
+    <line class="leader" x1="595" y1="382" x2="625" y2="371"/>
+    
+    <g class="label" transform="translate(735,515)">
+      <rect width="82" height="42" rx="13"/>
+      <text class="label-title" x="12" y="17">⑨ BHC</text>
+      <text class="label-sub" x="12" y="32">BHC 치킨 미아점</text>
+    </g>
+    <line class="leader" x1="735" y1="560" x2="735" y2="536"/>
+    
+    <g class="label" transform="translate(725,145)">
+      <rect width="82" height="42" rx="13"/>
+      <text class="label-title" x="12" y="17">辣年糕</text>
+      <text class="label-sub" x="12" y="32">삼양시장 떡볶이</text>
+    </g>
+    <line class="leader" x1="705" y1="180" x2="725" y2="166"/>
+    
+    <g class="label" transform="translate(655,602)">
+      <rect width="88" height="42" rx="13"/>
+      <text class="label-title" x="12" y="17">⑩ 王家糖葫蘆</text>
+      <text class="label-sub" x="12" y="32">왕가탕후루</text>
+    </g>
+    <line class="leader" x1="630" y1="630" x2="655" y2="623"/>
+    
+    <g class="label" transform="translate(495,145)">
+      <rect width="82" height="42" rx="13"/>
+      <text class="label-title" x="12" y="17">鯛魚燒</text>
+      <text class="label-sub" x="12" y="32">붕어빵 / 계란빵</text>
+    </g>
+    <line class="leader" x1="650" y1="150" x2="495" y2="166"/>
+    
+    <g class="label" transform="translate(465,320)">
+      <rect width="82" height="42" rx="13"/>
+      <text class="label-title" x="12" y="17">⑤ 巴黎貝甜</text>
+      <text class="label-sub" x="12" y="32">파리바게뜨</text>
+    </g>
+    <line class="leader" x1="435" y1="350" x2="465" y2="341"/>
+    
+    <g class="label" transform="translate(815,465)">
+      <rect width="82" height="42" rx="13"/>
+      <text class="label-title" x="12" y="17">韓式烤肉</text>
+      <text class="label-sub" x="12" y="32">삼겹살</text>
+    </g>
+    <line class="leader" x1="805" y1="500" x2="815" y2="486"/>
+    
+    <g class="label" transform="translate(390,625)">
+      <rect width="82" height="42" rx="13"/>
+      <text class="label-title" x="12" y="17">⑪ 人生四格</text>
+      <text class="label-sub" x="12" y="32">인생네컷</text>
+    </g>
+    <line class="leader" x1="560" y1="630" x2="390" y2="646"/>
+    
+    <g class="label" transform="translate(510,250)">
+      <rect width="88" height="42" rx="13"/>
+      <text class="label-title" x="12" y="17">無人冰淇淋</text>
+      <text class="label-sub" x="12" y="32">무인 아이스크림</text>
+    </g>
+    <line class="leader" x1="475" y1="270" x2="510" y2="271"/>
+    
+    <g class="label" transform="translate(655,415)">
+      <rect width="82" height="42" rx="13"/>
+      <text class="label-title" x="12" y="17">⑧ 橋村炸雞</text>
+      <text class="label-sub" x="12" y="32">교촌치킨</text>
+    </g>
+    <line class="leader" x1="625" y1="440" x2="655" y2="436"/>
+    
+    <g class="label" transform="translate(345,385)">
+      <rect width="82" height="42" rx="13"/>
+      <text class="label-title" x="12" y="17">④ 大創</text>
+      <text class="label-sub" x="12" y="32">다이소</text>
+    </g>
+    <line class="leader" x1="315" y1="405" x2="345" y2="406"/>
+    
+    <g class="label" transform="translate(235,330)">
+      <rect width="88" height="42" rx="13"/>
+      <text class="label-title" x="12" y="17">③ EDIYA</text>
+      <text class="label-sub" x="12" y="32">이디야커피</text>
+    </g>
+    <line class="leader" x1="205" y1="345" x2="235" y2="351"/>
+    
+    <g class="label" transform="translate(770,238)">
+      <rect width="112" height="42" rx="13"/>
+      <text class="label-title" x="12" y="17">黑糖餅&amp;雞肉串</text>
+      <text class="label-sub" x="12" y="32">호떡 / 닭꼬치</text>
+    </g>
+    <line class="leader" x1="760" y1="215" x2="770" y2="259"/>
+    
+
+    <a href="#poi-home"><g class="pin" transform="translate(260,300)">
+      <circle r="32" fill="#6c5ce7"/>
+      <circle r="24" fill="white" opacity=".94"/>
+      <text text-anchor="middle" dominant-baseline="central" font-size="22">🏠</text>
+      <title>民宿｜인수봉로 6길 9-2</title>
+    </g></a>
+    <g class="pin" transform="translate(405,238)">
+      <circle r="21" fill="#00b894"/>
+      <circle r="15" fill="white" opacity=".94"/>
+      <text text-anchor="middle" dominant-baseline="central" font-size="16">🏪</text>
+      <title>CU/GS25｜씨유 / GS25</title>
+    </g>
+    <a href="#poi-lotte"><g class="pin" transform="translate(525,105)">
+      <circle r="21" fill="#fd79a8"/>
+      <circle r="15" fill="white" opacity=".94"/>
+      <text text-anchor="middle" dominant-baseline="central" font-size="16">🛒</text>
+      <title>樂天瑪特｜롯데마트 삼양점</title>
+    </g></a>
+    <a href="#poi-porridge"><g class="pin" transform="translate(595,382)">
+      <circle r="21" fill="#74b9ff"/>
+      <circle r="15" fill="white" opacity=".94"/>
+      <text text-anchor="middle" dominant-baseline="central" font-size="16">🍲</text>
+      <title>本粥&amp;拌飯｜본죽 미아삼양점</title>
+    </g></a>
+    <a href="#poi-bhc"><g class="pin" transform="translate(735,560)">
+      <circle r="21" fill="#ee5253"/>
+      <circle r="15" fill="white" opacity=".94"/>
+      <text text-anchor="middle" dominant-baseline="central" font-size="16">🐔</text>
+      <title>BHC｜BHC 치킨 미아점</title>
+    </g></a>
+    <a href="#poi-tteok"><g class="pin" transform="translate(705,180)">
+      <circle r="21" fill="#ff9f43"/>
+      <circle r="15" fill="white" opacity=".94"/>
+      <text text-anchor="middle" dominant-baseline="central" font-size="16">🌶️</text>
+      <title>辣年糕｜삼양시장 떡볶이</title>
+    </g></a>
+    <a href="#poi-tanghulu"><g class="pin" transform="translate(630,630)">
+      <circle r="21" fill="#fab1a0"/>
+      <circle r="15" fill="white" opacity=".94"/>
+      <text text-anchor="middle" dominant-baseline="central" font-size="16">🍡</text>
+      <title>王家糖葫蘆｜왕가탕후루</title>
+    </g></a>
+    <a href="#poi-fish"><g class="pin" transform="translate(650,150)">
+      <circle r="21" fill="#fab1a0"/>
+      <circle r="15" fill="white" opacity=".94"/>
+      <text text-anchor="middle" dominant-baseline="central" font-size="16">🐟</text>
+      <title>鯛魚燒｜붕어빵 / 계란빵</title>
+    </g></a>
+    <a href="#poi-paris"><g class="pin" transform="translate(435,350)">
+      <circle r="21" fill="#1dd1a1"/>
+      <circle r="15" fill="white" opacity=".94"/>
+      <text text-anchor="middle" dominant-baseline="central" font-size="16">🥐</text>
+      <title>巴黎貝甜｜파리바게뜨</title>
+    </g></a>
+    <a href="#poi-bbq"><g class="pin" transform="translate(805,500)">
+      <circle r="21" fill="#cd6133"/>
+      <circle r="15" fill="white" opacity=".94"/>
+      <text text-anchor="middle" dominant-baseline="central" font-size="16">🥩</text>
+      <title>韓式烤肉｜삼겹살</title>
+    </g></a>
+    <a href="#poi-photo"><g class="pin" transform="translate(560,630)">
+      <circle r="21" fill="#706fd3"/>
+      <circle r="15" fill="white" opacity=".94"/>
+      <text text-anchor="middle" dominant-baseline="central" font-size="16">📸</text>
+      <title>人生四格｜인생네컷</title>
+    </g></a>
+    <a href="#poi-ice"><g class="pin" transform="translate(475,270)">
+      <circle r="21" fill="#fab1a0"/>
+      <circle r="15" fill="white" opacity=".94"/>
+      <text text-anchor="middle" dominant-baseline="central" font-size="16">🍦</text>
+      <title>無人冰淇淋｜무인 아이스크림</title>
+    </g></a>
+    <a href="#poi-kyochon"><g class="pin" transform="translate(625,440)">
+      <circle r="21" fill="#ee5253"/>
+      <circle r="15" fill="white" opacity=".94"/>
+      <text text-anchor="middle" dominant-baseline="central" font-size="16">🍗</text>
+      <title>橋村炸雞｜교촌치킨</title>
+    </g></a>
+    <a href="#poi-daiso"><g class="pin" transform="translate(315,405)">
+      <circle r="21" fill="#10ac84"/>
+      <circle r="15" fill="white" opacity=".94"/>
+      <text text-anchor="middle" dominant-baseline="central" font-size="16">🛍️</text>
+      <title>大創｜다이소</title>
+    </g></a>
+    <a href="#poi-ediya"><g class="pin" transform="translate(205,345)">
+      <circle r="21" fill="#0984e3"/>
+      <circle r="15" fill="white" opacity=".94"/>
+      <text text-anchor="middle" dominant-baseline="central" font-size="16">☕</text>
+      <title>EDIYA｜이디야커피</title>
+    </g></a>
+    <a href="#poi-hotteok"><g class="pin" transform="translate(760,215)">
+      <circle r="21" fill="#ff9f43"/>
+      <circle r="15" fill="white" opacity=".94"/>
+      <text text-anchor="middle" dominant-baseline="central" font-size="16">🍢</text>
+      <title>黑糖餅&amp;雞肉串｜호떡 / 닭꼬치</title>
+    </g></a>
+
+<!-- v3 新增：生活圈用餐備案 -->
+<a href="#poi-gimbap">
+  <line class="leader" x1="360" y1="445" x2="390" y2="472"/>
+  <g class="pin" transform="translate(360,445)">
+    <circle r="21" fill="#f6b93b"/>
+    <circle r="15" fill="white" opacity=".94"/>
+    <text text-anchor="middle" dominant-baseline="central" font-size="16">🍙</text>
+    <title>紫菜包飯天國｜김밥천국</title>
+  </g>
+</a>
+<g class="label" transform="translate(390,458)">
+  <rect width="112" height="42" rx="13"/>
+  <text class="label-title" x="12" y="17">⑥ 紫菜包飯</text>
+  <text class="label-sub" x="12" y="32">김밥천국</text>
+</g>
+
+<a href="#poi-kalguksu">
+  <line class="leader" x1="505" y1="405" x2="520" y2="462"/>
+  <g class="pin" transform="translate(505,405)">
+    <circle r="21" fill="#e58e26"/>
+    <circle r="15" fill="white" opacity=".94"/>
+    <text text-anchor="middle" dominant-baseline="central" font-size="16">🍜</text>
+    <title>儒林刀削麵與大蒸餃｜칼국수 / 왕만두</title>
+  </g>
+</a>
+<g class="label" transform="translate(520,448)">
+  <rect width="112" height="42" rx="13"/>
+  <text class="label-title" x="12" y="17">⑦ 刀削麵</text>
+  <text class="label-sub" x="12" y="32">칼국수</text>
+</g>
+
+<g transform="translate(900,58)"><circle r="34" fill="white" stroke="#eadfd1" stroke-width="2"/><text x="0" y="-6" text-anchor="middle" font-size="20" font-weight="900">N</text><path d="M0,-25 L8,10 L0,5 L-8,10 Z" fill="#6c5ce7"/></g>
+</svg>
+        </div>
+        <div class="legend"><span>🏠 民宿中心</span><span>紫圈：松泉生活圈</span><span>橘圈：三陽市場</span><span>藍圈：美阿方向</span><span>🍜🍙 地圖新增生活圈用餐</span><span>👨‍👩‍👧‍👧 下方有家庭餐廳備案</span></div>
+        <div class="note">插畫導覽圖重點是相對位置；🍜刀削麵、🍙紫菜包飯為新增生活圈用餐點。實際路線仍以 Naver 導航為準。</div>
+    </div>
+
+
+    
+    <div class="quick-picks">
+        <div class="quick-picks-title">⚡ 情境快速選</div>
+        <div class="quick-picks-grid">
+            <a class="quick-pick" href="#poi-gimbap">🍙 早餐 / 宵夜<small>紫菜包飯天國</small></a>
+            <a class="quick-pick" href="#poi-ediya">☕ 咖啡休息<small>EDIYA COFFEE</small></a>
+            <a class="quick-pick" href="#poi-lotte">🛒 採買補給<small>樂天瑪特三陽店</small></a>
+            <a class="quick-pick" href="#poi-kalguksu">🍜 清淡晚餐<small>刀削麵與大蒸餃</small></a>
+            <a class="quick-pick" href="#poi-kyochon">🍗 炸雞外帶<small>橋村炸雞</small></a>
+            <a class="quick-pick" href="#poi-photo">📸 拍照回憶<small>人生四格</small></a>
+        </div>
+    </div>
+
+<div class="section-label">🏪 便利商店</div>
+
+    <div id="poi-cu" class="food-card">
+        <div class="card-header"><a href="#nearby-map" style="float:right;font-size:.78rem;text-decoration:none;color:#6c5ce7;font-weight:800;">⬆ 回地圖</a>
+            <div><h2 class="food-title"><span class="poi-num">①</span>CU / GS25 便利商店</h2><div class="food-sub">씨유 / GS25</div></div>
+            <span class="tag store">便利商店</span>
+        </div>
+        <div class="walk-time">🚶 步行約 2 - 5 分鐘</div>
+        <div class="food-desc">民宿巷口就有。帶女兒買延世牛奶生乳包、香蕉牛奶當宵夜！</div>
+        <a class="nav-btn" href="https://map.naver.com/v5/search/%EC%82%BC%EC%96%91%EB%8F%99%20%ED%8E%B8%EC%9D%98%EC%A0%90">🗺 Naver 導航</a>
+    </div>
+
+
+    <div class="section-label">🍽 正餐 & 超市</div>
+
+    <div id="poi-lotte" class="food-card">
+        <div class="card-header"><a href="#nearby-map" style="float:right;font-size:.78rem;text-decoration:none;color:#6c5ce7;font-weight:800;">⬆ 回地圖</a>
+            <div><h2 class="food-title"><span class="poi-num">②</span>樂天瑪特美食街 & 超市</h2><div class="food-sub">롯데마트 삼양점</div></div>
+            <span class="tag meal">複合餐廳</span>
+        </div>
+        <div class="walk-time">🚶 步行約 5 - 7 分鐘</div>
+        <div class="food-desc">石鍋拌飯、炸醬麵、糖醋肉、現炸豬排。點餐有圖片對照，輕鬆又乾淨。</div>
+        <a class="nav-btn" href="https://map.naver.com/v5/search/%EB%A1%AF%EB%8D%B0%EB%A7%88%ED%8A%B8%20%EC%82%BC%EC%96%91%EC%A0%90">🗺 Naver 導航</a>
+    </div>
+
+    <div id="poi-bhc" class="food-card">
+        <div class="card-header"><a href="#nearby-map" style="float:right;font-size:.78rem;text-decoration:none;color:#6c5ce7;font-weight:800;">⬆ 回地圖</a>
+            <div><h2 class="food-title"><span class="poi-num">⑨</span>BHC 炸雞 美阿店</h2><div class="food-sub">BHC 치킨 미아점</div></div>
+            <span class="tag meal">韓式炸雞</span>
+        </div>
+        <div class="walk-time">🚶 步行約 10 - 15 分鐘</div>
+        <div class="food-desc">推薦外帶「半半炸雞（蜂蜜甘醬+原味脆皮）」，回民宿客廳一起吃最棒！</div>
+        <a class="nav-btn" href="https://map.naver.com/v5/search/BHC%EC%B9%98%ED%82%A8%20%EB%AF%B8%EC%95%84%EC%A0%90">🗺 Naver 導航</a>
+    </div>
+
+    <div id="poi-porridge" class="food-card">
+        <div class="card-header"><a href="#nearby-map" style="float:right;font-size:.78rem;text-decoration:none;color:#6c5ce7;font-weight:800;">⬆ 回地圖</a>
+            <div><h2 class="food-title">本粥 & 拌飯（美阿三陽店）</h2><div class="food-sub">본죽&비빔밥 cafe</div></div>
+            <span class="tag light">養生暖胃</span>
+        </div>
+        <div class="walk-time">🚶 步行約 5 - 8 分鐘</div>
+        <div class="food-desc">玩累想吃清淡的首選。鮑魚粥、牛肉蔬菜粥，調味溫和，媽媽和小朋友最適合。</div>
+        <a class="nav-btn" href="https://map.naver.com/v5/search/%EB%B3%B8%EC%A3%BD%20%EC%82%BC%EC%96%91%EC%A0%90">🗺 Naver 導航</a>
+    </div>
+
+    <div class="section-label">🍡 小吃 & 甜點</div>
+
+    <div id="poi-tteok" class="food-card">
+        <div class="card-header"><a href="#nearby-map" style="float:right;font-size:.78rem;text-decoration:none;color:#6c5ce7;font-weight:800;">⬆ 回地圖</a>
+            <div><h2 class="food-title">傳統市場老字號辣年糕</h2><div class="food-sub">삼양시장 떡볶이</div></div>
+            <span class="tag snack">在地小吃</span>
+        </div>
+        <div class="walk-time">🚶 步行約 8 - 12 分鐘</div>
+        <div class="food-desc">大鐵盤熬煮的元祖辣年糕，加魚板湯和現炸海苔冬粉捲，炸物沾醬最道地！</div>
+        <a class="nav-btn" href="https://map.naver.com/v5/search/%EC%82%BC%EC%96%91%EC%8B%9C%EC%9E%A5%20%EB%96%A1%EB%B3%B6%EC%9D%B4">🗺 Naver 導航</a>
+    </div>
+
+    <div id="poi-tanghulu" class="food-card">
+        <div class="card-header"><a href="#nearby-map" style="float:right;font-size:.78rem;text-decoration:none;color:#6c5ce7;font-weight:800;">⬆ 回地圖</a>
+            <div><h2 class="food-title"><span class="poi-num">⑩</span>王家糖葫蘆（美阿店）</h2><div class="food-sub">왕가탕후루</div></div>
+            <span class="tag sweet">人氣甜點</span>
+        </div>
+        <div class="walk-time">🚶 步行約 10 - 15 分鐘（近美阿站）</div>
+        <div class="food-desc">全韓最火糖葫蘆！脆糖衣包整顆草莓、綠葡萄，女兒看到絕對想拍照打卡！</div>
+        <a class="nav-btn" href="https://map.naver.com/v5/search/%EC%99%95%EA%B0%80%ED%83%95%ED%9B%84%EB%A3%A8%20%EB%AF%B8%EC%95%84%EC%A0%90">🗺 Naver 導航</a>
+    </div>
+
+    <div id="poi-fish" class="food-card">
+        <div class="card-header"><a href="#nearby-map" style="float:right;font-size:.78rem;text-decoration:none;color:#6c5ce7;font-weight:800;">⬆ 回地圖</a>
+            <div><h2 class="food-title">鯛魚燒 & 雞蛋糕</h2><div class="food-sub">붕어빵 / 계란빵（傳統市場入口）</div></div>
+            <span class="tag sweet">街頭點心</span>
+        </div>
+        <div class="walk-time">🚶 步行約 5 - 10 分鐘</div>
+        <div class="food-desc">傍晚常有熱騰騰的鯛魚燒（紅豆/奶油卡士達）和雞蛋糕（裡面有整顆蛋！），最棒的散步點心。</div>
+        <a class="nav-btn" href="https://map.naver.com/v5/search/%EC%82%BC%EC%96%91%EC%8B%9C%EC%9E%A5">🗺 Naver 導航</a>
+    </div>
+
+    <div id="poi-paris" class="food-card">
+        <div class="card-header"><a href="#nearby-map" style="float:right;font-size:.78rem;text-decoration:none;color:#6c5ce7;font-weight:800;">⬆ 回地圖</a>
+            <div><h2 class="food-title"><span class="poi-num">⑤</span>巴黎貝甜</h2><div class="food-sub">파리바게뜨 삼양동</div></div>
+            <span class="tag bakery">烘焙名店</span>
+        </div>
+        <div class="walk-time">🚶 步行約 4 - 6 分鐘</div>
+        <div class="food-desc">草莓蛋糕、奶油麵包水準極高。帶老婆女兒挑隔天早餐麵包與鮮奶，輕鬆優雅。</div>
+        <a class="nav-btn" href="https://map.naver.com/v5/search/%ED%8C%8C%EB%A6%AC%EB%B0%94%EA%B2%8C%EB%9C%A8%20%EC%82%BC%EC%96%91%EB%8F%99">🗺 Naver 導航</a>
+    </div>
+
+    <div class="section-label">🥩 烤肉 & 體驗 & 深夜</div>
+
+    <div id="poi-bbq" class="food-card" style="border-color:#ffeaa7;">
+        <div class="card-header"><a href="#nearby-map" style="float:right;font-size:.78rem;text-decoration:none;color:#6c5ce7;font-weight:800;">⬆ 回地圖</a>
+            <div><h2 class="food-title">道地韓式五花肉烤肉店</h2><div class="food-sub">삼겹살 (美阿站巷弄)</div></div>
+            <span class="tag" style="background:#cd6133;">韓式烤肉</span>
+        </div>
+        <div class="walk-time">🚶 步行約 10 - 15 分鐘（往美阿站方向巷弄）</div>
+        <div class="food-desc">厚實熟成五花肉與豬脖子肉，店員幫忙烤得金黃酥脆。用生菜包烤肉、泡菜和蒜片，老婆絕對滿足！</div>
+        <a class="nav-btn" href="https://map.naver.com/v5/search/%EB%AF%B8%EC%95%84%EB%8F%99%20%EC%82%BC%EA%B2%B9%EC%82%B4">🗺 Naver 導航</a>
+    </div>
+
+    <div id="poi-photo" class="food-card" style="border-color:#ffeaa7;">
+        <div class="card-header"><a href="#nearby-map" style="float:right;font-size:.78rem;text-decoration:none;color:#6c5ce7;font-weight:800;">⬆ 回地圖</a>
+            <div><h2 class="food-title"><span class="poi-num">⑪</span>人生四格自助拍貼店</h2><div class="food-sub">인생네컷 (Photoism)</div></div>
+            <span class="tag" style="background:#706fd3;">美照回憶</span>
+        </div>
+        <div class="walk-time">🚶 步行約 12 - 15 分鐘（地鐵站周邊）</div>
+        <div class="food-desc">韓國最流行的拍貼！免費借頭飾、髮箍，帶兩個女兒和老婆拍一張充滿韓流感的紀念拍貼！</div>
+        <a class="nav-btn" href="https://map.naver.com/v5/search/%EB%AF%B8%EC%95%84%EB%8F%99%20%EC%9D%B8%EC%83%9D%EB%84%A4%EC%BB%B7">🗺 Naver 導航</a>
+    </div>
+
+    <div id="poi-ice" class="food-card" style="border-color:#ffeaa7;">
+        <div class="card-header"><a href="#nearby-map" style="float:right;font-size:.78rem;text-decoration:none;color:#6c5ce7;font-weight:800;">⬆ 回地圖</a>
+            <div><h2 class="food-title">24H 無人冰淇淋零食店</h2><div class="food-sub">무인 아이스크림 할인점</div></div>
+            <span class="tag" style="background:#34ace0;">深夜點心</span>
+        </div>
+        <div class="walk-time">🚶 步行約 3 - 6 分鐘（住宅區大馬路旁）</div>
+        <div class="food-desc">百種比超商便宜的冰棒和韓國懷舊零食，自己刷條碼結帳。宵夜後散步來體驗，女兒超愛！</div>
+        <a class="nav-btn" href="https://map.naver.com/v5/search/%EC%82%BC%EC%96%91%EB%8F%99%20%EB%AC%B4%EC%9D%B8%EC%95%84%EC%9D%B4%EC%8A%A4%ED%81%AC%EB%A6%BC">🗺 Naver 導航</a>
+    </div>
+    <div class="section-label">👑 炸雞 & 購物 & 咖啡 & 宵夜</div>
+
+    <div id="poi-kyochon" class="food-card" style="border-color:#ffeaa7;">
+        <div class="card-header"><a href="#nearby-map" style="float:right;font-size:.78rem;text-decoration:none;color:#6c5ce7;font-weight:800;">⬆ 回地圖</a>
+            <div><h2 class="food-title"><span class="poi-num">⑧</span>橋村炸雞（美阿三陽店）</h2><div class="food-sub">교촌치킨 미아삼양점</div></div>
+            <span class="tag" style="background:#ee5253;">天王炸雞</span>
+        </div>
+        <div class="walk-time">🚶 步行約 8 - 12 分鐘</div>
+        <div class="food-desc">大蒜醬油和蜂蜜甜醬，連骨頭吮起來都有味道，全家一吃絕對狂讚。</div>
+        <a class="nav-btn" href="https://map.naver.com/v5/search/%EA%B5%90%EC%B4%8C%EC%B9%98%ED%82%A8%20%EB%AF%B8%EC%95%84%EC%82%BC%EC%96%91%EC%A0%90">🗺 Naver 導航</a>
+    </div>
+
+    <div id="poi-daiso" class="food-card" style="border-color:#ffeaa7;">
+        <div class="card-header"><a href="#nearby-map" style="float:right;font-size:.78rem;text-decoration:none;color:#6c5ce7;font-weight:800;">⬆ 回地圖</a>
+            <div><h2 class="food-title"><span class="poi-num">④</span>大創百貨 DAISO（三陽站店）</h2><div class="food-sub">다이소 삼양역점</div></div>
+            <span class="tag" style="background:#10ac84;">平價聖地</span>
+        </div>
+        <div class="walk-time">🚶 步行約 10 - 14 分鐘</div>
+        <div class="food-desc">三麗鷗、迪士尼聯名文具、收納袋與彩妝，10歲和12歲女兒進去絕對買到不想出來！</div>
+        <a class="nav-btn" href="https://map.naver.com/v5/search/%EB%8B%A4%EC%9D%B4%EC%86%8C%20%EC%82%BC%EC%96%91%EC%97%AD%EC%A0%90">🗺 Naver 導航</a>
+    </div>
+
+    <div id="poi-ediya" class="food-card" style="border-color:#ffeaa7;">
+        <div class="card-header"><a href="#nearby-map" style="float:right;font-size:.78rem;text-decoration:none;color:#6c5ce7;font-weight:800;">⬆ 回地圖</a>
+            <div><h2 class="food-title"><span class="poi-num">③</span>EDIYA COFFEE（松泉店）</h2><div class="food-sub">이디야커피 솔샘역점</div></div>
+            <span class="tag" style="background:#0984e3;">質感咖啡</span>
+        </div>
+        <div class="walk-time">🚶 步行約 4 - 6 分鐘</div>
+        <div class="food-desc">高CP值國民咖啡廳，黑糖珍珠、冰沙與迷你雕魚燒，逛累了來這享受下午茶最放鬆。</div>
+        <a class="nav-btn" href="https://map.naver.com/v5/search/%EC%9D%B4%EB%94%94%EC%95%BC%EC%BB%A4%ED%94%BC%20%EC%86%94%EC%83%98%EC%97%AD">🗺 Naver 導航</a>
+    </div>
+
+    <div id="poi-hotteok" class="food-card" style="border-color:#ffeaa7;">
+        <div class="card-header"><a href="#nearby-map" style="float:right;font-size:.78rem;text-decoration:none;color:#6c5ce7;font-weight:800;">⬆ 回地圖</a>
+            <div><h2 class="food-title">傳統現炸黑糖餅與大雞肉串</h2><div class="food-sub">호떡 / 닭꼬치</div></div>
+            <span class="tag" style="background:#ff9f43;">深夜宵夜</span>
+        </div>
+        <div class="walk-time">🚶 步行約 5 - 10 分鐘</div>
+        <div class="food-desc">現煎黑糖餅咬開爆出肉桂核桃糖漿；碳烤大雞肉串刷濃甘醬，香氣逼人，必帶幾串回房。</div>
+        <a class="nav-btn" href="https://map.naver.com/v5/search/%EC%82%BC%EC%96%91%EB%8F%99%20%ED%98%B8%EB%96%A1">🗺 Naver 導航</a>
+    </div>
+
+
+    <div class="section-label">👨‍👩‍👧‍👧 不知道吃什麼看這裡</div>
+    <div class="family-guide-note">
+        這區是「晚餐備案」：玩累、不想排隊、下雨或全家不知道吃什麼時，可以直接從這四種情境挑。
+    </div>
+
+    <div id="poi-jjimdak" class="choice-card">
+        <div class="choice-top">
+            <div>
+                <p class="choice-title">🍗 想吃韓劇料理｜元祖燉雞與一隻雞（美阿店）</p>
+                <div class="choice-sub">찜닭 / 닭한마리・Jjimdak</div>
+            </div>
+            <span class="choice-tag">🚶 10–15分</span>
+        </div>
+        <p class="choice-desc">道地韓式燉雞，大盤雞肉、蔬菜與吸滿甜鹹醬汁的寬冬粉一起上桌，也可加起司。口味接受度高，適合老婆和女兒。</p>
+        <div class="choice-rec">👍 必點：安東起司燉雞、韓式魚板湯</div>
+        <a class="nav-btn" href="https://www.google.com/maps/search/?api=1&query=Jjimdak+Mia+Seoul" target="_blank">📍 開啟地圖導航</a>
+    </div>
+
+    <div id="poi-tonkatsu" class="choice-card">
+        <div class="choice-top">
+            <div>
+                <p class="choice-title">🐷 想吃大份量｜城北洞手工炸豬排專賣店</p>
+                <div class="choice-sub">돈까스・Korean Style Tonkatsu</div>
+            </div>
+            <span class="choice-tag">🚖 約8分</span>
+        </div>
+        <p class="choice-desc">這一帶學生家庭多，韓式炸豬排份量大、外皮酥脆，搭配甜醬汁、白飯與濃湯，是很穩的家庭餐選擇。</p>
+        <div class="choice-rec">👍 必點：王炸豬排（왕돈까스）、起司夾心豬排</div>
+        <a class="nav-btn" href="https://www.google.com/maps/search/?api=1&query=Tonkatsu+Solsaem+Mia+Seoul" target="_blank">📍 開啟地圖導航</a>
+    </div>
+
+    <div id="poi-kalguksu" class="choice-card">
+        <div class="choice-top">
+            <div>
+                <p class="choice-title"><span class="poi-num">⑦</span>🍜 想吃清淡暖胃｜儒林手工刀削麵與大蒸餃</p>
+                <div class="choice-sub">칼국수 / 왕만두・Kalguksu & Mandu</div>
+            </div>
+            <span class="choice-tag">🚶 5–8分</span>
+        </div>
+        <p class="choice-desc">小魚與昆布熬的清甜高湯，配上 Q 彈手工麵和拳頭大的手包蒸餃。玩累時很適合媽媽和小朋友。</p>
+        <div class="choice-rec">👍 必點：海鮮刀削麵、手工大蒸餃</div>
+        <a class="nav-btn" href="https://www.google.com/maps/search/?api=1&query=Kalguksu+Samyang+Seoul" target="_blank">📍 開啟地圖導航</a>
+    </div>
+
+    <div id="poi-gimbap" class="choice-card">
+        <div class="choice-top">
+            <div>
+                <p class="choice-title"><span class="poi-num">⑥</span>🍙 早餐宵夜萬用｜紫菜包飯天國（松泉店）</p>
+                <div class="choice-sub">김밥천국・Gimbap CheonGuk</div>
+            </div>
+            <span class="choice-tag">🚶 3–5分</span>
+        </div>
+        <p class="choice-desc">韓國國民廚房，紫菜包飯、拉麵、辣炒年糕、泡菜炒飯都有，出餐快，適合早餐、宵夜或臨時備案。</p>
+        <div class="choice-rec">👍 必點：鮪魚紫菜包飯、起司拉麵、炸豬排</div>
+        <a class="nav-btn" href="https://www.google.com/maps/search/?api=1&query=Gimbap+Solsaem+Seoul" target="_blank">📍 開啟地圖導航</a>
+    </div>
+
+</div>
+</div>
+
+<footer>🏠 Sweet Home・首爾生活圈攻略 v1.0<br>Have a nice trip ✨</footer>
+
+<script>
+// ── 地圖初始化（只在 Tab 切換到地圖時執行一次）──
+var mapInitialized = false;
+function initMap() {
+    if (mapInitialized) return;
+    mapInitialized = true;
+
+    var HOME = [37.6185, 127.0104];
+    var map = L.map('map', { center: HOME, zoom: 15 });
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap', maxZoom: 19
+    }).addTo(map);
+
+    function makeIcon(color, emoji) {
+        var svg = '<svg xmlns="http://www.w3.org/2000/svg" width="36" height="44" viewBox="0 0 36 44">' +
+            '<path d="M18 0C8.06 0 0 8.06 0 18c0 13.5 18 26 18 26S36 31.5 36 18C36 8.06 27.94 0 18 0z" fill="' + color + '"/>' +
+            '<circle cx="18" cy="18" r="13" fill="white" opacity="0.9"/>' +
+            '<text x="18" y="23" text-anchor="middle" font-size="14">' + emoji + '</text></svg>';
+        return L.divIcon({ html: svg, iconSize: [36,44], iconAnchor: [18,44], popupAnchor: [0,-44], className: '' });
+    }
+
+    // 民宿
+    L.marker(HOME, { icon: makeIcon('#6c5ce7','🏠'), zIndexOffset: 1000 }).addTo(map)
+        .bindPopup('<b>🏠 我們的民宿</b><br><small>인수봉로 6길 9-2</small>').openPopup();
+
+    var places = [
+        { name:'CU / GS25 便利商店', sub:'씨유/GS25', walk:'2-5分', lat:37.6192, lng:127.0118, color:'#00b894', emoji:'🏪', naver:'삼양동 편의점' },
+        { name:'樂天瑪特美食街 & 超市', sub:'롯데마트 삼양점', walk:'5-7分', lat:37.6208, lng:127.0132, color:'#fd79a8', emoji:'🛒', naver:'롯데마트 삼양점' },
+        { name:'本粥 & 拌飯', sub:'본죽 미아삼양점', walk:'5-8分', lat:37.6175, lng:127.0138, color:'#74b9ff', emoji:'🍲', naver:'본죽 삼양점' },
+        { name:'BHC 炸雞 美阿店', sub:'BHC 치킨 미아점', walk:'10-15分', lat:37.6155, lng:127.0158, color:'#e17055', emoji:'🍗', naver:'BHC치킨 미아점' },
+        { name:'傳統市場老字號辣年糕', sub:'삼양시장 떡볶이', walk:'8-12分', lat:37.6198, lng:127.0155, color:'#ff7675', emoji:'🌶', naver:'삼양시장 떡볶이' },
+        { name:'王家糖葫蘆', sub:'왕가탕후루 미아점', walk:'10-15分', lat:37.6148, lng:127.0145, color:'#ff9f43', emoji:'🍡', naver:'왕가탕후루 미아점' },
+        { name:'鯛魚燒 & 雞蛋糕', sub:'붕어빵/계란빵', walk:'5-10分', lat:37.6202, lng:127.0148, color:'#fdcb6e', emoji:'🐟', naver:'삼양시장' },
+        { name:'巴黎貝甜', sub:'파리바게뜨 삼양동', walk:'4-6分', lat:37.6178, lng:127.0122, color:'#1dd1a1', emoji:'🥐', naver:'파리바게뜨 삼양동' },
+        { name:'韓式五花肉烤肉', sub:'삼겹살 미아동', walk:'10-15分', lat:37.6162, lng:127.0165, color:'#cd6133', emoji:'🥩', naver:'미아동 삼겹살' },
+        { name:'人生四格拍貼店', sub:'인생네컷 Photoism', walk:'12-15分', lat:37.6145, lng:127.0135, color:'#a29bfe', emoji:'📸', naver:'미아동 인생네컷' },
+        { name:'24H 無人冰淇淋店', sub:'무인 아이스크림', walk:'3-6分', lat:37.6188, lng:127.0125, color:'#0984e3', emoji:'🍦', naver:'삼양동 무인아이스크림' },
+        { name:'橋村炸雞 美阿三陽店', sub:'교촌치킨 미아삼양점', walk:'8-12分', lat:37.6168, lng:127.0142, color:'#ee5253', emoji:'🍗', naver:'교촌치킨 미아삼양점' },
+        { name:'DAISO 大創 三陽站店', sub:'다이소 삼양역점', walk:'10-14分', lat:37.6172, lng:127.0108, color:'#10ac84', emoji:'🛍', naver:'다이소 삼양역점' },
+        { name:'EDIYA COFFEE 松泉店', sub:'이디야커피 솔샘역점', walk:'4-6分', lat:37.6180, lng:127.0095, color:'#6c5ce7', emoji:'☕', naver:'이디야커피 솔샘역' },
+        { name:'黑糖餅 & 炭烤雞肉串', sub:'호떡/닭꼬치', walk:'5-10分', lat:37.6195, lng:127.0160, color:'#fd7f2a', emoji:'🍢', naver:'삼양동 호떡' },
+    ];
+
+    places.forEach(function(p) {
+        var url = 'https://map.naver.com/v5/search/' + encodeURIComponent(p.naver);
+        var popup = '<b>' + p.name + '</b><br><small style="color:#888">' + p.sub + '</small><br>' +
+            '<span style="color:#e67e22;font-size:0.78rem">🚶 ' + p.walk + '</span><br><br>' +
+            '<a href="' + url + '" style="display:block;text-align:center;background:#03C75A;color:white;padding:4px 8px;border-radius:6px;text-decoration:none;font-size:0.8rem;font-weight:bold;">🗺 Naver 導航</a>';
+        L.marker([p.lat, p.lng], { icon: makeIcon(p.color, p.emoji) }).addTo(map).bindPopup(popup);
+    });
+
+    // 圖例
+    var legend = L.control({ position: 'bottomleft' });
+    legend.onAdd = function() {
+        var d = L.DomUtil.create('div');
+        d.style.cssText = 'background:white;border-radius:10px;padding:8px 12px;font-size:0.72rem;box-shadow:0 2px 8px rgba(0,0,0,0.15);line-height:1.9';
+        d.innerHTML = [
+            ['#6c5ce7','民宿'],['#00b894','便利商店'],['#fd79a8','正餐 & 超市'],
+            ['#ff9f43','小吃 & 甜點'],['#cd6133','烤肉 & 體驗'],['#10ac84','購物 & 咖啡']
+        ].map(function(x){ return '<div style="display:flex;align-items:center;gap:6px"><div style="width:10px;height:10px;border-radius:50%;background:'+x[0]+'"></div>'+x[1]+'</div>'; }).join('');
+        return d;
+    };
+    legend.addTo(map);
+}
+</script>
+
+<script>
+function toggleDay(header) {
+    var card = header.parentElement;
+    card.classList.toggle('collapsed');
+    var chevron = header.querySelector('.day-chevron');
+    chevron.textContent = card.classList.contains('collapsed') ? '▶' : '▼';
+}
+function switchTab(index) {
+    document.querySelectorAll('.tab-btn').forEach((btn, i) => btn.classList.toggle('active', i === index));
+    document.querySelectorAll('.panel').forEach((p, i) => p.classList.toggle('active', i === index));
+    if (index === 2) initMap();
+}
+function openModal() {
+    var modal = document.getElementById('addrModal');
+    // Safari Quick Look fix: reposition fixed element to current scroll
+    modal.style.top = window.scrollY + 'px';
+    modal.style.height = window.innerHeight + 'px';
+    modal.classList.add('show');
+    document.body.style.overflow = 'hidden';
+}
+function closeModal() {
+    document.getElementById('addrModal').classList.remove('show');
+    document.body.style.overflow = '';
+}
+</script>
+
+<script>
+document.addEventListener('toggle', function(e) {
+  if (!e.target.matches('details.native-day') || !e.target.open) return;
+  document.querySelectorAll('details.native-day[open]').forEach(function(d) {
+    if (d !== e.target) d.removeAttribute('open');
+  });
+}, true);
+</script>
+
+
+<script>
+document.addEventListener('toggle', function(e) {
+  if (!e.target.matches('details.native-day') || !e.target.open) return;
+  document.querySelectorAll('details.native-day[open]').forEach(function(d) {
+    if (d !== e.target) d.removeAttribute('open');
+  });
+}, true);
+</script>
+
+</body>
+</html>
+
+<style>
+.show-addr-btn{display:none!important}
+.food-card .btn-row,
+.button-row,
+.action-buttons{display:flex}
+</style>
