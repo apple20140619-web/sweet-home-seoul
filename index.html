@@ -1,10 +1,10 @@
-<!-- SweetHome Seoul Guide v1.3 | Final single-file HTML -->
+<!-- SweetHome Seoul Guide v1.3-navermap | Final single-file HTML -->
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SweetHome Seoul Guide v1.3</title>
+    <title>SweetHome Seoul Guide v1.3-navermap</title>
     <style>
         * { box-sizing: border-box; }
         body {
@@ -115,6 +115,59 @@
         .t-metro { color: #6c5ce7; font-weight: bold; }
         .t-taxi { color: #27ae60; font-weight: bold; }
         .t-walk { color: #e67e22; font-weight: bold; }
+        .driver-line {
+            display:block;
+            background:#fff7f7;
+            border:1px dashed #ffaaa5;
+            color:#2d3436;
+            border-radius:10px;
+            padding:.45rem .55rem;
+            margin:.35rem 0;
+            line-height:1.45;
+            font-weight:800;
+            cursor:pointer;
+            position:relative;
+            padding-right:4.7rem;
+        }
+        .driver-line::after {
+            content:"點擊放大";
+            position:absolute;
+            right:.5rem;
+            top:50%;
+            transform:translateY(-50%);
+            background:#ff7675;
+            color:white;
+            border-radius:999px;
+            padding:.16rem .45rem;
+            font-size:.68rem;
+            font-weight:900;
+            white-space:nowrap;
+        }
+        .driver-line:hover { background:#fff0f0; }
+        .first-station-line {
+            display:flex;
+            gap:.45rem;
+            align-items:center;
+            justify-content:space-between;
+            background:#f3f0ff;
+            border:1px solid #ded7ff;
+            color:#4b3fb8;
+            border-radius:10px;
+            padding:.45rem .55rem;
+            margin:.35rem 0;
+            line-height:1.45;
+            font-weight:800;
+        }
+        .station-nav-btn {
+            flex-shrink:0;
+            background:#6c5ce7;
+            color:white;
+            text-decoration:none;
+            padding:.28rem .55rem;
+            border-radius:999px;
+            font-size:.74rem;
+            font-weight:900;
+        }
         .spot-title { font-size: 1rem; font-weight: 700; margin: 0.25rem 0; }
         .spot-desc { font-size: 0.875rem; color: #636e72; margin-bottom: 0.7rem; }
 
@@ -194,31 +247,37 @@
 
         .addr-modal {
             position: fixed;
-            top: 0; left: 0;
+            inset: 0;
             width: 100vw; height: 100vh;
+            height: 100dvh;
             background: rgba(0,0,0,0.6);
             z-index: 9999;
             display: flex;
-            align-items: flex-end;
+            align-items: center;
             justify-content: center;
             visibility: hidden;
             opacity: 0;
             transition: opacity 0.25s, visibility 0.25s;
+            padding: 1.2rem;
+            box-sizing: border-box;
         }
         .addr-modal.show { visibility: visible; opacity: 1; }
 
         .addr-popup {
             background: white;
             width: 100%;
-            border-radius: 28px 28px 0 0;
+            max-width: 520px;
+            border-radius: 28px;
             padding: 2rem 1.5rem 2.5rem;
             text-align: center;
             position: relative;
-            animation: slideUp 0.25s ease;
+            animation: popIn 0.22s ease;
+            max-height: calc(100dvh - 2.4rem);
+            overflow: auto;
         }
-        @keyframes slideUp {
-            from { transform: translateY(100%); }
-            to { transform: translateY(0); }
+        @keyframes popIn {
+            from { transform: scale(.96); opacity:.6; }
+            to { transform: scale(1); opacity:1; }
         }
         .addr-close {
             position: absolute;
@@ -228,6 +287,7 @@
             color: #b2bec3;
             cursor: pointer;
             background: #f1f2f6;
+            border: none;
             width: 2rem;
             height: 2rem;
             border-radius: 50%;
@@ -244,7 +304,7 @@
             margin-bottom: 0.8rem;
         }
         .addr-korean {
-            font-size: 2rem;
+            font-size: 2.15rem;
             font-weight: 900;
             color: #2d3436;
             line-height: 1.3;
@@ -266,6 +326,19 @@
             border-radius: 20px;
             border: 1.5px dashed #ff7675;
         }
+        .addr-close-big {
+            display: block;
+            width: 100%;
+            margin-top: 1.2rem;
+            border: none;
+            border-radius: 16px;
+            background: #2d3436;
+            color: white;
+            font-size: 1rem;
+            font-weight: 900;
+            padding: 0.85rem 1rem;
+            cursor: pointer;
+        }
     </style>
 
 <style>
@@ -278,6 +351,12 @@
 .embedded-illu-map .park{fill:#e1f7df}
 .embedded-illu-map .zone{opacity:.16}
 .embedded-illu-map .block{fill:#fff;stroke:#f1e5d7;stroke-width:2;opacity:.9}
+.embedded-illu-map .coord-grid line{stroke:#d9c8b5;stroke-width:1.2;stroke-dasharray:5 7;opacity:.25}
+.embedded-illu-map .context-road{fill:none;stroke:#dac2a6;stroke-width:20;stroke-linecap:round;stroke-linejoin:round;opacity:.58}
+.embedded-illu-map .context-road.major{stroke:#caa783;stroke-width:24;opacity:.62}
+.embedded-illu-map .context-road.minor{stroke:#e3d3bf;stroke-width:12;opacity:.48}
+.embedded-illu-map .context-park{fill:#dff2d6;stroke:#b9d9b0;stroke-width:2;opacity:.62}
+.embedded-illu-map .context-label{font-size:13px;font-weight:900;fill:#8b735c;opacity:.78}
 .embedded-illu-map .walk{fill:none;stroke:#6c5ce7;stroke-width:2;stroke-dasharray:8 8;opacity:.20}
 .embedded-illu-map .pin{filter:drop-shadow(0 4px 8px rgba(0,0,0,.20))}
 .embedded-illu-map .label rect{fill:rgba(255,255,255,.96);stroke:#eadfd1;stroke-width:1.5;filter:drop-shadow(0 3px 8px rgba(0,0,0,.10))}
@@ -285,6 +364,27 @@
 .embedded-illu-map .label-sub{font-size:9.5px;fill:#636e72}
 .embedded-illu-map .leader{stroke:#b7a895;stroke-width:1.7;stroke-dasharray:3 5;opacity:.65}
 .embedded-illu-map .maptext{font-size:16px;font-weight:900;fill:#b08d68;opacity:.7}
+.embedded-illu-map.map-compact .label,
+.embedded-illu-map.map-compact .leader{display:none}
+.embedded-illu-map .mapbox{position:relative}
+.embedded-illu-map .map-tip{
+  position:absolute;
+  z-index:5;
+  max-width:210px;
+  transform:translate(-50%,-115%);
+  background:rgba(255,255,255,.97);
+  border:2px solid #eadfd1;
+  border-radius:14px;
+  padding:8px 10px;
+  box-shadow:0 8px 22px rgba(45,52,54,.18);
+  font-size:.78rem;
+  font-weight:900;
+  color:#2d3436;
+  line-height:1.35;
+  pointer-events:none;
+}
+.embedded-illu-map .map-tip small{display:block;margin-top:3px;font-size:.68rem;color:#8a7b6c;font-weight:800}
+.embedded-illu-map svg a.map-pin-active .pin circle:first-child{stroke:#2d3436;stroke-width:4}
 .embedded-illu-map .legend{display:flex;gap:8px;flex-wrap:wrap;padding:9px 10px;border-top:1px solid #eee;background:#fff}
 .embedded-illu-map .legend span{font-size:.72rem;background:#f8f5ef;border:1px solid #eadfd1;border-radius:999px;padding:5px 8px;font-weight:800}
 .embedded-illu-map .note{font-size:.76rem;color:#636e72;padding:9px 10px;background:#fffdf8;border-top:1px dashed #eadfd1}
@@ -592,6 +692,10 @@ html{scroll-behavior:smooth}
     <div class="important-note">
         📌 <b>重要提醒：</b>最後一天早上 <b>09:45</b> 包車在民宿門口接送，請前一晚打包完畢！
     </div>
+    <div class="important-note" style="background:#fffdf6;border-color:#f3d7aa;color:#8a6d3b;">
+        🚇 <b>交通費口徑：</b>地鐵金額為 4 人使用交通卡的合計估算；計程車為白天一般中型車估算，尖峰、夜間、塞車與叫車附加費會增加。實際請以 Naver / Kakao T 即時路線為準。
+        <br>🚉 <b>Solsaem 站口驗證：</b>Naver 可驗證出入口共 2 個；民宿 → 1號出口 7 分鐘／351m，民宿 → 2號出口 6 分鐘／298m，所以民宿出發採 2號出口。
+    </div>
 
     <!-- DAY 1 -->
     <details class="day-card native-day" name="itinerary-days">
@@ -607,14 +711,14 @@ html{scroll-behavior:smooth}
         <div class="spot-item">
             <div class="spot-time">首晚補給</div>
             <div class="spot-title">樂天瑪特三陽店 (Lotte Mart Samyang)</div>
-            <div class="spot-desc">🚶 民宿步行 5-7 分鐘<br>民宿附近採買零食、鮮乳與水果補給，辦理入住後輕鬆逛一圈。</div>
-            <a class="nav-btn" href="https://map.naver.com/v5/search/롯데마트%20삼양점">🗺 Naver 導航</a>
+            <div class="spot-desc">🚶 民宿出發約 9-12 分鐘<br>民宿附近採買零食、鮮乳與水果補給，辦理入住後輕鬆逛一圈。</div>
+            <a class="nav-btn" href="https://map.naver.com/v5/search/롯데마트%20삼양점%20서울%20강북구%20삼양로%20247">🗺 Naver導航</a>
         </div>
         <div class="spot-item">
             <div class="spot-time">宵夜 & 隨時補給</div>
-            <div class="spot-title">CU / GS25 便利商店</div>
-            <div class="spot-desc">🚶 民宿步行 2-5 分鐘，巷口轉角就有。<br>延世牛奶生乳包、香蕉牛奶、冰塊杯飲料，深夜補給最方便。</div>
-            <a class="nav-btn" href="https://map.naver.com/v5/search/삼양동%20편의점">🗺 Naver 導航</a>
+            <div class="spot-title">GS25 美阿碧山店</div>
+            <div class="spot-desc">🚶 民宿出發約 5 分鐘（Naver 步行：332m）<br>以民宿為中心，改採 Naver 周邊便利商店中較靠近民宿生活圈的單一門市。延世牛奶生乳包、香蕉牛奶、冰塊杯飲料，深夜補給最方便。</div>
+            <a class="nav-btn" href="https://map.naver.com/v5/search/GS25%20%EB%AF%B8%EC%95%84%EB%B2%BD%EC%82%B0%EC%A0%90%20%EC%84%9C%EC%9A%B8%20%EA%B0%95%EB%B6%81%EA%B5%AC%20%EC%86%94%EC%83%98%EB%A1%9C%20167">🗺 Naver導航</a>
         </div>
     </details>
 
@@ -627,30 +731,58 @@ html{scroll-behavior:smooth}
 <div class="spot-title">明洞逛街、彩妝、飾品</div>
 <div class="must-tag">⭐ 必去程度：高</div>
 <div class="trans-box">
-<div class="trans-row"><span class="t-taxi">🚖 推薦｜計程車</span><span>25~30分鐘｜₩12,000~16,000（NT$275~370）</span></div>
-<div class="trans-row"><span class="t-metro">🚇 備用｜地鐵</span><span>35~45分鐘｜₩5,600（NT$130）</span></div>
-<div class="trans-row"><span class="route-line">Solsaem → 誠信女大 → 明洞（🟡轉乘1次）</span></div>
+<div class="trans-row"><span class="t-taxi">🚖 推薦｜計程車</span><span>25~35分鐘｜約₩15,000~22,000（白天估算）</span></div>
+<div class="driver-line">🚕 導航落點：명동역(우리금융타운) 6번출구｜서울 중구 퇴계로 126</div>
+<div class="trans-row"><span class="t-metro">🚇 備用｜地鐵</span><span>35~45分鐘｜約₩6,000~6,400（4人合計）</span></div>
+<div class="first-station-line"><span>🚇 最近進站口：Solsaem 松泉站 2號出口（솔샘역 2번출구；Naver 步行 6 分鐘／298m）</span><a class="station-nav-btn" href="https://map.naver.com/v5/search/%EC%86%94%EC%83%98%EC%97%AD%202%EB%B2%88%EC%B6%9C%EA%B5%AC">導航</a></div>
+<div class="trans-row"><span class="route-line">完整站序：Solsaem 松泉 → 北漢山輔國門 → 貞陵 → 誠信女大入口〔轉4號線〕→ 漢城大入口 → 惠化 → 東大門 → 東大門歷史文化公園 → 忠武路 → 明洞</span></div>
 </div>
-<div class="spot-desc">帶老婆女兒體驗韓系彩妝、平價精緻飾品。午餐推薦明洞餃子或韓式炸雞。</div>
-<a class="nav-btn" href="https://map.naver.com/v5/search/명동">🗺 明洞導航</a>
+<div class="spot-desc">帶老婆女兒體驗韓系彩妝、平價精緻飾品。這張卡只負責明洞商圈入口與逛街範圍；餐廳另外獨立成卡，避免導航混在一起。</div>
+<a class="nav-btn" href="https://map.naver.com/v5/search/명동거리%20서울%20중구%20명동2가">🗺 明洞導航</a>
+</div>
+
+<div class="spot-item">
+<div class="spot-time">早餐 / 小吃・明洞</div>
+<div class="spot-title">이삭토스트 명동성당점・Isaac Toast</div>
+<div class="spot-desc">快速、熟悉、孩子也容易接受。適合逛明洞前墊胃，或排餐廳前先買一份分食。</div>
+<a class="nav-btn" href="https://map.naver.com/p/search/%EC%9D%B4%EC%82%AD%ED%86%A0%EC%8A%A4%ED%8A%B8%20%EB%AA%85%EB%8F%99%EC%84%B1%EB%8B%B9%EC%A0%90">🗺 이삭토스트 명동성당점 導航</a>
+</div>
+
+<div class="spot-item">
+<div class="spot-time">午餐主推薦・明洞</div>
+<div class="spot-title">명동교자・明洞餃子本店</div>
+<div class="spot-desc">明洞經典刀削麵與餃子店。這張卡使用「店名＋明確地址」的 Naver 單一落點，避免只導航到明洞商圈範圍。</div>
+<a class="nav-btn" href="https://map.naver.com/p/search/%EB%AA%85%EB%8F%99%EA%B5%90%EC%9E%90%20%EC%84%9C%EC%9A%B8%20%EC%A4%91%EA%B5%AC%20%EB%AA%85%EB%8F%9910%EA%B8%B8%2029/place/1801246745?isCorrectAnswer=true">🗺 명동교자 本店導航</a>
+</div>
+
+<div class="spot-item">
+<div class="spot-time">午餐備案・明洞商圈</div>
+<div class="spot-title">군자대한곱창 명동점・牛腸烤物</div>
+<div class="spot-desc">若明洞餃子排隊太久，改用 Naver 明確顯示的「명동점」備案。比 이가네갈비 更適合作為明洞單一導航落點；但牛腸口味較挑，建議當大人想吃重口味時使用。</div>
+<a class="nav-btn" href="https://map.naver.com/v5/search/%EA%B5%B0%EC%9E%90%EB%8C%80%ED%95%9C%EA%B3%B1%EC%B0%BD%20%EB%AA%85%EB%8F%99%EC%A0%90">🗺 군자대한곱창 명동점 導航</a>
 </div>
 
 <div class="spot-item">
 <div class="spot-time">傍晚・明洞 ➜ 南山纜車站</div>
 <div class="trans-box">
 <div class="trans-row"><span class="t-walk">🚶 步行＋南山電梯</span><span>約15分鐘｜免費</span></div>
-<div class="trans-row"><span class="t-taxi">🚖 計程車</span><span>5~10分鐘｜₩5,500~8,000（NT$125~185）</span></div>
+<div class="trans-row"><span class="t-taxi">🚖 計程車</span><span>5~10分鐘｜約₩6,000~9,000（白天估算）</span></div>
+<div class="driver-line">🚕 導航落點：남산케이블카｜서울 중구 소파로 83</div>
+<div class="first-station-line"><span>🚇 站口導航：明洞站4號出口（명동역 4번출구）</span><a class="station-nav-btn" href="https://map.naver.com/v5/search/%EB%AA%85%EB%8F%99%EC%97%AD%204%EB%B2%88%EC%B6%9C%EA%B5%AC">導航</a></div>
 <div class="trans-row"><span class="route-line">明洞站4號出口 → 南山電梯 Namsan Ormi → 纜車站</span></div>
 </div>
 <div class="spot-desc">搭纜車上山，掛愛情鎖，鳥瞰首爾夜景。</div>
-<a class="nav-btn" href="https://map.naver.com/v5/search/남산케이블카">🗺 南山纜車導航</a>
+<a class="nav-btn" href="https://map.naver.com/v5/search/남산케이블카%20서울%20중구%20소파로%2083">🗺 南山纜車導航</a>
 </div>
 
 <div class="spot-item">
 <div class="spot-time">夜間・南山 ➜ 民宿</div>
 <div class="trans-box">
-<div class="trans-row"><span class="t-taxi">🚖 推薦回程</span><span>25~30分鐘｜₩13,000~17,000（NT$300~390）</span></div>
-<div class="trans-row"><span class="t-metro">🚇 備用地鐵</span><span>45~55分鐘｜₩5,600（NT$130）</span></div>
+<div class="trans-row"><span class="t-taxi">🚖 推薦回程</span><span>25~35分鐘｜約₩15,000~22,000（白天估算）</span></div>
+<div class="driver-line">🚕 導航落點：민박 주소｜서울특별시 강북구 인수봉로6길 9-2</div>
+<div class="trans-row"><span class="t-metro">🚇 備用地鐵</span><span>45~55分鐘｜約₩6,000~6,800（4人合計）</span></div>
+<div class="first-station-line"><span>🚇 站口導航：明洞站4號出口（명동역 4번출구）</span><a class="station-nav-btn" href="https://map.naver.com/v5/search/%EB%AA%85%EB%8F%99%EC%97%AD%204%EB%B2%88%EC%B6%9C%EA%B5%AC">導航</a></div>
+<div class="trans-row"><span class="route-line">完整站序：纜車站步行回明洞站 → 明洞 → 忠武路 → 東大門歷史文化公園 → 東大門 → 惠化 → 漢城大入口 → 誠信女大入口〔轉牛耳新設線〕→ 貞陵 → 北漢山輔國門 → Solsaem 松泉</span></div>
 </div>
 <div class="spot-desc">晚上搭車回民宿最省體力。</div>
 </div>
@@ -666,26 +798,52 @@ html{scroll-behavior:smooth}
 <div class="spot-title">AK PLAZA 弘大・CORTIS 官方周邊</div>
 <div class="must-tag">⭐ 必去程度：最高</div>
 <div class="trans-box">
-<div class="trans-row"><span class="t-taxi">🚖 強烈推薦｜計程車</span><span>30~35分鐘｜₩16,500~22,000（NT$380~505）</span></div>
-<div class="trans-row"><span class="t-metro">🚇 備用｜地鐵</span><span>45~55分鐘｜₩5,600（NT$130）</span></div>
-<div class="trans-row"><span class="route-line">Solsaem → 普門 → 新堂 → 弘大入口（🔴轉乘2次）</span></div>
+<div class="trans-row"><span class="t-taxi">🚖 強烈推薦｜計程車</span><span>35~45分鐘｜約₩23,000~32,000（白天估算）</span></div>
+<div class="driver-line">🚕 導航落點：AK PLAZA 홍대｜서울 마포구 양화로 188</div>
+<div class="trans-row"><span class="t-metro">🚇 備用｜地鐵</span><span>45~55分鐘｜約₩6,800~7,200（4人合計）</span></div>
+<div class="first-station-line"><span>🚇 最近進站口：Solsaem 松泉站 2號出口（솔샘역 2번출구；Naver 步行 6 分鐘／298m）</span><a class="station-nav-btn" href="https://map.naver.com/v5/search/%EC%86%94%EC%83%98%EC%97%AD%202%EB%B2%88%EC%B6%9C%EA%B5%AC">導航</a></div>
+<div class="trans-row"><span class="route-line">完整站序：Solsaem 松泉 → 北漢山輔國門 → 貞陵 → 誠信女大入口 → 普門〔轉6號線〕→ 昌信 → 東廟前 → 新堂〔轉2號線〕→ 東大門歷史文化公園 → 乙支路4街 → 乙支路3街 → 乙支路入口 → 市廳 → 忠正路 → 阿峴 → 梨大 → 新村 → 弘大入口</span></div>
 </div>
 <div class="spot-desc">地鐵轉乘多、樓梯多，全家直接打車省時省力。2樓 CORTIS 官方周邊，4-5樓動漫專區與主題咖啡廳。</div>
-<a class="nav-btn" href="https://map.naver.com/v5/search/AK플라자%20홍대">🗺 AK PLAZA 導航</a>
+<a class="nav-btn" href="https://map.naver.com/v5/search/AK플라자%20홍대%20서울%20마포구%20양화로%20188">🗺 AK PLAZA 導航</a>
 </div>
 
 <div class="spot-item">
 <div class="spot-time">下午～夜間</div>
 <div class="spot-title">弘大商圈＋弘大步行街</div>
 <div class="spot-desc">晚餐後在弘大商圈散步，觀賞街頭藝人表演，感受韓流流行前線。</div>
-<a class="nav-btn" href="https://map.naver.com/v5/search/홍대거리">🗺 弘大步行街導航</a>
+<a class="nav-btn" href="https://map.naver.com/v5/search/홍대거리%20서울%20마포구%20서교동">🗺 弘大步行街導航</a>
+</div>
+
+<div class="spot-item">
+<div class="spot-time">咖啡休息・弘大 / 延南</div>
+<div class="spot-title">오츠커피 연남・oats 維也納咖啡</div>
+<div class="spot-desc">從「oats 弘大」改成 Naver 可對到單一店家的「오츠커피 연남」。適合 AK PLAZA 採買後坐下休息，點維也納咖啡與甜點補體力。</div>
+<a class="nav-btn" href="https://map.naver.com/v5/search/oats%20%EC%97%B0%EB%82%A8">🗺 오츠커피 연남 導航</a>
+</div>
+
+<div class="spot-item">
+<div class="spot-time">甜點拍照・弘大 / 延南</div>
+<div class="spot-title">카페 레이어드 연남점・英式甜點咖啡</div>
+<div class="spot-desc">司康、蛋糕與店面風格都很適合拍照。和 oats 不同調性，適合想坐久一點、吃甜點時選。</div>
+<a class="nav-btn" href="https://map.naver.com/p/search/%EC%B9%B4%ED%8E%98%20%EB%A0%88%EC%9D%B4%EC%96%B4%EB%93%9C%20%EC%97%B0%EB%82%A8%EC%A0%90/place/1500504643?isCorrectAnswer=true">🗺 카페 레이어드 연남점 導航</a>
+</div>
+
+<div class="spot-item">
+<div class="spot-time">晚餐備案・弘大</div>
+<div class="spot-title">청기와타운 홍대점・韓式烤肉</div>
+<div class="spot-desc">想吃正式一點的烤肉晚餐可選。會比小吃花時間，適合 CORTIS 採買順利、晚上還有體力時。</div>
+<a class="nav-btn" href="https://map.naver.com/p/search/%EC%B2%AD%EA%B8%B0%EC%99%80%ED%83%80%EC%9A%B4%20%ED%99%8D%EB%8C%80%EC%A0%90">🗺 청기와타운 홍대점 導航</a>
 </div>
 
 <div class="spot-item">
 <div class="spot-time">夜間・弘大 ➜ 民宿</div>
 <div class="trans-box">
-<div class="trans-row"><span class="t-taxi">🚖 推薦回程</span><span>30~35分鐘｜₩16,500~22,000（NT$380~505）</span></div>
-<div class="trans-row"><span class="t-metro">🚇 備用地鐵</span><span>50~60分鐘｜₩5,600（NT$130）</span></div>
+<div class="trans-row"><span class="t-taxi">🚖 推薦回程</span><span>35~45分鐘｜約₩23,000~32,000（白天估算）</span></div>
+<div class="driver-line">🚕 導航落點：민박 주소｜서울특별시 강북구 인수봉로6길 9-2</div>
+<div class="trans-row"><span class="t-metro">🚇 備用地鐵</span><span>50~60分鐘｜約₩6,800~7,200（4人合計）</span></div>
+<div class="first-station-line"><span>🚇 站口導航：弘大入口站4號出口（홍대입구역 4번출구）</span><a class="station-nav-btn" href="https://map.naver.com/v5/search/%ED%99%8D%EB%8C%80%EC%9E%85%EA%B5%AC%EC%97%AD%204%EB%B2%88%EC%B6%9C%EA%B5%AC">導航</a></div>
+<div class="trans-row"><span class="route-line">完整站序：弘大入口 → 新村 → 梨大 → 阿峴 → 忠正路 → 市廳 → 乙支路入口 → 乙支路3街 → 乙支路4街 → 東大門歷史文化公園 → 新堂〔轉6號線〕→ 東廟前 → 昌信 → 普門〔轉牛耳新設線〕→ 誠信女大入口 → 貞陵 → 北漢山輔國門 → Solsaem 松泉</span></div>
 </div>
 <div class="spot-desc">提著 CORTIS 戰利品，直接打車回民宿最優雅。</div>
 </div>
@@ -699,19 +857,66 @@ html{scroll-behavior:smooth}
 <div class="spot-time">上午・民宿 ➜ 聖水洞</div>
 <div class="spot-title">聖水洞潮流街區</div>
 <div class="trans-box">
-<div class="trans-row"><span class="t-taxi">🚖 推薦｜計程車</span><span>25分鐘｜₩13,000~16,000（NT$300~370）</span></div>
-<div class="trans-row"><span class="t-metro">🚇 備用｜地鐵</span><span>45~50分鐘｜₩5,600（NT$130）</span></div>
-<div class="trans-row"><span style="font-size:0.75rem;color:#636e72;">Solsaem → 誠信女大 → 東大門歷史文化公園 → 聖水（🔴轉乘2次）</span></div>
+<div class="trans-row"><span class="t-taxi">🚖 推薦｜計程車</span><span>30~40分鐘｜約₩18,000~27,000（白天估算）</span></div>
+<div class="driver-line">🚕 導航落點：성수역(무신사) 3번출구｜서울 성동구 아차산로 100</div>
+<div class="trans-row"><span class="t-metro">🚇 備用｜地鐵</span><span>45~50分鐘｜約₩6,400~6,800（4人合計）</span></div>
+<div class="first-station-line"><span>🚇 最近進站口：Solsaem 松泉站 2號出口（솔샘역 2번출구；Naver 步行 6 分鐘／298m）</span><a class="station-nav-btn" href="https://map.naver.com/v5/search/%EC%86%94%EC%83%98%EC%97%AD%202%EB%B2%88%EC%B6%9C%EA%B5%AC">導航</a></div>
+<div class="trans-row"><span class="route-line">完整站序：Solsaem 松泉 → 北漢山輔國門 → 貞陵 → 誠信女大入口〔轉4號線〕→ 漢城大入口 → 惠化 → 東大門 → 東大門歷史文化公園〔轉2號線〕→ 新堂 → 上往十里 → 往十里 → 漢陽大 → 纛島 → 聖水</span></div>
 </div>
 <div class="spot-desc">11:00 抵達最剛好。Maison de Margarett、Musinsa Standard、DIOR 概念店、人生四格與聯慕路散步。</div>
+<a class="nav-btn" href="https://map.naver.com/v5/search/성수역%203번%20출구%20서울%20성동구%20아차산로">🗺 Naver導航</a>
+</div>
+
+<div class="spot-item">
+<div class="spot-time">聖水咖啡・甜點</div>
+<div class="spot-title">vetiver・黑芝麻維也納</div>
+<div class="spot-desc">Naver 已可落到單一 place。照片感強、很適合聖水洞下午休息；如果不想再排大型網紅店，這間比純逛街更有記憶點。</div>
+<a class="nav-btn" href="https://map.naver.com/v5/search/vetiver%20%EC%84%B1%EC%88%98">🗺 vetiver 導航</a>
+</div>
+
+<div class="spot-item">
+<div class="spot-time">聖水經典咖啡</div>
+<div class="spot-title">어니언 성수・Onion Seongsu</div>
+<div class="spot-desc">聖水代表咖啡店之一，工業風空間很有記憶點。缺點是可能排隊；想拍「我真的來過聖水」就選它。</div>
+<a class="nav-btn" href="https://map.naver.com/p/search/%EC%96%B4%EB%8B%88%EC%96%B8%20%EC%84%B1%EC%88%98">🗺 어니언 성수 導航</a>
+</div>
+
+<div class="spot-item">
+<div class="spot-time">聖水小吃甜點</div>
+<div class="spot-title">자연도소금빵in 성수・鹽麵包</div>
+<div class="spot-desc">不用排正式餐廳也能補一個人氣小吃。適合聖水散步途中買來分食，甜鹹都不會太膩。</div>
+<a class="nav-btn" href="https://map.naver.com/p/search/%EC%9E%90%EC%97%B0%EB%8F%84%EC%86%8C%EA%B8%88%EB%B9%B5%20%EC%84%B1%EC%88%98">🗺 자연도소금빵in 성수 導航</a>
+</div>
+
+<div class="spot-item">
+<div class="spot-time">聖水晚餐備案 A</div>
+<div class="spot-title">계자람・烤雞 / 辣雞爪</div>
+<div class="spot-desc">Naver 已可落到單一 place。比一般咖啡甜點更有韓國在地感；想吃烤雞、辣雞爪或下酒菜風格時選它。</div>
+<a class="nav-btn" href="https://map.naver.com/v5/search/%EA%B3%84%EC%9E%90%EB%9E%8C%20%EC%84%B1%EC%88%98">🗺 계자람 導航</a>
+</div>
+
+<div class="spot-item">
+<div class="spot-time">聖水晚餐備案 B</div>
+<div class="spot-title">조조칼국수 성수점・蛤蜊刀削麵</div>
+<div class="spot-desc">精準分店確認為「조조칼국수 성수점」。適合想吃熱湯、海鮮刀削麵、不要太油膩的晚餐；三人以上可點蛤蜊湯與煎餅分食。</div>
+<a class="nav-btn" href="https://map.naver.com/v5/search/%EC%A1%B0%EC%A1%B0%EC%B9%BC%EA%B5%AD%EC%88%98%20%EC%84%B1%EC%88%98%EC%A0%90">🗺 조조칼국수 성수점 導航</a>
+</div>
+
+<div class="spot-item">
+<div class="spot-time">聖水熱湯備案</div>
+<div class="spot-title">소문난성수감자탕・馬鈴薯排骨湯</div>
+<div class="spot-desc">天氣冷、下雨或大家想吃熱湯時很適合。口味比咖啡甜點更在地，但份量與湯鍋感較重。</div>
+<a class="nav-btn" href="https://map.naver.com/p/search/%EC%86%8C%EB%AC%B8%EB%82%9C%EC%84%B1%EC%88%98%EA%B0%90%EC%9E%90%ED%83%95">🗺 소문난성수감자탕 導航</a>
 </div>
 
 <div class="spot-item">
 <div class="spot-time">下午・聖水洞 ➜ COEX</div>
 <div class="trans-box">
-<div class="trans-row"><span class="t-taxi">🚖 推薦｜計程車</span><span>12~15分鐘｜₩10,000~15,000（NT$230~345）</span></div>
-<div class="trans-row"><span class="t-metro">🚇 2號線直達</span><span>20分鐘｜₩5,600（NT$130）</span></div>
-<div class="trans-row"><span style="font-size:0.75rem;color:#636e72;">聖水站 → 三成站（🟢免轉車）</span></div>
+<div class="trans-row"><span class="t-taxi">🚖 推薦｜計程車</span><span>12~20分鐘｜約₩10,000~16,000（白天估算）</span></div>
+<div class="driver-line">🚕 導航落點：스타필드 코엑스몰｜서울 강남구 영동대로 513</div>
+<div class="trans-row"><span class="t-metro">🚇 2號線直達</span><span>約20分鐘｜約₩5,600（4人合計）</span></div>
+<div class="first-station-line"><span>🚇 站口導航：聖水站3號出口（성수역 3번출구）</span><a class="station-nav-btn" href="https://map.naver.com/v5/search/%EC%84%B1%EC%88%98%EC%97%AD%203%EB%B2%88%EC%B6%9C%EA%B5%AC">導航</a></div>
+<div class="trans-row"><span class="route-line">完整站序：聖水 → 建大入口 → 九宜 → 江邊 → 蠶室渡口 → 蠶室 → 蠶室新川 → 綜合運動場 → 三成（2號線免轉車）</span></div>
 </div>
 <div class="spot-desc">跨漢江後直接進入 COEX 商圈，下午全程室內吹冷氣。</div>
 </div>
@@ -720,14 +925,24 @@ html{scroll-behavior:smooth}
 <div class="spot-time">COEX 必訪</div>
 <div class="spot-title">Ktown4u ➜ 星空圖書館 ➜ 水族館</div>
 <div class="spot-desc">先完成 CORTIS 周邊採買，再拍星空圖書館，最後依體力決定是否進水族館。</div>
+<a class="nav-btn" href="https://map.naver.com/v5/search/별마당%20도서관%20코엑스%20서울%20강남구%20영동대로%20513">🗺 Naver導航</a>
+</div>
+
+<div class="spot-item">
+<div class="spot-time">COEX 用餐備案</div>
+<div class="spot-title">팀호완 삼성점・港式點心</div>
+<div class="spot-desc">不是韓國特色，但很安全、好點餐，適合大家逛到累、想吃穩定熟悉口味時使用。</div>
+<a class="nav-btn" href="https://map.naver.com/p/search/%ED%8C%80%ED%98%B8%EC%99%84%20%EC%82%BC%EC%84%B1%EC%A0%90/place/1209180080?isCorrectAnswer=true">🗺 팀호완 삼성점 導航</a>
 </div>
 
 <div class="spot-item">
 <div class="spot-time">夜間・COEX ➜ 民宿</div>
 <div class="trans-box">
-<div class="trans-row"><span class="t-taxi">🚖 推薦回程</span><span>35~40分鐘｜₩20,000~25,000（NT$460~575）</span></div>
-<div class="trans-row"><span class="t-metro">🚇 地鐵</span><span>55~60分鐘｜₩5,600（NT$130）</span></div>
-<div class="trans-row"><span style="font-size:0.75rem;color:#636e72;">三成 → 東大門歷史文化公園 → 誠信女大 → Solsaem（🔴轉乘2次）</span></div>
+<div class="trans-row"><span class="t-taxi">🚖 推薦回程</span><span>40~55分鐘｜約₩28,000~40,000（白天估算）</span></div>
+<div class="driver-line">🚕 導航落點：민박 주소｜서울특별시 강북구 인수봉로6길 9-2</div>
+<div class="trans-row"><span class="t-metro">🚇 地鐵</span><span>55~65分鐘｜約₩6,800~7,600（4人合計）</span></div>
+<div class="first-station-line"><span>🚇 站口導航：三成站5號出口（삼성역 5번출구，COEX 連通側）</span><a class="station-nav-btn" href="https://map.naver.com/v5/search/%EC%82%BC%EC%84%B1%EC%97%AD%205%EB%B2%88%EC%B6%9C%EA%B5%AC">導航</a></div>
+<div class="trans-row"><span class="route-line">完整站序：三成 → 綜合運動場 → 蠶室新川 → 蠶室 → 蠶室渡口 → 江邊 → 九宜 → 建大入口 → 聖水 → 纛島 → 漢陽大 → 往十里 → 上往十里 → 新堂 → 東大門歷史文化公園〔轉4號線〕→ 東大門 → 惠化 → 漢城大入口 → 誠信女大入口〔轉牛耳新設線〕→ 貞陵 → 北漢山輔國門 → Solsaem 松泉</span></div>
 </div>
 <div class="spot-desc">晚上直接搭車回民宿最舒服。</div>
 </div>
@@ -743,39 +958,59 @@ html{scroll-behavior:smooth}
 <div class="spot-title">景福宮韓服拍照</div>
 <div class="must-tag">⭐ 必去程度：高</div>
 <div class="trans-box">
-<div class="trans-row"><span class="t-taxi">🚖 推薦｜計程車</span><span>20~25分鐘｜₩12,000~16,000（NT$275~370）</span></div>
-<div class="trans-row"><span class="t-metro">🚇 備用｜地鐵</span><span>40~45分鐘｜₩5,600（NT$130）</span></div>
-<div class="trans-row"><span class="route-line">Solsaem → 誠信女大 → 忠武路 → 景福宮（🔴轉乘2次）</span></div>
+<div class="trans-row"><span class="t-taxi">🚖 推薦｜計程車</span><span>20~30分鐘｜約₩13,000~20,000（白天估算）</span></div>
+<div class="driver-line">🚕 導航落點：경복궁｜서울 종로구 사직로 161</div>
+<div class="trans-row"><span class="t-metro">🚇 備用｜地鐵</span><span>40~45分鐘｜約₩6,000~6,400（4人合計）</span></div>
+<div class="first-station-line"><span>🚇 最近進站口：Solsaem 松泉站 2號出口（솔샘역 2번출구；Naver 步行 6 分鐘／298m）</span><a class="station-nav-btn" href="https://map.naver.com/v5/search/%EC%86%94%EC%83%98%EC%97%AD%202%EB%B2%88%EC%B6%9C%EA%B5%AC">導航</a></div>
+<div class="trans-row"><span class="route-line">完整站序：Solsaem 松泉 → 北漢山輔國門 → 貞陵 → 誠信女大入口〔轉4號線〕→ 漢城大入口 → 惠化 → 東大門 → 東大門歷史文化公園 → 忠武路〔轉3號線〕→ 乙支路3街 → 鍾路3街 → 安國 → 景福宮</span></div>
 </div>
 <div class="spot-desc">換上傳統韓服，在宮殿間穿梭留下最美回憶。提醒：景福宮週二通常休館，請避開。</div>
-<a class="nav-btn" href="https://map.naver.com/v5/search/경복궁">🗺 景福宮導航</a>
+<a class="nav-btn" href="https://map.naver.com/v5/search/경복궁%20서울%20종로구%20사직로%20161">🗺 景福宮導航</a>
 </div>
 
 <div class="spot-item">
 <div class="spot-time">下午・景福宮 ➜ 益善洞</div>
 <div class="trans-box">
 <div class="trans-row"><span class="t-walk">🚶 散步</span><span>約20分鐘｜免費</span></div>
-<div class="trans-row"><span class="t-taxi">🚖 計程車</span><span>8~10分鐘｜₩5,500~8,000（NT$125~185）</span></div>
+<div class="trans-row"><span class="t-taxi">🚖 計程車</span><span>8~12分鐘｜約₩6,500~9,500（白天估算）</span></div>
+<div class="driver-line">🚕 導航落點：종로3가역 4번출구</div>
 </div>
 <div class="spot-desc">老韓屋文青巷弄，挑一家鬆餅咖啡廳享受下午茶。</div>
-<a class="nav-btn" href="https://map.naver.com/v5/search/익선동%20한옥마을">🗺 益善洞導航</a>
+<a class="nav-btn" href="https://map.naver.com/v5/search/익선동%20한옥마을%20서울%20종로구%20수표로28길">🗺 益善洞導航</a>
+</div>
+
+<div class="spot-item">
+<div class="spot-time">益善洞甜點 A</div>
+<div class="spot-title">밀토스트 익선점・蒸吐司</div>
+<div class="spot-desc">益善洞很搭的甜點店，吐司和飲品適合下午茶。想坐下休息、拍韓屋街氛圍照時選它。</div>
+<a class="nav-btn" href="https://map.naver.com/p/search/%EB%B0%80%ED%86%A0%EC%8A%A4%ED%8A%B8%20%EC%9D%B5%EC%84%A0">🗺 밀토스트 익선점 導航</a>
+</div>
+
+<div class="spot-item">
+<div class="spot-time">益善洞甜點 B</div>
+<div class="spot-title">청수당 베이커리・庭園系甜點咖啡</div>
+<div class="spot-desc">空間漂亮、甜點感強，但可能排隊。若 밀토스트 人太多，可改查這間當附近備案。</div>
+<a class="nav-btn" href="https://map.naver.com/p/search/%EC%B2%AD%EC%88%98%EB%8B%B9%20%EC%9D%B5%EC%84%A0">🗺 청수당 베이커리 導航</a>
 </div>
 
 <div class="spot-item">
 <div class="spot-time">傍晚・益善洞 ➜ 樂天超市首爾站</div>
 <div class="trans-box">
-<div class="trans-row"><span class="t-taxi">🚖 推薦｜計程車</span><span>12~15分鐘｜₩7,000~10,000（NT$160~230）</span></div>
-<div class="trans-row"><span class="t-metro">🚇 備用地鐵</span><span>25~30分鐘｜₩5,600（NT$130）</span></div>
-<div class="trans-row"><span class="route-line">四人同行這段打車最划算，還能保留採買體力。</span></div>
+<div class="trans-row"><span class="t-taxi">🚖 推薦｜計程車</span><span>12~18分鐘｜約₩9,000~13,000（白天估算）</span></div>
+<div class="driver-line">🚕 導航落點：롯데마트 제타플렉스 서울역점｜서울 중구 한강대로 405</div>
+<div class="trans-row"><span class="t-metro">🚇 備用地鐵</span><span>25~30分鐘｜約₩5,600（4人合計）</span></div>
+<div class="first-station-line"><span>🚇 站口導航：鍾路3街站4號出口（종로3가역 4번출구）</span><a class="station-nav-btn" href="https://map.naver.com/v5/search/%EC%A2%85%EB%A1%9C3%EA%B0%80%EC%97%AD%204%EB%B2%88%EC%B6%9C%EA%B5%AC">導航</a></div>
+<div class="trans-row"><span class="route-line">完整站序：益善洞步行到鍾路3街站 → 鍾路3街〔1號線〕→ 鍾閣 → 市廳 → 首爾站。四人同行這段打車最划算，還能保留採買體力。</span></div>
 </div>
 <div class="spot-desc">伴手禮大作戰！泡麵、海苔、零食一次掃貨。</div>
-<a class="nav-btn" href="https://map.naver.com/v5/search/롯데마트%20서울역점">🗺 樂天超市導航</a>
+<a class="nav-btn" href="https://map.naver.com/v5/search/롯데마트%20서울역점%20서울%20중구%20한강대로%20405">🗺 樂天超市導航</a>
 </div>
 
 <div class="spot-item">
 <div class="spot-time">夜間・樂天超市 ➜ 民宿</div>
 <div class="trans-box">
-<div class="trans-row"><span class="t-taxi">🚖 必搭｜大包小包回家</span><span>25~30分鐘｜₩13,000~17,000（NT$300~390）</span></div>
+<div class="trans-row"><span class="t-taxi">🚖 必搭｜大包小包回家</span><span>30~40分鐘｜約₩18,000~26,000（白天估算）</span></div>
+<div class="driver-line">🚕 導航落點：민박 주소｜서울특별시 강북구 인수봉로6길 9-2</div>
 </div>
 </div>
 </details>
@@ -813,14 +1048,14 @@ html{scroll-behavior:smooth}
         <div class="food-desc">搭計程車或叫車時，直接出示韓文地址給司機即可。</div>
         <div style="display:flex;gap:0.5rem;">
             
-            <a class="nav-btn" style="flex:1;" href="https://map.naver.com/v5/search/%EC%9D%B8%EC%88%98%EB%B4%89%EB%A1%9C%206%EA%B8%B8%209-2">🗺 Naver 導航</a>
+            <a class="nav-btn" style="flex:1;" href="https://map.naver.com/v5/search/서울%20강북구%20인수봉로6길%209-2">🗺 Naver導航</a>
         </div>
     </div>
 <div id="driver-address" class="driver-address-card">
         <div class="driver-address-title">🚕 給司機看的韓文地址</div>
         <div class="driver-address-main">인수봉로 6길 9-2</div>
         <div class="driver-address-sub">서울특별시 강북구 01183</div>
-        <div class="driver-address-phrase">여기로 가주세요 🙏</div>
+        <div class="driver-address-phrase">정확한 주소 / 택시 목적지</div>
     </div>
 
 <div id="nearby-map" class="embedded-illu-map">
@@ -831,23 +1066,29 @@ html{scroll-behavior:smooth}
 <ellipse class="zone" cx="230" cy="360" rx="210" ry="190" fill="#6c5ce7"/>
 <ellipse class="zone" cx="690" cy="190" rx="230" ry="150" fill="#ff9f43"/>
 <ellipse class="zone" cx="690" cy="545" rx="250" ry="160" fill="#0984e3"/>
-<ellipse class="park" cx="160" cy="120" rx="140" ry="80"/>
-<ellipse class="park" cx="820" cy="610" rx="150" ry="85"/>
-<path class="water" d="M-20,655 C150,600 270,700 420,646 C590,585 720,640 1000,585 L1000,760 L-20,760 Z"/>
-<g opacity=".9">
-<rect class="block" x="60" y="210" width="150" height="90" rx="18"/><rect class="block" x="260" y="115" width="160" height="105" rx="18"/><rect class="block" x="520" y="95" width="170" height="115" rx="18"/><rect class="block" x="730" y="150" width="170" height="105" rx="18"/><rect class="block" x="95" y="395" width="180" height="110" rx="18"/><rect class="block" x="355" y="360" width="180" height="130" rx="18"/><rect class="block" x="640" y="350" width="210" height="120" rx="18"/>
+<ellipse class="context-park" cx="150" cy="105" rx="135" ry="70"/>
+<ellipse class="context-park" cx="835" cy="620" rx="135" ry="72"/>
+<path class="context-road major" d="M80 360 C235 335 360 320 520 300 C675 280 790 245 925 190"/>
+<path class="context-road" d="M210 660 C315 535 440 420 565 305 C675 205 760 120 850 55"/>
+<path class="context-road minor" d="M120 455 C250 430 390 420 540 445 C665 465 770 520 900 585"/>
+<text x="78" y="108" class="context-label">北漢山／住宅綠地方向</text>
+<text x="642" y="134" class="context-label">三陽市場／Samyang-ro 軸</text>
+<text x="635" y="610" class="context-label">美阿／三陽十字路方向</text>
+<text x="88" y="432" class="context-label">Solmae-ro 市場街方向</text>
+<g class="coord-grid">
+  <line x1="260" y1="70" x2="260" y2="650"/>
+  <line x1="70" y1="300" x2="910" y2="300"/>
+  <line x1="470" y1="70" x2="470" y2="650"/>
+  <line x1="680" y1="70" x2="680" y2="650"/>
+  <line x1="70" y1="155" x2="910" y2="155"/>
+  <line x1="70" y1="445" x2="910" y2="445"/>
 </g>
-<path class="road" d="M70 560 C220 495 280 410 380 345 C500 268 615 235 900 165"/>
-<path class="road" d="M110 170 C280 230 445 270 635 285 C760 295 850 315 950 365"/>
-<path class="road" d="M165 690 C250 580 360 470 485 355 C600 250 700 155 820 65"/>
-<path class="road thin" d="M40 335 C210 320 380 330 560 365 C710 395 840 450 950 530"/>
-<path class="road thin" d="M315 45 C360 185 405 305 455 455 C495 575 535 650 590 740"/>
-<path class="road thin" d="M690 40 C655 190 620 315 590 455 C565 570 530 660 485 735"/>
 <circle class="walk" cx="260" cy="300" r="95"/><circle class="walk" cx="260" cy="300" r="180"/><circle class="walk" cx="260" cy="300" r="265"/>
-<text x="70" y="535" class="maptext">Solsaem-ro 周邊</text>
-<text x="640" y="135" class="maptext">三陽市場 / 美阿方向</text>
-<text x="80" y="110" class="maptext">住宅巷弄</text>
-<text x="278" y="398" class="maptext" style="font-size:12px;opacity:.5">5 / 10 / 15 分鐘圈</text>
+<text x="76" y="294" class="maptext">西</text>
+<text x="880" y="294" class="maptext">東</text>
+<text x="270" y="88" class="maptext">北</text>
+<text x="270" y="640" class="maptext">南</text>
+<text x="278" y="398" class="maptext" style="font-size:12px;opacity:.55">圖示按座標投影；道路為大方向參考</text>
 
     <g class="label" transform="translate(300,286)">
       <rect width="82" height="42" rx="13"/>
@@ -858,8 +1099,8 @@ html{scroll-behavior:smooth}
     
     <g class="label" transform="translate(430,210)">
       <rect width="112" height="42" rx="13"/>
-      <text class="label-title" x="12" y="17">① CU/GS25</text>
-      <text class="label-sub" x="12" y="32">씨유 / GS25</text>
+      <text class="label-title" x="12" y="17">① GS25</text>
+      <text class="label-sub" x="12" y="32">미아벽산점</text>
     </g>
     <line class="leader" x1="405" y1="238" x2="430" y2="231"/>
     
@@ -873,35 +1114,35 @@ html{scroll-behavior:smooth}
     <g class="label" transform="translate(625,350)">
       <rect width="88" height="42" rx="13"/>
       <text class="label-title" x="12" y="17">本粥&amp;拌飯</text>
-      <text class="label-sub" x="12" y="32">본죽 미아삼양점</text>
+      <text class="label-sub" x="12" y="32">삼양역점</text>
     </g>
     <line class="leader" x1="595" y1="382" x2="625" y2="371"/>
     
     <g class="label" transform="translate(735,515)">
       <rect width="82" height="42" rx="13"/>
       <text class="label-title" x="12" y="17">⑨ BHC</text>
-      <text class="label-sub" x="12" y="32">BHC 치킨 미아점</text>
+      <text class="label-sub" x="12" y="32">삼양사거리점</text>
     </g>
     <line class="leader" x1="735" y1="560" x2="735" y2="536"/>
     
     <g class="label" transform="translate(725,145)">
       <rect width="82" height="42" rx="13"/>
       <text class="label-title" x="12" y="17">辣年糕</text>
-      <text class="label-sub" x="12" y="32">삼양시장 떡볶이</text>
+      <text class="label-sub" x="12" y="32">삼양동순대떡볶이</text>
     </g>
     <line class="leader" x1="705" y1="180" x2="725" y2="166"/>
     
     <g class="label" transform="translate(655,602)">
       <rect width="88" height="42" rx="13"/>
-      <text class="label-title" x="12" y="17">⑩ 王家糖葫蘆</text>
-      <text class="label-sub" x="12" y="32">왕가탕후루</text>
+      <text class="label-title" x="12" y="17">⑩ 24H零食</text>
+      <text class="label-sub" x="12" y="32">더까까주까</text>
     </g>
     <line class="leader" x1="630" y1="630" x2="655" y2="623"/>
     
     <g class="label" transform="translate(495,145)">
       <rect width="82" height="42" rx="13"/>
-      <text class="label-title" x="12" y="17">鯛魚燒</text>
-      <text class="label-sub" x="12" y="32">붕어빵 / 계란빵</text>
+      <text class="label-title" x="12" y="17">鯛魚燒替代</text>
+      <text class="label-sub" x="12" y="32">디저트를사랑한커피</text>
     </g>
     <line class="leader" x1="650" y1="150" x2="495" y2="166"/>
     
@@ -915,28 +1156,28 @@ html{scroll-behavior:smooth}
     <g class="label" transform="translate(815,465)">
       <rect width="82" height="42" rx="13"/>
       <text class="label-title" x="12" y="17">韓式烤肉</text>
-      <text class="label-sub" x="12" y="32">삼겹살</text>
+      <text class="label-sub" x="12" y="32">삼양돈</text>
     </g>
     <line class="leader" x1="805" y1="500" x2="815" y2="486"/>
     
     <g class="label" transform="translate(390,625)">
       <rect width="82" height="42" rx="13"/>
-      <text class="label-title" x="12" y="17">⑪ 人生四格</text>
-      <text class="label-sub" x="12" y="32">인생네컷</text>
+      <text class="label-title" x="12" y="17">⑪ MEGA咖啡</text>
+      <text class="label-sub" x="12" y="32">삼양시장점</text>
     </g>
     <line class="leader" x1="560" y1="630" x2="390" y2="646"/>
     
     <g class="label" transform="translate(510,250)">
       <rect width="88" height="42" rx="13"/>
       <text class="label-title" x="12" y="17">無人冰淇淋</text>
-      <text class="label-sub" x="12" y="32">무인 아이스크림</text>
+      <text class="label-sub" x="12" y="32">우리동네</text>
     </g>
     <line class="leader" x1="475" y1="270" x2="510" y2="271"/>
     
     <g class="label" transform="translate(655,415)">
       <rect width="82" height="42" rx="13"/>
-      <text class="label-title" x="12" y="17">⑧ 橋村炸雞</text>
-      <text class="label-sub" x="12" y="32">교촌치킨</text>
+      <text class="label-title" x="12" y="17">⑧ 炸雞替代</text>
+      <text class="label-sub" x="12" y="32">쿨호프 미아점</text>
     </g>
     <line class="leader" x1="625" y1="440" x2="655" y2="436"/>
     
@@ -949,15 +1190,15 @@ html{scroll-behavior:smooth}
     
     <g class="label" transform="translate(235,330)">
       <rect width="88" height="42" rx="13"/>
-      <text class="label-title" x="12" y="17">③ EDIYA</text>
-      <text class="label-sub" x="12" y="32">이디야커피</text>
+      <text class="label-title" x="12" y="17">③ 빽다방</text>
+      <text class="label-sub" x="12" y="32">삼양시장점</text>
     </g>
     <line class="leader" x1="205" y1="345" x2="235" y2="351"/>
     
     <g class="label" transform="translate(770,238)">
       <rect width="112" height="42" rx="13"/>
-      <text class="label-title" x="12" y="17">黑糖餅&amp;雞肉串</text>
-      <text class="label-sub" x="12" y="32">호떡 / 닭꼬치</text>
+      <text class="label-title" x="12" y="17">三陽市場小吃</text>
+      <text class="label-sub" x="12" y="32">떡볶이순대</text>
     </g>
     <line class="leader" x1="760" y1="215" x2="770" y2="259"/>
     
@@ -968,108 +1209,108 @@ html{scroll-behavior:smooth}
       <text text-anchor="middle" dominant-baseline="central" font-size="22">🏠</text>
       <title>民宿｜인수봉로 6길 9-2</title>
     </g></a>
-    <g class="pin" transform="translate(405,238)">
+    <a href="#poi-cu"><g class="pin" transform="translate(405,238)">
       <circle r="21" fill="#00b894"/>
       <circle r="15" fill="white" opacity=".94"/>
       <text text-anchor="middle" dominant-baseline="central" font-size="16">🏪</text>
-      <title>CU/GS25｜씨유 / GS25</title>
-    </g>
+      <title>①GS25 美阿碧山店｜GS25 미아벽산점</title>
+    </g></a>
     <a href="#poi-lotte"><g class="pin" transform="translate(525,105)">
       <circle r="21" fill="#fd79a8"/>
       <circle r="15" fill="white" opacity=".94"/>
       <text text-anchor="middle" dominant-baseline="central" font-size="16">🛒</text>
-      <title>樂天瑪特｜롯데마트 삼양점</title>
+      <title>②樂天瑪特美食街 &amp; 超市｜롯데마트 삼양점</title>
     </g></a>
     <a href="#poi-porridge"><g class="pin" transform="translate(595,382)">
       <circle r="21" fill="#74b9ff"/>
       <circle r="15" fill="white" opacity=".94"/>
       <text text-anchor="middle" dominant-baseline="central" font-size="16">🍲</text>
-      <title>本粥&amp;拌飯｜본죽 미아삼양점</title>
+      <title>本粥 &amp; 拌飯（三陽站店）｜본 죽&amp;비빔밥 삼양역점</title>
     </g></a>
     <a href="#poi-bhc"><g class="pin" transform="translate(735,560)">
       <circle r="21" fill="#ee5253"/>
       <circle r="15" fill="white" opacity=".94"/>
       <text text-anchor="middle" dominant-baseline="central" font-size="16">🐔</text>
-      <title>BHC｜BHC 치킨 미아점</title>
+      <title>⑨BHC 炸雞 三陽十字路店｜BHC치킨 삼양사거리점</title>
     </g></a>
     <a href="#poi-tteok"><g class="pin" transform="translate(705,180)">
       <circle r="21" fill="#ff9f43"/>
       <circle r="15" fill="white" opacity=".94"/>
       <text text-anchor="middle" dominant-baseline="central" font-size="16">🌶️</text>
-      <title>辣年糕｜삼양시장 떡볶이</title>
+      <title>傳統市場老字號辣年糕｜삼양동순대떡볶이</title>
     </g></a>
     <a href="#poi-tanghulu"><g class="pin" transform="translate(630,630)">
       <circle r="21" fill="#fab1a0"/>
       <circle r="15" fill="white" opacity=".94"/>
       <text text-anchor="middle" dominant-baseline="central" font-size="16">🍡</text>
-      <title>王家糖葫蘆｜왕가탕후루</title>
+      <title>⑩糖葫蘆替代：24H 世界零食店｜더까까주까 삼양시장점</title>
     </g></a>
     <a href="#poi-fish"><g class="pin" transform="translate(650,150)">
       <circle r="21" fill="#fab1a0"/>
       <circle r="15" fill="white" opacity=".94"/>
       <text text-anchor="middle" dominant-baseline="central" font-size="16">🐟</text>
-      <title>鯛魚燒｜붕어빵 / 계란빵</title>
+      <title>鯛魚燒替代：Dessert Love Coffee｜디저트를사랑한커피</title>
     </g></a>
     <a href="#poi-paris"><g class="pin" transform="translate(435,350)">
       <circle r="21" fill="#1dd1a1"/>
       <circle r="15" fill="white" opacity=".94"/>
       <text text-anchor="middle" dominant-baseline="central" font-size="16">🥐</text>
-      <title>巴黎貝甜｜파리바게뜨</title>
+      <title>⑤巴黎貝甜三陽市場店｜파리바게뜨 삼양시장점</title>
     </g></a>
     <a href="#poi-bbq"><g class="pin" transform="translate(805,500)">
       <circle r="21" fill="#cd6133"/>
       <circle r="15" fill="white" opacity=".94"/>
       <text text-anchor="middle" dominant-baseline="central" font-size="16">🥩</text>
-      <title>韓式烤肉｜삼겹살</title>
+      <title>道地韓式五花肉烤肉：三陽豚｜삼양돈</title>
     </g></a>
     <a href="#poi-photo"><g class="pin" transform="translate(560,630)">
       <circle r="21" fill="#706fd3"/>
       <circle r="15" fill="white" opacity=".94"/>
-      <text text-anchor="middle" dominant-baseline="central" font-size="16">📸</text>
-      <title>人生四格｜인생네컷</title>
+      <text text-anchor="middle" dominant-baseline="central" font-size="16">🥤</text>
+      <title>⑪飲料補給替代：MEGA MGC Coffee 三陽市場店｜메가MGC커피 삼양시장점</title>
     </g></a>
     <a href="#poi-ice"><g class="pin" transform="translate(475,270)">
       <circle r="21" fill="#fab1a0"/>
       <circle r="15" fill="white" opacity=".94"/>
       <text text-anchor="middle" dominant-baseline="central" font-size="16">🍦</text>
-      <title>無人冰淇淋｜무인 아이스크림</title>
+      <title>24H 無人冰淇淋零食店｜우리동네 아이스크림</title>
     </g></a>
     <a href="#poi-kyochon"><g class="pin" transform="translate(625,440)">
       <circle r="21" fill="#ee5253"/>
       <circle r="15" fill="white" opacity=".94"/>
       <text text-anchor="middle" dominant-baseline="central" font-size="16">🍗</text>
-      <title>橋村炸雞｜교촌치킨</title>
+      <title>⑧炸雞替代：Cool Hof 美阿店｜쿨호프 미아점</title>
     </g></a>
     <a href="#poi-daiso"><g class="pin" transform="translate(315,405)">
       <circle r="21" fill="#10ac84"/>
       <circle r="15" fill="white" opacity=".94"/>
       <text text-anchor="middle" dominant-baseline="central" font-size="16">🛍️</text>
-      <title>大創｜다이소</title>
+      <title>④大創百貨 DAISO 大地市場店｜다이소 대지시장점</title>
     </g></a>
     <a href="#poi-ediya"><g class="pin" transform="translate(205,345)">
       <circle r="21" fill="#0984e3"/>
       <circle r="15" fill="white" opacity=".94"/>
       <text text-anchor="middle" dominant-baseline="central" font-size="16">☕</text>
-      <title>EDIYA｜이디야커피</title>
+      <title>③咖啡替代：빽다방 三陽市場店｜빽다방 삼양시장점</title>
     </g></a>
     <a href="#poi-hotteok"><g class="pin" transform="translate(760,215)">
       <circle r="21" fill="#ff9f43"/>
       <circle r="15" fill="white" opacity=".94"/>
       <text text-anchor="middle" dominant-baseline="central" font-size="16">🍢</text>
-      <title>黑糖餅&amp;雞肉串｜호떡 / 닭꼬치</title>
+      <title>市場小吃替代：三陽市場辣年糕順대｜삼양시장떡볶이순대</title>
     </g></a>
 
 <!-- v3 新增：生活圈用餐備案 -->
 <a href="#poi-gimbap">
-  <line class="leader" x1="360" y1="445" x2="390" y2="472"/>
-  <g class="pin" transform="translate(360,445)">
+  <line class="leader" x1="235" y1="382" x2="268" y2="392"/>
+  <g class="pin" transform="translate(235,382)">
     <circle r="21" fill="#f6b93b"/>
     <circle r="15" fill="white" opacity=".94"/>
     <text text-anchor="middle" dominant-baseline="central" font-size="16">🍙</text>
-    <title>紫菜包飯天國｜김밥천국</title>
+    <title>⑥早餐宵夜萬用：紫菜包飯天國（三陽洞店）｜김밥천국 삼양동점</title>
   </g>
 </a>
-<g class="label" transform="translate(390,458)">
+<g class="label" transform="translate(268,378)">
   <rect width="112" height="42" rx="13"/>
   <text class="label-title" x="12" y="17">⑥ 紫菜包飯</text>
   <text class="label-sub" x="12" y="32">김밥천국</text>
@@ -1081,7 +1322,7 @@ html{scroll-behavior:smooth}
     <circle r="21" fill="#e58e26"/>
     <circle r="15" fill="white" opacity=".94"/>
     <text text-anchor="middle" dominant-baseline="central" font-size="16">🍜</text>
-    <title>儒林刀削麵與大蒸餃｜칼국수 / 왕만두</title>
+    <title>⑦想吃清淡暖胃：牛耳川雞刀削麵 松泉站店｜우이천닭칼국수 솔샘역점</title>
   </g>
 </a>
 <g class="label" transform="translate(520,448)">
@@ -1090,11 +1331,87 @@ html{scroll-behavior:smooth}
   <text class="label-sub" x="12" y="32">칼국수</text>
 </g>
 
+<!-- v4 新增：追加推薦店家 -->
+<a href="#poi-deopbap">
+  <line class="leader" x1="690" y1="488" x2="720" y2="478"/>
+  <g class="pin" transform="translate(690,488)">
+    <circle r="21" fill="#e17055"/>
+    <circle r="15" fill="white" opacity=".94"/>
+    <text text-anchor="middle" dominant-baseline="central" font-size="16">🍚</text>
+    <title>直火豬肉蓋飯：The Poom 三陽十字路本店｜더품 삼양사거리본점</title>
+  </g>
+</a>
+<g class="label" transform="translate(720,462)">
+  <rect width="116" height="42" rx="13"/>
+  <text class="label-title" x="12" y="17">追加：蓋飯</text>
+  <text class="label-sub" x="12" y="32">더품</text>
+</g>
+
+<a href="#poi-sushi">
+  <line class="leader" x1="675" y1="535" x2="705" y2="535"/>
+  <g class="pin" transform="translate(675,535)">
+    <circle r="21" fill="#00cec9"/>
+    <circle r="15" fill="white" opacity=".94"/>
+    <text text-anchor="middle" dominant-baseline="central" font-size="16">🍣</text>
+    <title>清爽晚餐備案：主大國壽司 美阿店｜주대국초밥집 미아점</title>
+  </g>
+</a>
+<g class="label" transform="translate(705,520)">
+  <rect width="116" height="42" rx="13"/>
+  <text class="label-title" x="12" y="17">追加：壽司</text>
+  <text class="label-sub" x="12" y="32">주대국초밥집</text>
+</g>
+
+<a href="#poi-hongkong">
+  <line class="leader" x1="835" y1="385" x2="850" y2="355"/>
+  <g class="pin" transform="translate(835,385)">
+    <circle r="21" fill="#d63031"/>
+    <circle r="15" fill="white" opacity=".94"/>
+    <text text-anchor="middle" dominant-baseline="central" font-size="16">🍜</text>
+    <title>炸醬麵保底：香港飯店 0410 三陽洞十字路店｜홍콩반점0410 삼양동사거리점</title>
+  </g>
+</a>
+<g class="label" transform="translate(820,312)">
+  <rect width="120" height="42" rx="13"/>
+  <text class="label-title" x="12" y="17">追加：中式</text>
+  <text class="label-sub" x="12" y="32">香港飯店0410</text>
+</g>
+
+<a href="#poi-gamjatang">
+  <line class="leader" x1="860" y1="445" x2="872" y2="418"/>
+  <g class="pin" transform="translate(860,445)">
+    <circle r="21" fill="#6c5ce7"/>
+    <circle r="15" fill="white" opacity=".94"/>
+    <text text-anchor="middle" dominant-baseline="central" font-size="16">🍲</text>
+    <title>熱湯鍋物備案：朝鮮甘藷馬鈴薯排骨湯｜조선감저</title>
+  </g>
+</a>
+<g class="label" transform="translate(842,398)">
+  <rect width="112" height="42" rx="13"/>
+  <text class="label-title" x="12" y="17">追加：熱湯</text>
+  <text class="label-sub" x="12" y="32">조선감저</text>
+</g>
+
+<a href="#poi-mcdonalds">
+  <line class="leader" x1="890" y1="565" x2="870" y2="585"/>
+  <g class="pin" transform="translate(890,565)">
+    <circle r="21" fill="#fdcb6e"/>
+    <circle r="15" fill="white" opacity=".94"/>
+    <text text-anchor="middle" dominant-baseline="central" font-size="16">🍟</text>
+    <title>24H 速食保底：麥當勞美阿 DT 店｜맥도날드 미아DT점</title>
+  </g>
+</a>
+<g class="label" transform="translate(765,575)">
+  <rect width="112" height="42" rx="13"/>
+  <text class="label-title" x="12" y="17">追加：24H</text>
+  <text class="label-sub" x="12" y="32">맥도날드</text>
+</g>
+
 <g transform="translate(900,58)"><circle r="34" fill="white" stroke="#eadfd1" stroke-width="2"/><text x="0" y="-6" text-anchor="middle" font-size="20" font-weight="900">N</text><path d="M0,-25 L8,10 L0,5 L-8,10 Z" fill="#6c5ce7"/></g>
 </svg>
         </div>
-        <div class="legend"><span>🏠 民宿中心</span><span>紫圈：松泉生活圈</span><span>橘圈：三陽市場</span><span>藍圈：美阿方向</span><span>🍜🍙 地圖新增生活圈用餐</span><span>👨‍👩‍👧‍👧 下方有家庭餐廳備案</span></div>
-        <div class="note">插畫導覽圖重點是相對位置；🍜刀削麵、🍙紫菜包飯為新增生活圈用餐點。實際路線仍以 Naver 導航為準。</div>
+        <div class="legend"><span>🏠 民宿中心</span><span>粗線：主要道路方向</span><span>綠塊：公園／山麓方向</span><span>圓圈：相對距離圈</span><span>🍚🍣🍜 新增追加推薦</span><span>👨‍👩‍👧‍👧 下方有情境快速選</span></div>
+        <div class="note">圖示位置依經緯度投影，方向與遠近以目前座標資料為準；背景的主要道路與綠地方向是相對位置參考，不是可直接導航的精確路線。下方步行時間為「從民宿出發」的保守估算；GS25 已讀到 Naver 步行明細：5 分鐘／332m，其他仍以實際 Naver 導航為準。</div>
     </div>
 
 
@@ -1102,12 +1419,12 @@ html{scroll-behavior:smooth}
     <div class="quick-picks">
         <div class="quick-picks-title">⚡ 情境快速選</div>
         <div class="quick-picks-grid">
-            <a class="quick-pick" href="#poi-gimbap">🍙 早餐 / 宵夜<small>紫菜包飯天國</small></a>
-            <a class="quick-pick" href="#poi-ediya">☕ 咖啡休息<small>EDIYA COFFEE</small></a>
-            <a class="quick-pick" href="#poi-lotte">🛒 採買補給<small>樂天瑪特三陽店</small></a>
-            <a class="quick-pick" href="#poi-kalguksu">🍜 清淡晚餐<small>刀削麵與大蒸餃</small></a>
-            <a class="quick-pick" href="#poi-kyochon">🍗 炸雞外帶<small>橋村炸雞</small></a>
-            <a class="quick-pick" href="#poi-photo">📸 拍照回憶<small>人生四格</small></a>
+            <a class="quick-pick" href="#poi-paris">🥐 早餐補給<small>巴黎貝甜三陽市場店</small></a>
+            <a class="quick-pick" href="#poi-jjimdak">🥘 全家晚餐<small>Sodamchon 涮涮鍋</small></a>
+            <a class="quick-pick" href="#poi-deopbap">🍚 快速吃飯<small>더품 直火蓋飯</small></a>
+            <a class="quick-pick" href="#poi-sushi">🍣 清爽晚餐<small>주대국초밥집</small></a>
+            <a class="quick-pick" href="#poi-hongkong">🍜 小孩保底<small>香港飯店 0410</small></a>
+            <a class="quick-pick" href="#poi-mcdonalds">🍟 深夜保底<small>麥當勞 24H</small></a>
         </div>
     </div>
 
@@ -1115,12 +1432,12 @@ html{scroll-behavior:smooth}
 
     <div id="poi-cu" class="food-card">
         <div class="card-header"><a href="#nearby-map" style="float:right;font-size:.78rem;text-decoration:none;color:#6c5ce7;font-weight:800;">⬆ 回地圖</a>
-            <div><h2 class="food-title"><span class="poi-num">①</span>CU / GS25 便利商店</h2><div class="food-sub">씨유 / GS25</div></div>
+            <div><h2 class="food-title"><span class="poi-num">①</span>GS25 美阿碧山店</h2><div class="food-sub">GS25 미아벽산점｜서울 강북구 솔샘로 167</div></div>
             <span class="tag store">便利商店</span>
         </div>
-        <div class="walk-time">🚶 步行約 2 - 5 分鐘</div>
-        <div class="food-desc">民宿巷口就有。帶女兒買延世牛奶生乳包、香蕉牛奶當宵夜！</div>
-        <a class="nav-btn" href="https://map.naver.com/v5/search/%EC%82%BC%EC%96%91%EB%8F%99%20%ED%8E%B8%EC%9D%98%EC%A0%90">🗺 Naver 導航</a>
+        <div class="walk-time">🚶 民宿出發約 5 分鐘（Naver 步行：332m）</div>
+        <div class="food-desc">原本的 GS25 三陽站店改為不採用；此處改成以民宿地址為中心搜尋到的較近單一門市。帶女兒買延世牛奶生乳包、香蕉牛奶當宵夜！</div>
+        <a class="nav-btn" href="https://map.naver.com/v5/search/GS25%20%EB%AF%B8%EC%95%84%EB%B2%BD%EC%82%B0%EC%A0%90%20%EC%84%9C%EC%9A%B8%20%EA%B0%95%EB%B6%81%EA%B5%AC%20%EC%86%94%EC%83%98%EB%A1%9C%20167">🗺 Naver導航</a>
     </div>
 
 
@@ -1131,202 +1448,332 @@ html{scroll-behavior:smooth}
             <div><h2 class="food-title"><span class="poi-num">②</span>樂天瑪特美食街 & 超市</h2><div class="food-sub">롯데마트 삼양점</div></div>
             <span class="tag meal">複合餐廳</span>
         </div>
-        <div class="walk-time">🚶 步行約 5 - 7 分鐘</div>
+        <div class="walk-time">🚶 民宿出發約 9 - 12 分鐘</div>
         <div class="food-desc">石鍋拌飯、炸醬麵、糖醋肉、現炸豬排。點餐有圖片對照，輕鬆又乾淨。</div>
-        <a class="nav-btn" href="https://map.naver.com/v5/search/%EB%A1%AF%EB%8D%B0%EB%A7%88%ED%8A%B8%20%EC%82%BC%EC%96%91%EC%A0%90">🗺 Naver 導航</a>
+        <a class="nav-btn" href="https://map.naver.com/v5/search/롯데마트%20삼양점%20서울%20강북구%20삼양로%20247">🗺 Naver導航</a>
     </div>
 
     <div id="poi-bhc" class="food-card">
         <div class="card-header"><a href="#nearby-map" style="float:right;font-size:.78rem;text-decoration:none;color:#6c5ce7;font-weight:800;">⬆ 回地圖</a>
-            <div><h2 class="food-title"><span class="poi-num">⑨</span>BHC 炸雞 美阿店</h2><div class="food-sub">BHC 치킨 미아점</div></div>
+            <div><h2 class="food-title"><span class="poi-num">⑨</span>BHC 炸雞 三陽十字路店</h2><div class="food-sub">BHC치킨 삼양사거리점｜서울 강북구 삼양로 261</div></div>
             <span class="tag meal">韓式炸雞</span>
         </div>
-        <div class="walk-time">🚶 步行約 10 - 15 分鐘</div>
+        <div class="walk-time">🚶 民宿出發約 13 - 16 分鐘</div>
         <div class="food-desc">推薦外帶「半半炸雞（蜂蜜甘醬+原味脆皮）」，回民宿客廳一起吃最棒！</div>
-        <a class="nav-btn" href="https://map.naver.com/v5/search/BHC%EC%B9%98%ED%82%A8%20%EB%AF%B8%EC%95%84%EC%A0%90">🗺 Naver 導航</a>
+        <a class="nav-btn" href="https://map.naver.com/v5/search/BHC%EC%B9%98%ED%82%A8%20%EC%82%BC%EC%96%91%EC%82%AC%EA%B1%B0%EB%A6%AC%EC%A0%90%20%EC%84%9C%EC%9A%B8%20%EA%B0%95%EB%B6%81%EA%B5%AC%20%EC%82%BC%EC%96%91%EB%A1%9C%20261">🗺 Naver導航</a>
     </div>
 
     <div id="poi-porridge" class="food-card">
         <div class="card-header"><a href="#nearby-map" style="float:right;font-size:.78rem;text-decoration:none;color:#6c5ce7;font-weight:800;">⬆ 回地圖</a>
-            <div><h2 class="food-title">本粥 & 拌飯（美阿三陽店）</h2><div class="food-sub">본죽&비빔밥 cafe</div></div>
+            <div><h2 class="food-title">本粥 & 拌飯（三陽站店）</h2><div class="food-sub">본 죽&비빔밥 삼양역점｜서울 강북구 삼양로 235 1층</div></div>
             <span class="tag light">養生暖胃</span>
         </div>
-        <div class="walk-time">🚶 步行約 5 - 8 分鐘</div>
+        <div class="walk-time">🚶 民宿出發約 8 - 11 分鐘</div>
         <div class="food-desc">玩累想吃清淡的首選。鮑魚粥、牛肉蔬菜粥，調味溫和，媽媽和小朋友最適合。</div>
-        <a class="nav-btn" href="https://map.naver.com/v5/search/%EB%B3%B8%EC%A3%BD%20%EC%82%BC%EC%96%91%EC%A0%90">🗺 Naver 導航</a>
+        <a class="nav-btn" href="https://map.naver.com/v5/search/%EB%B3%B8%EC%A3%BD%EB%B9%84%EB%B9%94%EB%B0%A5%20%EC%82%BC%EC%96%91%EC%97%AD%EC%A0%90%20%EC%84%9C%EC%9A%B8%20%EA%B0%95%EB%B6%81%EA%B5%AC%20%EC%82%BC%EC%96%91%EB%A1%9C%20235">🗺 Naver導航</a>
     </div>
 
     <div class="section-label">🍡 小吃 & 甜點</div>
 
     <div id="poi-tteok" class="food-card">
         <div class="card-header"><a href="#nearby-map" style="float:right;font-size:.78rem;text-decoration:none;color:#6c5ce7;font-weight:800;">⬆ 回地圖</a>
-            <div><h2 class="food-title">傳統市場老字號辣年糕</h2><div class="food-sub">삼양시장 떡볶이</div></div>
+            <div><h2 class="food-title">傳統市場老字號辣年糕</h2><div class="food-sub">삼양동순대떡볶이｜서울 강북구 삼양로 246</div></div>
             <span class="tag snack">在地小吃</span>
         </div>
-        <div class="walk-time">🚶 步行約 8 - 12 分鐘</div>
+        <div class="walk-time">🚶 民宿出發約 9 - 12 分鐘</div>
         <div class="food-desc">大鐵盤熬煮的元祖辣年糕，加魚板湯和現炸海苔冬粉捲，炸物沾醬最道地！</div>
-        <a class="nav-btn" href="https://map.naver.com/v5/search/%EC%82%BC%EC%96%91%EC%8B%9C%EC%9E%A5%20%EB%96%A1%EB%B3%B6%EC%9D%B4">🗺 Naver 導航</a>
+        <a class="nav-btn" href="https://map.naver.com/v5/search/%EC%82%BC%EC%96%91%EB%8F%99%EC%88%9C%EB%8C%80%EB%96%A1%EB%B3%B6%EC%9D%B4%20%EC%84%9C%EC%9A%B8%20%EA%B0%95%EB%B6%81%EA%B5%AC%20%EC%82%BC%EC%96%91%EB%A1%9C%20246">🗺 Naver導航</a>
     </div>
 
     <div id="poi-tanghulu" class="food-card">
         <div class="card-header"><a href="#nearby-map" style="float:right;font-size:.78rem;text-decoration:none;color:#6c5ce7;font-weight:800;">⬆ 回地圖</a>
-            <div><h2 class="food-title"><span class="poi-num">⑩</span>王家糖葫蘆（美阿店）</h2><div class="food-sub">왕가탕후루</div></div>
-            <span class="tag sweet">人氣甜點</span>
+            <div><h2 class="food-title"><span class="poi-num">⑩</span>糖葫蘆替代：24H 世界零食店</h2><div class="food-sub">더까까주까 삼양시장점｜서울 강북구 솔매로 59</div></div>
+            <span class="tag sweet">糖葫蘆無結果改用</span>
         </div>
-        <div class="walk-time">🚶 步行約 10 - 15 分鐘（近美阿站）</div>
-        <div class="food-desc">全韓最火糖葫蘆！脆糖衣包整顆草莓、綠葡萄，女兒看到絕對想拍照打卡！</div>
-        <a class="nav-btn" href="https://map.naver.com/v5/search/%EC%99%95%EA%B0%80%ED%83%95%ED%9B%84%EB%A3%A8%20%EB%AF%B8%EC%95%84%EC%A0%90">🗺 Naver 導航</a>
+        <div class="walk-time">🚶 民宿出發約 10 - 13 分鐘；24 小時營業</div>
+        <div class="food-desc">原「삼양역 탕후루 / 왕가탕후루 미아점」在 Naver 查無店家；巴黎貝甜已在下一張卡使用，避免重複。改用可導航的 24H 世界零食／冰淇淋店，適合晚上買糖果、餅乾、冰品和飲料回民宿。</div>
+        <a class="nav-btn" href="https://map.naver.com/v5/search/%EB%8D%94%EA%B9%8C%EA%B9%8C%EC%A3%BC%EA%B9%8C%20%EC%82%BC%EC%96%91%EC%8B%9C%EC%9E%A5%EC%A0%90%20%EC%84%9C%EC%9A%B8%20%EA%B0%95%EB%B6%81%EA%B5%AC%20%EC%86%94%EB%A7%A4%EB%A1%9C%2059">🗺 Naver導航</a>
     </div>
 
     <div id="poi-fish" class="food-card">
         <div class="card-header"><a href="#nearby-map" style="float:right;font-size:.78rem;text-decoration:none;color:#6c5ce7;font-weight:800;">⬆ 回地圖</a>
-            <div><h2 class="food-title">鯛魚燒 & 雞蛋糕</h2><div class="food-sub">붕어빵 / 계란빵（傳統市場入口）</div></div>
-            <span class="tag sweet">街頭點心</span>
+            <div><h2 class="food-title">鯛魚燒替代：Dessert Love Coffee</h2><div class="food-sub">디저트를사랑한커피｜서울 강북구 솔샘로 184 sk북한산시티아파트 주상가동 지하 1층 121호</div></div>
+            <span class="tag sweet">붕어빵可導航店</span>
         </div>
-        <div class="walk-time">🚶 步行約 5 - 10 分鐘</div>
-        <div class="food-desc">傍晚常有熱騰騰的鯛魚燒（紅豆/奶油卡士達）和雞蛋糕（裡面有整顆蛋！），最棒的散步點心。</div>
-        <a class="nav-btn" href="https://map.naver.com/v5/search/%EC%82%BC%EC%96%91%EC%8B%9C%EC%9E%A5">🗺 Naver 導航</a>
+        <div class="walk-time">🚶 民宿出發約 6 - 9 分鐘</div>
+        <div class="food-desc">原「붕어빵 / 계란빵」是季節性攤位關鍵字，不適合做導航落點；Naver 搜尋「삼양역 붕어빵」第一順位為此店，評論明確提到 붕어빵，且地址可導航。</div>
+        <a class="nav-btn" href="https://map.naver.com/v5/search/%EB%94%94%EC%A0%80%ED%8A%B8%EB%A5%BC%EC%82%AC%EB%9E%91%ED%95%9C%EC%BB%A4%ED%94%BC%20%EC%84%9C%EC%9A%B8%20%EA%B0%95%EB%B6%81%EA%B5%AC%20%EC%86%94%EC%83%98%EB%A1%9C%20184">🗺 Naver導航</a>
     </div>
 
     <div id="poi-paris" class="food-card">
         <div class="card-header"><a href="#nearby-map" style="float:right;font-size:.78rem;text-decoration:none;color:#6c5ce7;font-weight:800;">⬆ 回地圖</a>
-            <div><h2 class="food-title"><span class="poi-num">⑤</span>巴黎貝甜</h2><div class="food-sub">파리바게뜨 삼양동</div></div>
+            <div><h2 class="food-title"><span class="poi-num">⑤</span>巴黎貝甜三陽市場店</h2><div class="food-sub">파리바게뜨 삼양시장점｜서울 강북구 삼양로 241</div></div>
             <span class="tag bakery">烘焙名店</span>
         </div>
-        <div class="walk-time">🚶 步行約 4 - 6 分鐘</div>
+        <div class="walk-time">🚶 民宿出發約 8 - 11 分鐘</div>
         <div class="food-desc">草莓蛋糕、奶油麵包水準極高。帶老婆女兒挑隔天早餐麵包與鮮奶，輕鬆優雅。</div>
-        <a class="nav-btn" href="https://map.naver.com/v5/search/%ED%8C%8C%EB%A6%AC%EB%B0%94%EA%B2%8C%EB%9C%A8%20%EC%82%BC%EC%96%91%EB%8F%99">🗺 Naver 導航</a>
+        <a class="nav-btn" href="https://map.naver.com/v5/search/파리바게뜨%20삼양시장점%20서울%20강북구%20삼양로%20241">🗺 Naver導航</a>
     </div>
 
     <div class="section-label">🥩 烤肉 & 體驗 & 深夜</div>
 
     <div id="poi-bbq" class="food-card" style="border-color:#ffeaa7;">
         <div class="card-header"><a href="#nearby-map" style="float:right;font-size:.78rem;text-decoration:none;color:#6c5ce7;font-weight:800;">⬆ 回地圖</a>
-            <div><h2 class="food-title">道地韓式五花肉烤肉店</h2><div class="food-sub">삼겹살 (美阿站巷弄)</div></div>
+            <div><h2 class="food-title">道地韓式五花肉烤肉：三陽豚</h2><div class="food-sub">삼양돈｜서울 강북구 솔매로 64-1 1층 전부</div></div>
             <span class="tag" style="background:#cd6133;">韓式烤肉</span>
         </div>
-        <div class="walk-time">🚶 步行約 10 - 15 分鐘（往美阿站方向巷弄）</div>
-        <div class="food-desc">厚實熟成五花肉與豬脖子肉，店員幫忙烤得金黃酥脆。用生菜包烤肉、泡菜和蒜片，老婆絕對滿足！</div>
-        <a class="nav-btn" href="https://map.naver.com/v5/search/%EB%AF%B8%EC%95%84%EB%8F%99%20%EC%82%BC%EA%B2%B9%EC%82%B4">🗺 Naver 導航</a>
+        <div class="walk-time">🚶 民宿出發約 11 - 14 分鐘</div>
+        <div class="food-desc">Naver 類別為「돼지고기구이」的熟成豬肉烤肉店，店名與地址皆可落到單一店家。</div>
+        <a class="nav-btn" href="https://map.naver.com/v5/search/%EC%82%BC%EC%96%91%EB%8F%88%20%EC%84%9C%EC%9A%B8%20%EA%B0%95%EB%B6%81%EA%B5%AC%20%EC%86%94%EB%A7%A4%EB%A1%9C%2064-1">🗺 Naver導航</a>
     </div>
 
     <div id="poi-photo" class="food-card" style="border-color:#ffeaa7;">
         <div class="card-header"><a href="#nearby-map" style="float:right;font-size:.78rem;text-decoration:none;color:#6c5ce7;font-weight:800;">⬆ 回地圖</a>
-            <div><h2 class="food-title"><span class="poi-num">⑪</span>人生四格自助拍貼店</h2><div class="food-sub">인생네컷 (Photoism)</div></div>
-            <span class="tag" style="background:#706fd3;">美照回憶</span>
+            <div><h2 class="food-title"><span class="poi-num">⑪</span>飲料補給替代：MEGA MGC Coffee 三陽市場店</h2><div class="food-sub">메가MGC커피 삼양시장점｜서울 강북구 삼양로54길 3 1층</div></div>
+            <span class="tag" style="background:#706fd3;">人生四格不採用</span>
         </div>
-        <div class="walk-time">🚶 步行約 12 - 15 分鐘（地鐵站周邊）</div>
-        <div class="food-desc">韓國最流行的拍貼！免費借頭飾、髮箍，帶兩個女兒和老婆拍一張充滿韓流感的紀念拍貼！</div>
-        <a class="nav-btn" href="https://map.naver.com/v5/search/%EB%AF%B8%EC%95%84%EB%8F%99%20%EC%9D%B8%EC%83%9D%EB%84%A4%EC%BB%B7">🗺 Naver 導航</a>
+        <div class="walk-time">🚶 民宿出發約 10 - 13 分鐘</div>
+        <div class="food-desc">原「인생네컷 삼양역」在 Naver 查無店家，水踰店又太遠；攝影棚不採用。改成三陽市場生活圈內可導航、評論數多的飲料補給店。</div>
+        <a class="nav-btn" href="https://map.naver.com/v5/search/%EB%A9%94%EA%B0%80MGC%EC%BB%A4%ED%94%BC%20%EC%82%BC%EC%96%91%EC%8B%9C%EC%9E%A5%EC%A0%90%20%EC%84%9C%EC%9A%B8%20%EA%B0%95%EB%B6%81%EA%B5%AC%20%EC%82%BC%EC%96%91%EB%A1%9C54%EA%B8%B8%203">🗺 Naver導航</a>
     </div>
 
     <div id="poi-ice" class="food-card" style="border-color:#ffeaa7;">
         <div class="card-header"><a href="#nearby-map" style="float:right;font-size:.78rem;text-decoration:none;color:#6c5ce7;font-weight:800;">⬆ 回地圖</a>
-            <div><h2 class="food-title">24H 無人冰淇淋零食店</h2><div class="food-sub">무인 아이스크림 할인점</div></div>
+            <div><h2 class="food-title">24H 無人冰淇淋零食店</h2><div class="food-sub">우리동네 아이스크림｜서울 강북구 삼양로19길 109 제401동 1층 108호</div></div>
             <span class="tag" style="background:#34ace0;">深夜點心</span>
         </div>
-        <div class="walk-time">🚶 步行約 3 - 6 分鐘（住宅區大馬路旁）</div>
-        <div class="food-desc">百種比超商便宜的冰棒和韓國懷舊零食，自己刷條碼結帳。宵夜後散步來體驗，女兒超愛！</div>
-        <a class="nav-btn" href="https://map.naver.com/v5/search/%EC%82%BC%EC%96%91%EB%8F%99%20%EB%AC%B4%EC%9D%B8%EC%95%84%EC%9D%B4%EC%8A%A4%ED%81%AC%EB%A6%BC">🗺 Naver 導航</a>
+        <div class="walk-time">🚶 民宿出發約 6 - 9 分鐘（住宅區大馬路旁）</div>
+        <div class="food-desc">Naver 確認為單一可導航店家，類別「가공식품」，24 小時營業、全年無休。適合宵夜後散步買冰棒和韓國懷舊零食。</div>
+        <a class="nav-btn" href="https://map.naver.com/v5/search/%EC%9A%B0%EB%A6%AC%EB%8F%99%EB%84%A4%20%EC%95%84%EC%9D%B4%EC%8A%A4%ED%81%AC%EB%A6%BC%20%EC%84%9C%EC%9A%B8%20%EA%B0%95%EB%B6%81%EA%B5%AC%20%EC%82%BC%EC%96%91%EB%A1%9C19%EA%B8%B8%20109">🗺 Naver導航</a>
     </div>
     <div class="section-label">👑 炸雞 & 購物 & 咖啡 & 宵夜</div>
 
     <div id="poi-kyochon" class="food-card" style="border-color:#ffeaa7;">
         <div class="card-header"><a href="#nearby-map" style="float:right;font-size:.78rem;text-decoration:none;color:#6c5ce7;font-weight:800;">⬆ 回地圖</a>
-            <div><h2 class="food-title"><span class="poi-num">⑧</span>橋村炸雞（美阿三陽店）</h2><div class="food-sub">교촌치킨 미아삼양점</div></div>
-            <span class="tag" style="background:#ee5253;">天王炸雞</span>
+            <div><h2 class="food-title"><span class="poi-num">⑧</span>炸雞替代：Cool Hof 美阿店</h2><div class="food-sub">쿨호프 미아점｜서울 강북구 솔매로 85</div></div>
+            <span class="tag" style="background:#ee5253;">橋村無結果改用</span>
         </div>
-        <div class="walk-time">🚶 步行約 8 - 12 分鐘</div>
-        <div class="food-desc">大蒜醬油和蜂蜜甜醬，連骨頭吮起來都有味道，全家一吃絕對狂讚。</div>
-        <a class="nav-btn" href="https://map.naver.com/v5/search/%EA%B5%90%EC%B4%8C%EC%B9%98%ED%82%A8%20%EB%AF%B8%EC%95%84%EC%82%BC%EC%96%91%EC%A0%90">🗺 Naver 導航</a>
+        <div class="walk-time">🚶 民宿出發約 12 - 15 分鐘</div>
+        <div class="food-desc">原「교촌치킨 미아삼양점 / 미아사거리점」在 Naver 查無可用店點；改用 Naver 周邊搜尋中星等較高的炸雞／啤酒備案。</div>
+        <a class="nav-btn" href="https://map.naver.com/v5/search/%EC%BF%A8%ED%98%B8%ED%94%84%20%EB%AF%B8%EC%95%84%EC%A0%90%20%EC%84%9C%EC%9A%B8%20%EA%B0%95%EB%B6%81%EA%B5%AC%20%EC%86%94%EB%A7%A4%EB%A1%9C%2085">🗺 Naver導航</a>
     </div>
 
     <div id="poi-daiso" class="food-card" style="border-color:#ffeaa7;">
         <div class="card-header"><a href="#nearby-map" style="float:right;font-size:.78rem;text-decoration:none;color:#6c5ce7;font-weight:800;">⬆ 回地圖</a>
-            <div><h2 class="food-title"><span class="poi-num">④</span>大創百貨 DAISO（三陽站店）</h2><div class="food-sub">다이소 삼양역점</div></div>
+            <div><h2 class="food-title"><span class="poi-num">④</span>大創百貨 DAISO 大地市場店</h2><div class="food-sub">다이소 대지시장점｜서울 강북구 솔샘로 239</div></div>
             <span class="tag" style="background:#10ac84;">平價聖地</span>
         </div>
-        <div class="walk-time">🚶 步行約 10 - 14 分鐘</div>
-        <div class="food-desc">三麗鷗、迪士尼聯名文具、收納袋與彩妝，10歲和12歲女兒進去絕對買到不想出來！</div>
-        <a class="nav-btn" href="https://map.naver.com/v5/search/%EB%8B%A4%EC%9D%B4%EC%86%8C%20%EC%82%BC%EC%96%91%EC%97%AD%EC%A0%90">🗺 Naver 導航</a>
+        <div class="walk-time">🚶 民宿出發約 10 - 13 分鐘</div>
+        <div class="food-desc">Naver 確認為單一 DAISO 分店，星等 4.43／評論 1.1萬。三麗鷗、迪士尼聯名文具、收納袋與彩妝，10歲和12歲女兒進去絕對買到不想出來！</div>
+        <a class="nav-btn" href="https://map.naver.com/v5/search/%EB%8B%A4%EC%9D%B4%EC%86%8C%20%EB%8C%80%EC%A7%80%EC%8B%9C%EC%9E%A5%EC%A0%90%20%EC%84%9C%EC%9A%B8%20%EA%B0%95%EB%B6%81%EA%B5%AC%20%EC%86%94%EC%83%98%EB%A1%9C%20239">🗺 Naver導航</a>
     </div>
 
     <div id="poi-ediya" class="food-card" style="border-color:#ffeaa7;">
         <div class="card-header"><a href="#nearby-map" style="float:right;font-size:.78rem;text-decoration:none;color:#6c5ce7;font-weight:800;">⬆ 回地圖</a>
-            <div><h2 class="food-title"><span class="poi-num">③</span>EDIYA COFFEE（松泉店）</h2><div class="food-sub">이디야커피 솔샘역점</div></div>
+            <div><h2 class="food-title"><span class="poi-num">③</span>咖啡替代：빽다방 三陽市場店</h2><div class="food-sub">빽다방 삼양시장점｜서울 강북구 솔매로 52 1층</div></div>
             <span class="tag" style="background:#0984e3;">質感咖啡</span>
         </div>
-        <div class="walk-time">🚶 步行約 4 - 6 分鐘</div>
-        <div class="food-desc">高CP值國民咖啡廳，黑糖珍珠、冰沙與迷你雕魚燒，逛累了來這享受下午茶最放鬆。</div>
-        <a class="nav-btn" href="https://map.naver.com/v5/search/%EC%9D%B4%EB%94%94%EC%95%BC%EC%BB%A4%ED%94%BC%20%EC%86%94%EC%83%98%EC%97%AD">🗺 Naver 導航</a>
+        <div class="walk-time">🚶 民宿出發約 9 - 12 分鐘</div>
+        <div class="food-desc">原 EDIYA「삼양사거리점／솔샘역점」在 Naver 查無可導航店家；改用 Naver 單一結果且可按「到達」的 빽다방 삼양시장점。訪客評論 491，適合外帶咖啡、冰飲與甜點補給。</div>
+        <a class="nav-btn" href="https://map.naver.com/v5/search/%EB%B9%BD%EB%8B%A4%EB%B0%A9%20%EC%82%BC%EC%96%91%EC%8B%9C%EC%9E%A5%EC%A0%90%20%EC%84%9C%EC%9A%B8%20%EA%B0%95%EB%B6%81%EA%B5%AC%20%EC%86%94%EB%A7%A4%EB%A1%9C%2052">🗺 Naver導航</a>
     </div>
 
     <div id="poi-hotteok" class="food-card" style="border-color:#ffeaa7;">
         <div class="card-header"><a href="#nearby-map" style="float:right;font-size:.78rem;text-decoration:none;color:#6c5ce7;font-weight:800;">⬆ 回地圖</a>
-            <div><h2 class="food-title">傳統現炸黑糖餅與大雞肉串</h2><div class="food-sub">호떡 / 닭꼬치</div></div>
+            <div><h2 class="food-title">市場小吃替代：三陽市場辣年糕順대</h2><div class="food-sub">삼양시장떡볶이순대｜서울 강북구 솔매로 46</div></div>
             <span class="tag" style="background:#ff9f43;">深夜宵夜</span>
         </div>
-        <div class="walk-time">🚶 步行約 5 - 10 分鐘</div>
-        <div class="food-desc">現煎黑糖餅咬開爆出肉桂核桃糖漿；碳烤大雞肉串刷濃甘醬，香氣逼人，必帶幾串回房。</div>
-        <a class="nav-btn" href="https://map.naver.com/v5/search/%EC%82%BC%EC%96%91%EB%8F%99%20%ED%98%B8%EB%96%A1">🗺 Naver 導航</a>
+        <div class="walk-time">🚶 民宿出發約 9 - 12 分鐘</div>
+        <div class="food-desc">原「삼양동 호떡」與「삼양시장 닭꼬치」不是可導航到三陽市場店家的單一落點；改用 Naver 直接確認的 삼양시장떡볶이순대。市場小吃感更穩，適合買辣年糕、順대回民宿當宵夜。</div>
+        <a class="nav-btn" href="https://map.naver.com/v5/search/%EC%82%BC%EC%96%91%EC%8B%9C%EC%9E%A5%EB%96%A1%EB%B3%B6%EC%9D%B4%EC%88%9C%EB%8C%80%20%EC%84%9C%EC%9A%B8%20%EA%B0%95%EB%B6%81%EA%B5%AC%20%EC%86%94%EB%A7%A4%EB%A1%9C%2046">🗺 Naver導航</a>
+    </div>
+
+    <div class="section-label">🆕 民宿附近追加推薦</div>
+
+    <div id="poi-deopbap" class="food-card" style="border-color:#dfe6e9;">
+        <div class="card-header">
+            <div><h2 class="food-title">直火豬肉蓋飯：The Poom 三陽十字路本店</h2><div class="food-sub">더품 삼양사거리본점｜서울 강북구 솔샘로50길 16 1층</div></div>
+            <span class="tag" style="background:#e17055;">蓋飯</span>
+        </div>
+        <div class="walk-time">🚶 民宿出發約 10 - 14 分鐘</div>
+        <div class="food-desc">Naver 類別為「덮밥」，評論提到直火豬肉蓋飯。適合玩累後想快速吃一碗飯，不想再研究菜單時使用。</div>
+        <a class="nav-btn" href="https://map.naver.com/v5/search/%EB%8D%94%ED%92%88%20%EC%82%BC%EC%96%91%EC%82%AC%EA%B1%B0%EB%A6%AC%EB%B3%B8%EC%A0%90">🗺 Naver導航</a>
+    </div>
+
+    <div id="poi-sushi" class="food-card" style="border-color:#dfe6e9;">
+        <div class="card-header">
+            <div><h2 class="food-title">清爽晚餐備案：主大國壽司 美阿店</h2><div class="food-sub">주대국초밥집 미아점｜서울 강북구 솔샘로48길 4</div></div>
+            <span class="tag" style="background:#00cec9;">壽司</span>
+        </div>
+        <div class="walk-time">🚶 民宿出發約 11 - 15 分鐘</div>
+        <div class="food-desc">Naver 類別為「초밥,롤」，評論數多。連續吃烤肉、炸雞後，想換清爽一點的壽司／冷麵感晚餐時可以考慮。</div>
+        <a class="nav-btn" href="https://map.naver.com/v5/search/%EC%A3%BC%EB%8C%80%EA%B5%AD%EC%B4%88%EB%B0%A5%EC%A7%91%20%EB%AF%B8%EC%95%84%EC%A0%90">🗺 Naver導航</a>
+    </div>
+
+    <div id="poi-hongkong" class="food-card" style="border-color:#dfe6e9;">
+        <div class="card-header">
+            <div><h2 class="food-title">炸醬麵保底：香港飯店 0410 三陽洞十字路店</h2><div class="food-sub">홍콩반점0410 삼양동사거리점｜서울 강북구 미아동</div></div>
+            <span class="tag" style="background:#d63031;">中式</span>
+        </div>
+        <div class="walk-time">🚶 民宿出發約 12 - 16 分鐘</div>
+        <div class="food-desc">白鍾元系連鎖中式餐廳，Naver 可搜尋到單一店名。孩子想吃炸醬麵、糖醋肉時很穩，適合作為不冒險的晚餐備案。</div>
+        <a class="nav-btn" href="https://map.naver.com/v5/search/%ED%99%8D%EC%BD%A9%EB%B0%98%EC%A0%900410%20%EC%82%BC%EC%96%91%EB%8F%99%EC%82%AC%EA%B1%B0%EB%A6%AC%EC%A0%90">🗺 Naver導航</a>
+    </div>
+
+    <div id="poi-gamjatang" class="food-card" style="border-color:#dfe6e9;">
+        <div class="card-header">
+            <div><h2 class="food-title">熱湯鍋物備案：朝鮮甘藷馬鈴薯排骨湯</h2><div class="food-sub">조선감저｜감자탕｜서울 강북구 미아동</div></div>
+            <span class="tag" style="background:#6c5ce7;">感자탕</span>
+        </div>
+        <div class="walk-time">🚶 民宿出發約 12 - 17 分鐘</div>
+        <div class="food-desc">Naver 類別為「감자탕」，適合想吃韓式熱湯、排骨湯、醒胃一點的晚餐。店名搜尋有多分店，導航時請選 강북구 미아동 店點。</div>
+        <a class="nav-btn" href="https://map.naver.com/v5/search/%EC%A1%B0%EC%84%A0%EA%B0%90%EC%A0%80%20%EA%B0%95%EB%B6%81%EA%B5%AC%20%EB%AF%B8%EC%95%84%EB%8F%99">🗺 Naver導航</a>
+    </div>
+
+    <div id="poi-mcdonalds" class="food-card" style="border-color:#dfe6e9;">
+        <div class="card-header">
+            <div><h2 class="food-title">24H 速食保底：麥當勞美阿 DT 店</h2><div class="food-sub">맥도날드 미아DT점｜서울 강북구 미아동</div></div>
+            <span class="tag" style="background:#fdcb6e;color:#2d3436;">24H</span>
+        </div>
+        <div class="walk-time">🚶 民宿出發約 12 - 18 分鐘</div>
+        <div class="food-desc">不是特色店，但家庭旅行很有用：早餐、宵夜、孩子突然餓、下雨不想找餐廳時可當最後保底。Naver 顯示 24 小時營業。</div>
+        <a class="nav-btn" href="https://map.naver.com/v5/search/%EB%A7%A5%EB%8F%84%EB%82%A0%EB%93%9C%20%EB%AF%B8%EC%95%84DT%EC%A0%90">🗺 Naver導航</a>
     </div>
 
 
-    <div class="section-label">👨‍👩‍👧‍👧 不知道吃什麼看這裡</div>
+    <div class="section-label">👨‍👩‍👧‍👧 情境快速選</div>
     <div class="family-guide-note">
-        這區是「晚餐備案」：玩累、不想排隊、下雨或全家不知道吃什麼時，可以直接從這四種情境挑。
+        不想一間一間看時，直接照情境選。這區不是重新排序所有店家，而是幫你在旅行現場快速做決定：餓、累、下雨、小孩突然想吃熟悉的東西，都能直接點導航。
+    </div>
+
+    <div class="choice-card">
+        <div class="choice-top">
+            <div>
+                <p class="choice-title">🥐 早餐／隔天早上最省心｜巴黎貝甜三陽市場店</p>
+                <div class="choice-sub">파리바게뜨 삼양시장점｜베이커리</div>
+            </div>
+            <span class="choice-tag">🚶 民宿出發約 8–11分</span>
+        </div>
+        <p class="choice-desc">麵包、蛋糕、鮮奶都好買，適合前一天晚上先買好早餐；比早上臨時找店更穩。</p>
+        <div class="choice-rec">👍 適合：小孩早餐、隔天出門前補給、老婆女兒挑甜點</div>
+        <a class="nav-btn" href="https://map.naver.com/v5/search/파리바게뜨%20삼양시장점%20서울%20강북구%20삼양로%20241">🗺 Naver導航</a>
     </div>
 
     <div id="poi-jjimdak" class="choice-card">
         <div class="choice-top">
             <div>
-                <p class="choice-title">🍗 想吃韓劇料理｜元祖燉雞與一隻雞（美阿店）</p>
-                <div class="choice-sub">찜닭 / 닭한마리・Jjimdak</div>
+                <p class="choice-title">🥘 全家穩定晚餐｜Sodamchon 涮涮鍋（三陽樂天瑪特店）</p>
+                <div class="choice-sub">소담촌 삼양롯데마트점｜샤브샤브</div>
             </div>
-            <span class="choice-tag">🚶 10–15分</span>
+            <span class="choice-tag">🚶 民宿出發約 9–12分</span>
         </div>
-        <p class="choice-desc">道地韓式燉雞，大盤雞肉、蔬菜與吸滿甜鹹醬汁的寬冬粉一起上桌，也可加起司。口味接受度高，適合老婆和女兒。</p>
-        <div class="choice-rec">👍 必點：安東起司燉雞、韓式魚板湯</div>
-        <a class="nav-btn" href="https://www.google.com/maps/search/?api=1&query=Jjimdak+Mia+Seoul" target="_blank">📍 開啟地圖導航</a>
+        <p class="choice-desc">原「Jjimdak Mia Seoul」是英文泛稱，無法導航到單一店家；改用 Naver 確認的樂天瑪特 2 樓涮涮鍋。蔬菜、肉片、湯麵都能自己調整，對家庭晚餐很安全。</p>
+        <div class="choice-rec">👍 Naver：샤브샤브／訪客評論 93／서울 강북구 삼양로 247 2층</div>
+        <a class="nav-btn" href="https://map.naver.com/v5/search/%EC%86%8C%EB%8B%B4%EC%B4%8C%20%EC%82%BC%EC%96%91%EB%A1%AF%EB%8D%B0%EB%A7%88%ED%8A%B8%EC%A0%90%20%EC%84%9C%EC%9A%B8%20%EA%B0%95%EB%B6%81%EA%B5%AC%20%EC%82%BC%EC%96%91%EB%A1%9C%20247">🗺 Naver導航</a>
     </div>
 
-    <div id="poi-tonkatsu" class="choice-card">
+    <div id="poi-deopbap-choice" class="choice-card">
         <div class="choice-top">
             <div>
-                <p class="choice-title">🐷 想吃大份量｜城北洞手工炸豬排專賣店</p>
-                <div class="choice-sub">돈까스・Korean Style Tonkatsu</div>
+                <p class="choice-title">🍚 玩累只想吃一碗飯｜The Poom 直火蓋飯</p>
+                <div class="choice-sub">더품 삼양사거리본점｜덮밥</div>
             </div>
-            <span class="choice-tag">🚖 約8分</span>
+            <span class="choice-tag">🚶 民宿出發約 10–14分</span>
         </div>
-        <p class="choice-desc">這一帶學生家庭多，韓式炸豬排份量大、外皮酥脆，搭配甜醬汁、白飯與濃湯，是很穩的家庭餐選擇。</p>
-        <div class="choice-rec">👍 必點：王炸豬排（왕돈까스）、起司夾心豬排</div>
-        <a class="nav-btn" href="https://www.google.com/maps/search/?api=1&query=Tonkatsu+Solsaem+Mia+Seoul" target="_blank">📍 開啟地圖導航</a>
+        <p class="choice-desc">不想吃鍋、不想點太多菜時選這個。一人一碗飯最簡單，也適合外帶回民宿。</p>
+        <div class="choice-rec">👍 Naver：덮밥／솔샘로50길 16 1층</div>
+        <a class="nav-btn" href="https://map.naver.com/v5/search/%EB%8D%94%ED%92%88%20%EC%82%BC%EC%96%91%EC%82%AC%EA%B1%B0%EB%A6%AC%EB%B3%B8%EC%A0%90">🗺 Naver導航</a>
+    </div>
+
+    <div id="poi-sushi-choice" class="choice-card">
+        <div class="choice-top">
+            <div>
+                <p class="choice-title">🍣 吃膩炸物烤肉｜主大國壽司 美阿店</p>
+                <div class="choice-sub">주대국초밥집 미아점｜초밥,롤</div>
+            </div>
+            <span class="choice-tag">🚶 民宿出發約 11–15分</span>
+        </div>
+        <p class="choice-desc">連續吃烤肉、炸雞、小吃後，這家可以當「清爽但還是有飽足感」的晚餐備案。</p>
+        <div class="choice-rec">👍 Naver：초밥,롤／評論數多／솔샘로48길 4</div>
+        <a class="nav-btn" href="https://map.naver.com/v5/search/%EC%A3%BC%EB%8C%80%EA%B5%AD%EC%B4%88%EB%B0%A5%EC%A7%91%20%EB%AF%B8%EC%95%84%EC%A0%90">🗺 Naver導航</a>
     </div>
 
     <div id="poi-kalguksu" class="choice-card">
         <div class="choice-top">
             <div>
-                <p class="choice-title"><span class="poi-num">⑦</span>🍜 想吃清淡暖胃｜儒林手工刀削麵與大蒸餃</p>
-                <div class="choice-sub">칼국수 / 왕만두・Kalguksu & Mandu</div>
+                <p class="choice-title"><span class="poi-num">⑦</span>🍜 想吃清淡暖胃｜牛耳川雞刀削麵 松泉站店</p>
+                <div class="choice-sub">우이천닭칼국수 솔샘역점｜서울 강북구 솔샘로 199-3 1층</div>
             </div>
-            <span class="choice-tag">🚶 5–8分</span>
+            <span class="choice-tag">🚶 民宿出發約 7–10分</span>
         </div>
-        <p class="choice-desc">小魚與昆布熬的清甜高湯，配上 Q 彈手工麵和拳頭大的手包蒸餃。玩累時很適合媽媽和小朋友。</p>
-        <div class="choice-rec">👍 必點：海鮮刀削麵、手工大蒸餃</div>
-        <a class="nav-btn" href="https://www.google.com/maps/search/?api=1&query=Kalguksu+Samyang+Seoul" target="_blank">📍 開啟地圖導航</a>
+        <p class="choice-desc">原 `솔샘칼국수보쌈 서울 강북구 솔샘로 225` 在 Naver 查無符合店家；改用松泉站旁可導航的雞刀削麵店。雞湯、刀削麵和餃子類更適合玩累後清淡晚餐。</p>
+        <div class="choice-rec">👍 Naver：칼국수,만두／評論 81／솔샘역 2 號出口約 136m</div>
+        <a class="nav-btn" href="https://map.naver.com/v5/search/%EC%9A%B0%EC%9D%B4%EC%B2%9C%EB%8B%AD%EC%B9%BC%EA%B5%AD%EC%88%98%20%EC%86%94%EC%83%98%EC%97%AD%EC%A0%90%20%EC%84%9C%EC%9A%B8%20%EA%B0%95%EB%B6%81%EA%B5%AC%20%EC%86%94%EC%83%98%EB%A1%9C%20199-3">🗺 Naver導航</a>
+    </div>
+
+    <div id="poi-hongkong-choice" class="choice-card">
+        <div class="choice-top">
+            <div>
+                <p class="choice-title">🍜 小孩想吃炸醬麵｜香港飯店 0410 三陽洞十字路店</p>
+                <div class="choice-sub">홍콩반점0410 삼양동사거리점｜중식당</div>
+            </div>
+            <span class="choice-tag">🚶 民宿出發約 12–16分</span>
+        </div>
+        <p class="choice-desc">炸醬麵、糖醋肉這種「孩子一定知道怎麼吃」的保底牌；下雨、不想冒險時很好用。</p>
+        <div class="choice-rec">👍 適合：炸醬麵、糖醋肉、全家不想研究菜單</div>
+        <a class="nav-btn" href="https://map.naver.com/v5/search/%ED%99%8D%EC%BD%A9%EB%B0%98%EC%A0%900410%20%EC%82%BC%EC%96%91%EB%8F%99%EC%82%AC%EA%B1%B0%EB%A6%AC%EC%A0%90">🗺 Naver導航</a>
+    </div>
+
+    <div id="poi-gamjatang-choice" class="choice-card">
+        <div class="choice-top">
+            <div>
+                <p class="choice-title">🍲 大人想吃韓式熱湯｜朝鮮甘藷馬鈴薯排骨湯</p>
+                <div class="choice-sub">조선감저｜감자탕</div>
+            </div>
+            <span class="choice-tag">🚶 民宿出發約 12–17分</span>
+        </div>
+        <p class="choice-desc">天氣冷、下雨、走很多路後，想吃熱湯鍋物就選它。導航時請選 강북구 미아동 店點。</p>
+        <div class="choice-rec">👍 適合：大人熱湯、韓式鍋物、晚餐補體力</div>
+        <a class="nav-btn" href="https://map.naver.com/v5/search/%EC%A1%B0%EC%84%A0%EA%B0%90%EC%A0%80%20%EA%B0%95%EB%B6%81%EA%B5%AC%20%EB%AF%B8%EC%95%84%EB%8F%99">🗺 Naver導航</a>
+    </div>
+
+    <div id="poi-tonkatsu" class="choice-card">
+        <div class="choice-top">
+            <div>
+                <p class="choice-title">🐷 想吃大份量｜高山冷麵＋炸豬排</p>
+                <div class="choice-sub">고산냉면｜서울 강북구 삼양로73길 3 1층 일부</div>
+            </div>
+            <span class="choice-tag">🚶 民宿出發約 14–17分</span>
+        </div>
+        <p class="choice-desc">想吃炸物又不想太膩，可以冷麵配炸豬排；比較適合大食量或青少年會喜歡的晚餐。</p>
+        <div class="choice-rec">👍 Naver：냉면／評論 157／菜單評論含 돈까스</div>
+        <a class="nav-btn" href="https://map.naver.com/v5/search/%EA%B3%A0%EC%82%B0%EB%83%89%EB%A9%B4%20%EC%84%9C%EC%9A%B8%20%EA%B0%95%EB%B6%81%EA%B5%AC%20%EC%82%BC%EC%96%91%EB%A1%9C73%EA%B8%B8%203">🗺 Naver導航</a>
     </div>
 
     <div id="poi-gimbap" class="choice-card">
         <div class="choice-top">
             <div>
-                <p class="choice-title"><span class="poi-num">⑥</span>🍙 早餐宵夜萬用｜紫菜包飯天國（松泉店）</p>
-                <div class="choice-sub">김밥천국・Gimbap CheonGuk</div>
+                <p class="choice-title"><span class="poi-num">⑥</span>🍙 早餐宵夜萬用｜紫菜包飯天國（三陽洞店）</p>
+                <div class="choice-sub">김밥천국 삼양동점｜서울 강북구 솔매로 52</div>
             </div>
-            <span class="choice-tag">🚶 3–5分</span>
+            <span class="choice-tag">🚶 民宿出發約 9–12分</span>
         </div>
         <p class="choice-desc">韓國國民廚房，紫菜包飯、拉麵、辣炒年糕、泡菜炒飯都有，出餐快，適合早餐、宵夜或臨時備案。</p>
         <div class="choice-rec">👍 必點：鮪魚紫菜包飯、起司拉麵、炸豬排</div>
-        <a class="nav-btn" href="https://www.google.com/maps/search/?api=1&query=Gimbap+Solsaem+Seoul" target="_blank">📍 開啟地圖導航</a>
+        <a class="nav-btn" href="https://map.naver.com/v5/search/%EA%B9%80%EB%B0%A5%EC%B2%9C%EA%B5%AD%20%EC%82%BC%EC%96%91%EB%8F%99%EC%A0%90%20%EC%84%9C%EC%9A%B8%20%EA%B0%95%EB%B6%81%EA%B5%AC%20%EC%86%94%EB%A7%A4%EB%A1%9C%2052">🗺 Naver導航</a>
+    </div>
+
+    <div id="poi-mcdonalds-choice" class="choice-card">
+        <div class="choice-top">
+            <div>
+                <p class="choice-title">🍟 最後保底／深夜突然餓｜麥當勞美阿 DT 店</p>
+                <div class="choice-sub">맥도날드 미아DT점｜24시간</div>
+            </div>
+            <span class="choice-tag">🚶 民宿出發約 12–18分</span>
+        </div>
+        <p class="choice-desc">不是特色店，但旅途中很有價值：孩子突然餓、餐廳都關了、下雨不想賭，直接導航它。</p>
+        <div class="choice-rec">👍 Naver：24 小時營業／適合早餐、宵夜、保底</div>
+        <a class="nav-btn" href="https://map.naver.com/v5/search/%EB%A7%A5%EB%8F%84%EB%82%A0%EB%93%9C%20%EB%AF%B8%EC%95%84DT%EC%A0%90">🗺 Naver導航</a>
     </div>
 
 </div>
@@ -1361,28 +1808,33 @@ function initMap() {
         .bindPopup('<b>🏠 我們的民宿</b><br><small>인수봉로 6길 9-2</small>').openPopup();
 
     var places = [
-        { name:'CU / GS25 便利商店', sub:'씨유/GS25', walk:'2-5分', lat:37.6192, lng:127.0118, color:'#00b894', emoji:'🏪', naver:'삼양동 편의점' },
-        { name:'樂天瑪特美食街 & 超市', sub:'롯데마트 삼양점', walk:'5-7分', lat:37.6208, lng:127.0132, color:'#fd79a8', emoji:'🛒', naver:'롯데마트 삼양점' },
-        { name:'本粥 & 拌飯', sub:'본죽 미아삼양점', walk:'5-8分', lat:37.6175, lng:127.0138, color:'#74b9ff', emoji:'🍲', naver:'본죽 삼양점' },
-        { name:'BHC 炸雞 美阿店', sub:'BHC 치킨 미아점', walk:'10-15分', lat:37.6155, lng:127.0158, color:'#e17055', emoji:'🍗', naver:'BHC치킨 미아점' },
-        { name:'傳統市場老字號辣年糕', sub:'삼양시장 떡볶이', walk:'8-12分', lat:37.6198, lng:127.0155, color:'#ff7675', emoji:'🌶', naver:'삼양시장 떡볶이' },
-        { name:'王家糖葫蘆', sub:'왕가탕후루 미아점', walk:'10-15分', lat:37.6148, lng:127.0145, color:'#ff9f43', emoji:'🍡', naver:'왕가탕후루 미아점' },
-        { name:'鯛魚燒 & 雞蛋糕', sub:'붕어빵/계란빵', walk:'5-10分', lat:37.6202, lng:127.0148, color:'#fdcb6e', emoji:'🐟', naver:'삼양시장' },
-        { name:'巴黎貝甜', sub:'파리바게뜨 삼양동', walk:'4-6分', lat:37.6178, lng:127.0122, color:'#1dd1a1', emoji:'🥐', naver:'파리바게뜨 삼양동' },
-        { name:'韓式五花肉烤肉', sub:'삼겹살 미아동', walk:'10-15分', lat:37.6162, lng:127.0165, color:'#cd6133', emoji:'🥩', naver:'미아동 삼겹살' },
-        { name:'人生四格拍貼店', sub:'인생네컷 Photoism', walk:'12-15分', lat:37.6145, lng:127.0135, color:'#a29bfe', emoji:'📸', naver:'미아동 인생네컷' },
-        { name:'24H 無人冰淇淋店', sub:'무인 아이스크림', walk:'3-6分', lat:37.6188, lng:127.0125, color:'#0984e3', emoji:'🍦', naver:'삼양동 무인아이스크림' },
-        { name:'橋村炸雞 美阿三陽店', sub:'교촌치킨 미아삼양점', walk:'8-12分', lat:37.6168, lng:127.0142, color:'#ee5253', emoji:'🍗', naver:'교촌치킨 미아삼양점' },
-        { name:'DAISO 大創 三陽站店', sub:'다이소 삼양역점', walk:'10-14分', lat:37.6172, lng:127.0108, color:'#10ac84', emoji:'🛍', naver:'다이소 삼양역점' },
-        { name:'EDIYA COFFEE 松泉店', sub:'이디야커피 솔샘역점', walk:'4-6分', lat:37.6180, lng:127.0095, color:'#6c5ce7', emoji:'☕', naver:'이디야커피 솔샘역' },
-        { name:'黑糖餅 & 炭烤雞肉串', sub:'호떡/닭꼬치', walk:'5-10分', lat:37.6195, lng:127.0160, color:'#fd7f2a', emoji:'🍢', naver:'삼양동 호떡' },
+        { name:'GS25 美阿碧山店', sub:'GS25 미아벽산점', walk:'民宿出發約5分（Naver 332m）', lat:37.6192, lng:127.0118, color:'#00b894', emoji:'🏪', naver:'GS25 미아벽산점 서울 강북구 솔샘로 167' },
+        { name:'樂天瑪特美食街 & 超市', sub:'롯데마트 삼양점', walk:'民宿出發約9-12分', lat:37.6208, lng:127.0132, color:'#fd79a8', emoji:'🛒', naver:'롯데마트 삼양점 서울 강북구 삼양로 247' },
+        { name:'本粥 & 拌飯（三陽站店）', sub:'본 죽&비빔밥 삼양역점', walk:'民宿出發約8-11分', lat:37.6175, lng:127.0138, color:'#74b9ff', emoji:'🍲', naver:'본죽비빔밥 삼양역점 서울 강북구 삼양로 235' },
+        { name:'BHC 炸雞 三陽十字路店', sub:'BHC치킨 삼양사거리점', walk:'民宿出發約13-16分', lat:37.6155, lng:127.0158, color:'#e17055', emoji:'🍗', naver:'BHC치킨 삼양사거리점 서울 강북구 삼양로 261' },
+        { name:'傳統市場老字號辣年糕', sub:'삼양동순대떡볶이', walk:'民宿出發約9-12分', lat:37.6198, lng:127.0155, color:'#ff7675', emoji:'🌶', naver:'삼양동순대떡볶이 서울 강북구 삼양로 246' },
+        { name:'糖葫蘆替代：24H世界零食店', sub:'더까까주까 삼양시장점', walk:'民宿出發約10-13分', lat:37.6148, lng:127.0145, color:'#ff9f43', emoji:'🍬', naver:'더까까주까 삼양시장점 서울 강북구 솔매로 59' },
+        { name:'鯛魚燒替代：Dessert Love Coffee', sub:'디저트를사랑한커피', walk:'民宿出發約6-9分', lat:37.6202, lng:127.0148, color:'#fdcb6e', emoji:'🐟', naver:'디저트를사랑한커피 서울 강북구 솔샘로 184' },
+        { name:'巴黎貝甜三陽市場店', sub:'파리바게뜨 삼양시장점', walk:'民宿出發約8-11分', lat:37.6178, lng:127.0122, color:'#1dd1a1', emoji:'🥐', naver:'파리바게뜨 삼양시장점 서울 강북구 삼양로 241' },
+        { name:'道地韓式五花肉烤肉：三陽豚', sub:'삼양돈', walk:'民宿出發約11-14分', lat:37.6162, lng:127.0165, color:'#cd6133', emoji:'🥩', naver:'삼양돈 서울 강북구 솔매로 64-1' },
+        { name:'飲料補給替代：MEGA MGC Coffee 三陽市場店', sub:'메가MGC커피 삼양시장점', walk:'民宿出發約10-13分', lat:37.6145, lng:127.0135, color:'#a29bfe', emoji:'🥤', naver:'메가MGC커피 삼양시장점 서울 강북구 삼양로54길 3' },
+        { name:'24H 無人冰淇淋店', sub:'우리동네 아이스크림', walk:'民宿出發約6-9分', lat:37.6188, lng:127.0125, color:'#0984e3', emoji:'🍦', naver:'우리동네 아이스크림 서울 강북구 삼양로19길 109' },
+        { name:'炸雞替代：Cool Hof 美阿店', sub:'쿨호프 미아점', walk:'民宿出發約12-15分', lat:37.6168, lng:127.0142, color:'#ee5253', emoji:'🍗', naver:'쿨호프 미아점 서울 강북구 솔매로 85' },
+        { name:'DAISO 大創 大地市場店', sub:'다이소 대지시장점', walk:'民宿出發約10-13分', lat:37.6172, lng:127.0108, color:'#10ac84', emoji:'🛍', naver:'다이소 대지시장점 서울 강북구 솔샘로 239' },
+        { name:'咖啡替代：빽다방 三陽市場店', sub:'빽다방 삼양시장점', walk:'民宿出發約9-12分', lat:37.6180, lng:127.0095, color:'#6c5ce7', emoji:'☕', naver:'빽다방 삼양시장점 서울 강북구 솔매로 52' },
+        { name:'市場小吃替代：三陽市場辣年糕順대', sub:'삼양시장떡볶이순대', walk:'民宿出發約9-12分', lat:37.6195, lng:127.0160, color:'#fd7f2a', emoji:'🍢', naver:'삼양시장떡볶이순대 서울 강북구 솔매로 46' },
+        { name:'直火豬肉蓋飯：The Poom 三陽十字路本店', sub:'더품 삼양사거리본점', walk:'民宿出發約10-14分', lat:37.6158, lng:127.0132, color:'#e17055', emoji:'🍚', naver:'더품 삼양사거리본점' },
+        { name:'清爽晚餐備案：主大國壽司 美阿店', sub:'주대국초밥집 미아점', walk:'民宿出發約11-15分', lat:37.6156, lng:127.0128, color:'#00cec9', emoji:'🍣', naver:'주대국초밥집 미아점' },
+        { name:'炸醬麵保底：香港飯店 0410 三陽洞十字路店', sub:'홍콩반점0410 삼양동사거리점', walk:'民宿出發約12-16分', lat:37.6152, lng:127.0140, color:'#d63031', emoji:'🍜', naver:'홍콩반점0410 삼양동사거리점' },
+        { name:'熱湯鍋物備案：朝鮮甘藷馬鈴薯排骨湯', sub:'조선감저', walk:'民宿出發約12-17分', lat:37.6160, lng:127.0144, color:'#6c5ce7', emoji:'🍲', naver:'조선감저 강북구 미아동' },
+        { name:'24H 速食保底：麥當勞美阿 DT 店', sub:'맥도날드 미아DT점', walk:'民宿出發約12-18分', lat:37.6166, lng:127.0172, color:'#fdcb6e', emoji:'🍟', naver:'맥도날드 미아DT점' },
     ];
 
     places.forEach(function(p) {
         var url = 'https://map.naver.com/v5/search/' + encodeURIComponent(p.naver);
         var popup = '<b>' + p.name + '</b><br><small style="color:#888">' + p.sub + '</small><br>' +
             '<span style="color:#e67e22;font-size:0.78rem">🚶 ' + p.walk + '</span><br><br>' +
-            '<a href="' + url + '" style="display:block;text-align:center;background:#03C75A;color:white;padding:4px 8px;border-radius:6px;text-decoration:none;font-size:0.8rem;font-weight:bold;">🗺 Naver 導航</a>';
+            '<a href="' + url + '" style="display:block;text-align:center;background:#03C75A;color:white;padding:4px 8px;border-radius:6px;text-decoration:none;font-size:0.8rem;font-weight:bold;">🗺 Naver導航</a>';
         L.marker([p.lat, p.lng], { icon: makeIcon(p.color, p.emoji) }).addTo(map).bindPopup(popup);
     });
 
@@ -1402,6 +1854,124 @@ function initMap() {
 </script>
 
 <script>
+document.addEventListener('DOMContentLoaded', function() {
+  var map = document.getElementById('nearby-map');
+  if (!map) return;
+  var mapbox = map.querySelector('.mapbox');
+  var svg = map.querySelector('svg');
+  if (!mapbox || !svg) return;
+
+  map.classList.add('map-compact');
+
+  var svgGeoPoints = {
+    '#poi-home': [37.6185, 127.0104],
+    '#poi-cu': [37.6192, 127.0118],
+    '#poi-lotte': [37.6208, 127.0132],
+    '#poi-porridge': [37.6175, 127.0138],
+    '#poi-bhc': [37.6155, 127.0158],
+    '#poi-tteok': [37.6198, 127.0155],
+    '#poi-tanghulu': [37.6148, 127.0145],
+    '#poi-fish': [37.6202, 127.0148],
+    '#poi-paris': [37.6178, 127.0122],
+    '#poi-bbq': [37.6162, 127.0165],
+    '#poi-photo': [37.6145, 127.0135],
+    '#poi-ice': [37.6188, 127.0125],
+    '#poi-kyochon': [37.6168, 127.0142],
+    '#poi-daiso': [37.6172, 127.0108],
+    '#poi-ediya': [37.6180, 127.0095],
+    '#poi-hotteok': [37.6195, 127.0160],
+    '#poi-gimbap': [37.6180, 127.0095],
+    '#poi-kalguksu': [37.6200, 127.0126],
+    '#poi-deopbap': [37.6158, 127.0132],
+    '#poi-sushi': [37.6156, 127.0128],
+    '#poi-hongkong': [37.6152, 127.0140],
+    '#poi-gamjatang': [37.6160, 127.0144],
+    '#poi-mcdonalds': [37.6166, 127.0172]
+  };
+  var homeLat = 37.6185;
+  var homeLng = 127.0104;
+  var homeX = 260;
+  var homeY = 300;
+  var scaleX = 90000;
+  var scaleY = 85000;
+  function projectPoint(lat, lng) {
+    return [
+      Math.max(70, Math.min(910, homeX + (lng - homeLng) * scaleX)),
+      Math.max(70, Math.min(650, homeY - (lat - homeLat) * scaleY))
+    ];
+  }
+  Object.keys(svgGeoPoints).forEach(function(href) {
+    var link = svg.querySelector('a[href="' + href + '"]');
+    if (!link) return;
+    var pin = link.querySelector('.pin');
+    if (!pin) return;
+    var point = projectPoint(svgGeoPoints[href][0], svgGeoPoints[href][1]);
+    pin.setAttribute('transform', 'translate(' + point[0].toFixed(1) + ',' + point[1].toFixed(1) + ')');
+  });
+
+  var tip = document.createElement('div');
+  tip.className = 'map-tip';
+  tip.style.display = 'none';
+  mapbox.appendChild(tip);
+
+  var activeHref = '';
+
+  function clearActive() {
+    svg.querySelectorAll('a.map-pin-active').forEach(function(a) {
+      a.classList.remove('map-pin-active');
+    });
+  }
+
+  svg.querySelectorAll('a[href^="#"]').forEach(function(link) {
+    link.addEventListener('click', function(e) {
+      var href = link.getAttribute('href');
+      if (!href) return;
+
+      if (activeHref === href && link.classList.contains('map-pin-active')) {
+        return;
+      }
+
+      e.preventDefault();
+      activeHref = href;
+      clearActive();
+      link.classList.add('map-pin-active');
+
+      var title = link.querySelector('title');
+      var text = title ? title.textContent : href.replace('#poi-', '');
+      var parts = text.split('｜');
+      tip.innerHTML = parts[0] + (parts[1] ? '<small>' + parts.slice(1).join('｜') + '<br>再點一次前往卡片</small>' : '<small>再點一次前往卡片</small>');
+
+      var box = mapbox.getBoundingClientRect();
+      var x = e.clientX - box.left;
+      var y = e.clientY - box.top;
+      tip.style.left = Math.max(80, Math.min(box.width - 80, x)) + 'px';
+      tip.style.top = Math.max(40, y) + 'px';
+      tip.style.display = 'block';
+    });
+  });
+
+  document.addEventListener('click', function(e) {
+    if (map.contains(e.target)) return;
+    activeHref = '';
+    clearActive();
+    tip.style.display = 'none';
+  });
+});
+</script>
+
+<div id="addrModal" class="addr-modal" onclick="if(event.target === this) closeModal()">
+    <div class="addr-popup" role="dialog" aria-modal="true" aria-label="給司機看的放大地址">
+        <button class="addr-close" type="button" onclick="closeModal()" aria-label="關閉">×</button>
+        <div class="addr-icon">🚕</div>
+        <div id="addrModalLabel" class="addr-label">給司機看</div>
+        <div id="addrModalKorean" class="addr-korean">서울특별시 강북구 인수봉로6길 9-2</div>
+        <div id="addrModalDetail" class="addr-detail">明確導航落點；可直接給司機或輸入叫車 App</div>
+        <div class="addr-hint">정확한 목적지 / 주소</div>
+        <button class="addr-close-big" type="button" onclick="closeModal()">關閉</button>
+    </div>
+</div>
+
+<script>
 function toggleDay(header) {
     var card = header.parentElement;
     card.classList.toggle('collapsed');
@@ -1413,11 +1983,16 @@ function switchTab(index) {
     document.querySelectorAll('.panel').forEach((p, i) => p.classList.toggle('active', i === index));
     if (index === 2) initMap();
 }
-function openModal() {
+function openModal(label, korean, detail) {
     var modal = document.getElementById('addrModal');
-    // Safari Quick Look fix: reposition fixed element to current scroll
-    modal.style.top = window.scrollY + 'px';
-    modal.style.height = window.innerHeight + 'px';
+    var labelEl = document.getElementById('addrModalLabel');
+    var koreanEl = document.getElementById('addrModalKorean');
+    var detailEl = document.getElementById('addrModalDetail');
+    if (labelEl && label) labelEl.textContent = label;
+    if (koreanEl && korean) koreanEl.textContent = korean;
+    if (detailEl && detail) detailEl.textContent = detail;
+    modal.style.top = '';
+    modal.style.height = '';
     modal.classList.add('show');
     document.body.style.overflow = 'hidden';
 }
@@ -1425,6 +2000,18 @@ function closeModal() {
     document.getElementById('addrModal').classList.remove('show');
     document.body.style.overflow = '';
 }
+document.addEventListener('click', function(e) {
+    var line = e.target.closest && e.target.closest('.driver-line');
+    if (!line) return;
+    var raw = line.textContent.replace(/\s+/g, ' ').trim();
+    var parts = raw.split('：');
+    var label = parts[0] || '🚕 給司機看';
+    var korean = parts.slice(1).join('：').trim() || raw;
+    openModal(label, korean, '明確導航落點；可直接給司機或輸入叫車 App。');
+});
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeModal();
+});
 </script>
 
 <script>
