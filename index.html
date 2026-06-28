@@ -342,8 +342,8 @@
     </style>
 
 <style>
-.embedded-illu-map{margin:1rem 0 1.2rem;background:white;border:1px solid #eadfd1;border-radius:18px;overflow:hidden;box-shadow:0 4px 10px rgba(0,0,0,.05)}
-.embedded-illu-map .mapbox{background:#fff8ec;overflow:hidden}
+.embedded-illu-map{margin:1rem 0 1.2rem;background:white;border:1px solid #eadfd1;border-radius:24px;overflow:hidden;box-shadow:0 16px 34px rgba(108,92,231,.10),0 4px 12px rgba(45,52,54,.06)}
+.embedded-illu-map .mapbox{background:linear-gradient(145deg,#fff9ef 0%,#fffdf8 46%,#f5fbff 100%);overflow:hidden}
 .embedded-illu-map svg{display:block;width:100%;height:auto}
 .embedded-illu-map .road{fill:none;stroke:#e1d2c0;stroke-width:18;stroke-linecap:round;stroke-linejoin:round;opacity:.86}
 .embedded-illu-map .road.thin{stroke-width:9;opacity:.58}
@@ -352,48 +352,92 @@
 .embedded-illu-map .zone{opacity:.16}
 .embedded-illu-map .block{fill:#fff;stroke:#f1e5d7;stroke-width:2;opacity:.9}
 .embedded-illu-map .coord-grid line{stroke:#d9c8b5;stroke-width:1.2;stroke-dasharray:5 7;opacity:.25}
-.embedded-illu-map .context-road{fill:none;stroke:#dac2a6;stroke-width:20;stroke-linecap:round;stroke-linejoin:round;opacity:.58}
-.embedded-illu-map .context-road.major{stroke:#caa783;stroke-width:24;opacity:.62}
-.embedded-illu-map .context-road.minor{stroke:#e3d3bf;stroke-width:12;opacity:.48}
-.embedded-illu-map .context-park{fill:#dff2d6;stroke:#b9d9b0;stroke-width:2;opacity:.62}
-.embedded-illu-map .context-label{font-size:13px;font-weight:900;fill:#8b735c;opacity:.78}
-.embedded-illu-map .walk{fill:none;stroke:#6c5ce7;stroke-width:2;stroke-dasharray:8 8;opacity:.20}
-.embedded-illu-map .pin{filter:drop-shadow(0 4px 8px rgba(0,0,0,.20))}
-.embedded-illu-map .label rect{fill:rgba(255,255,255,.96);stroke:#eadfd1;stroke-width:1.5;filter:drop-shadow(0 3px 8px rgba(0,0,0,.10))}
+.embedded-illu-map .context-road{fill:none;stroke:#d9b98e;stroke-width:20;stroke-linecap:round;stroke-linejoin:round;opacity:.60}
+.embedded-illu-map .context-road.major{stroke:#c79b67;stroke-width:30;opacity:.72}
+.embedded-illu-map .context-road.artery{stroke:#b98552;stroke-width:36;opacity:.78}
+.embedded-illu-map .context-road.minor{stroke:#ead9c3;stroke-width:13;opacity:.58}
+.embedded-illu-map .context-road-shadow{fill:none;stroke:#8d6e4f;stroke-width:44;stroke-linecap:round;stroke-linejoin:round;opacity:.08}
+.embedded-illu-map .context-park{fill:#dff2d6;stroke:#a8cf9e;stroke-width:2;opacity:.72}
+.embedded-illu-map .context-label{font-size:13px;font-weight:900;fill:#725a43;opacity:.82;paint-order:stroke;stroke:#fffaf1;stroke-width:4px;stroke-linejoin:round}
+.embedded-illu-map .walk{fill:none;stroke:#6c5ce7;stroke-width:2.2;stroke-dasharray:8 8;opacity:.18}
+.embedded-illu-map .pin{filter:drop-shadow(0 6px 10px rgba(45,52,54,.24))}
+.embedded-illu-map .pin:hover circle:first-child{stroke:#2d3436;stroke-width:3}
+.embedded-illu-map .label rect{fill:rgba(255,255,255,.97);stroke:#eadfd1;stroke-width:1.5;filter:drop-shadow(0 6px 14px rgba(45,52,54,.12))}
 .embedded-illu-map .label-title{font-size:12px;font-weight:900;fill:#2d3436}
-.embedded-illu-map .label-sub{font-size:9.5px;fill:#636e72}
-.embedded-illu-map .leader{stroke:#b7a895;stroke-width:1.7;stroke-dasharray:3 5;opacity:.65}
-.embedded-illu-map .maptext{font-size:16px;font-weight:900;fill:#b08d68;opacity:.7}
+.embedded-illu-map .label-sub{font-size:9.5px;fill:#6f6254;font-weight:750}
+.embedded-illu-map .leader{stroke:#9f8c7a;stroke-width:1.8;stroke-dasharray:3 5;opacity:.68}
+.embedded-illu-map .maptext{font-size:16px;font-weight:900;fill:#9b7650;opacity:.72;paint-order:stroke;stroke:#fff8ec;stroke-width:4px;stroke-linejoin:round}
 .embedded-illu-map.map-compact .label,
 .embedded-illu-map.map-compact .leader{display:none}
 .embedded-illu-map .mapbox{position:relative}
 .embedded-illu-map .map-tip{
   position:absolute;
   z-index:5;
-  max-width:210px;
-  transform:translate(-50%,-115%);
+  width:min(230px, calc(100% - 28px));
   background:rgba(255,255,255,.97);
   border:2px solid #eadfd1;
-  border-radius:14px;
-  padding:8px 10px;
+  border-radius:16px;
+  padding:10px 12px;
   box-shadow:0 8px 22px rgba(45,52,54,.18);
   font-size:.78rem;
   font-weight:900;
   color:#2d3436;
   line-height:1.35;
-  pointer-events:none;
+  pointer-events:auto;
+  cursor:pointer;
+  touch-action:manipulation;
 }
-.embedded-illu-map .map-tip small{display:block;margin-top:3px;font-size:.68rem;color:#8a7b6c;font-weight:800}
+.embedded-illu-map .map-tip small{display:block;margin-top:4px;font-size:.68rem;color:#8a7b6c;font-weight:800}
+.embedded-illu-map .map-tip::after{content:"";position:absolute;left:50%;transform:translateX(-50%);border:8px solid transparent}
+.embedded-illu-map .map-tip.tip-above::after{bottom:-16px;border-top-color:#eadfd1}
+.embedded-illu-map .map-tip.tip-below::after{top:-16px;border-bottom-color:#eadfd1}
 .embedded-illu-map svg a.map-pin-active .pin circle:first-child{stroke:#2d3436;stroke-width:4}
-.embedded-illu-map .legend{display:flex;gap:8px;flex-wrap:wrap;padding:9px 10px;border-top:1px solid #eee;background:#fff}
-.embedded-illu-map .legend span{font-size:.72rem;background:#f8f5ef;border:1px solid #eadfd1;border-radius:999px;padding:5px 8px;font-weight:800}
-.embedded-illu-map .note{font-size:.76rem;color:#636e72;padding:9px 10px;background:#fffdf8;border-top:1px dashed #eadfd1}
-.embedded-illu-title{padding:0.75rem 0.9rem;background:#fffdf8;border-bottom:1px dashed #eadfd1;font-size:.9rem;font-weight:900;color:#6c5ce7}
+.food-card.map-card-focus{outline:3px solid #6c5ce7;box-shadow:0 0 0 7px rgba(108,92,231,.12),0 10px 24px rgba(45,52,54,.10)}
+.food-card.map-card-focus .card-header{background:linear-gradient(90deg,#f1efff,#fffdf8);border-radius:14px}
+.embedded-illu-map .legend{display:flex;gap:8px;flex-wrap:wrap;padding:11px 12px;border-top:1px solid #f1e5d7;background:#fff}
+.embedded-illu-map .legend span{font-size:.72rem;background:#fff8ec;border:1px solid #eadfd1;border-radius:999px;padding:6px 10px;font-weight:850;color:#6f5b47}
+.embedded-illu-map .note{font-size:.76rem;color:#636e72;padding:11px 12px;background:#fffdf8;border-top:1px dashed #eadfd1}
+.embedded-illu-title{padding:0.85rem 1rem;background:linear-gradient(90deg,#fff4df,#fffdf8);border-bottom:1px dashed #eadfd1;font-size:.92rem;font-weight:950;color:#6c5ce7}
+.calibration-map{margin:1rem 0 1.2rem;background:#fff;border:1px solid #dfe6e9;border-radius:24px;overflow:hidden;box-shadow:0 16px 34px rgba(9,132,227,.10),0 4px 12px rgba(45,52,54,.06)}
+.calibration-title{padding:.9rem 1rem;background:linear-gradient(90deg,#f1f8ff,#fffdf8);border-bottom:1px dashed #dfe6e9;font-size:.95rem;font-weight:950;color:#2d3436}
+.calibration-map svg{display:block;width:100%;height:auto;background:linear-gradient(145deg,#fbfdff 0%,#fffaf1 55%,#f4fbff 100%)}
+.calibration-grid line{stroke:#cfd8dc;stroke-width:1;stroke-dasharray:4 7;opacity:.48}
+.calibration-axis{stroke:#6c5ce7;stroke-width:3;stroke-linecap:round;opacity:.42;stroke-dasharray:10 9}
+.calibration-road{fill:none;stroke:#dcc09c;stroke-width:24;stroke-linecap:round;stroke-linejoin:round;opacity:.62}
+.calibration-road.major{stroke:#c79b67;stroke-width:32;opacity:.70}
+.calibration-road.minor{stroke:#e9d7c0;stroke-width:12;opacity:.56}
+.calibration-park{fill:#e1f7df;stroke:#b6d9ad;stroke-width:2;opacity:.70}
+.calibration-zone{opacity:.15}
+.calibration-compass text{font-size:15px;font-weight:950;fill:#6c5ce7}
+.calibration-point circle{stroke:white;stroke-width:3;filter:drop-shadow(0 5px 10px rgba(45,52,54,.24))}
+.calibration-point:hover circle{stroke:#2d3436;stroke-width:4}
+.calibration-point text{font-size:12px;font-weight:900;fill:white;text-anchor:middle;dominant-baseline:central}
+.calibration-home circle{stroke:#2d3436;stroke-width:4}
+.calibration-label{font-size:12px;font-weight:900;fill:#5f6f77;paint-order:stroke;stroke:#fff;stroke-width:4px;stroke-linejoin:round}
+.calibration-table{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:6px;padding:10px;background:#fff}
+.calibration-table a{display:flex;align-items:center;gap:6px;text-decoration:none;color:#2d3436;background:#f8f9fa;border:1px solid #edf0f2;border-radius:10px;padding:6px 8px;font-size:.74rem;font-weight:800}
+.calibration-table b{display:inline-flex;align-items:center;justify-content:center;min-width:24px;height:24px;border-radius:999px;background:#6c5ce7;color:white;font-size:.7rem}
+.calibration-note{font-size:.76rem;color:#636e72;padding:9px 10px;background:#fffdf8;border-top:1px dashed #dfe6e9;line-height:1.55}
+.route-audit{margin:1rem 0 1.2rem;background:white;border:2px solid #eadfd1;border-radius:18px;overflow:hidden;box-shadow:0 4px 10px rgba(0,0,0,.05)}
+.route-audit-title{padding:.8rem .9rem;background:#fffdf8;border-bottom:1px dashed #eadfd1;font-size:.94rem;font-weight:900;color:#6c5ce7}
+.route-audit-note{padding:9px 10px;background:#fff8ec;color:#8b735c;font-size:.76rem;line-height:1.55;border-bottom:1px dashed #eadfd1}
+.route-audit-scroll{overflow:auto}
+.route-audit table{width:100%;border-collapse:collapse;min-width:960px}
+.route-audit th,.route-audit td{border-bottom:1px solid #f1e5d7;padding:8px 9px;text-align:left;font-size:.74rem;vertical-align:top}
+.route-audit th{position:sticky;top:0;background:#fffdf8;color:#8b735c;font-weight:900;z-index:1}
+.route-audit td:first-child{font-weight:900;color:#6c5ce7;white-space:nowrap}
+.route-audit .status{display:inline-block;border-radius:999px;padding:3px 7px;font-size:.68rem;font-weight:900;white-space:nowrap}
+.route-audit .ok{background:#e8fff6;color:#00a36c;border:1px solid #b8f4dd}
+.route-audit .partial{background:#fff7df;color:#b7791f;border:1px solid #ffe0a3}
+.route-audit .todo{background:#f3f4f6;color:#636e72;border:1px solid #dfe6e9}
+.route-audit .route-link{display:inline-block;text-decoration:none;border-radius:999px;padding:4px 8px;margin:2px 2px 0 0;background:#03C75A;color:white;font-size:.68rem;font-weight:900}
+.route-audit .card-link{display:inline-block;text-decoration:none;border-radius:999px;padding:4px 8px;margin:2px 2px 0 0;background:#6c5ce7;color:white;font-size:.68rem;font-weight:900}
 @media (orientation: landscape) and (max-height: 520px){
   .embedded-illu-map .mapbox{height:calc(100vh - 170px);min-height:300px;display:flex;align-items:center;justify-content:center}
   .embedded-illu-map svg{width:auto;height:100%;max-width:100%}
   .embedded-illu-map .legend{flex-wrap:nowrap;overflow:auto}
-  .embedded-illu-map .note{display:none}
+  .embedded-illu-map .note{display:block;font-size:.68rem;line-height:1.45;padding:7px 9px}
+  .calibration-table{grid-template-columns:repeat(3,minmax(150px,1fr));max-height:150px;overflow:auto}
 }
 </style>
 
@@ -1071,371 +1115,62 @@ html{scroll-behavior:smooth}
     </div>
 
 <div id="nearby-map" class="embedded-illu-map">
-        <div class="embedded-illu-title">🗺️ Sweet Home 生活圈地圖</div>
+        <div class="embedded-illu-title">📍 Sweet Home 生活圈定位圖（Naver 座標校準）</div>
         <div class="mapbox">
-<svg viewBox="0 0 980 720" preserveAspectRatio="xMidYMid meet" role="img" aria-label="民宿周遭自適應插畫地圖">
-<rect width="980" height="720" fill="#fff8ec"/>
-<ellipse class="zone" cx="230" cy="360" rx="210" ry="190" fill="#6c5ce7"/>
-<ellipse class="zone" cx="690" cy="190" rx="230" ry="150" fill="#ff9f43"/>
-<ellipse class="zone" cx="690" cy="545" rx="250" ry="160" fill="#0984e3"/>
-<ellipse class="context-park" cx="150" cy="105" rx="135" ry="70"/>
-<ellipse class="context-park" cx="835" cy="620" rx="135" ry="72"/>
-<path class="context-road major" d="M80 360 C235 335 360 320 520 300 C675 280 790 245 925 190"/>
-<path class="context-road" d="M210 660 C315 535 440 420 565 305 C675 205 760 120 850 55"/>
-<path class="context-road minor" d="M120 455 C250 430 390 420 540 445 C665 465 770 520 900 585"/>
-<text x="78" y="108" class="context-label">北漢山／住宅綠地方向</text>
-<text x="642" y="134" class="context-label">三陽市場／Samyang-ro 軸</text>
-<text x="635" y="610" class="context-label">美阿／三陽十字路方向</text>
-<text x="88" y="432" class="context-label">Solmae-ro 市場街方向</text>
+<svg viewBox="0 0 980 620" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Naver 座標校準後的民宿周遭店點定位圖">
+<rect width="980" height="620" fill="#fbfdff"/>
+<ellipse class="zone" cx="250" cy="330" rx="235" ry="170" fill="#6c5ce7"/>
+<ellipse class="zone" cx="650" cy="175" rx="265" ry="145" fill="#ff9f43"/>
+<ellipse class="zone" cx="690" cy="440" rx="300" ry="135" fill="#00cec9"/>
+<ellipse class="context-park" cx="135" cy="112" rx="118" ry="56"/>
+<ellipse class="context-park" cx="860" cy="552" rx="122" ry="54"/>
+<path class="context-road-shadow" d="M93 535 C210 492 360 452 528 405 C690 360 820 300 930 246"/>
+<path class="context-road-shadow" d="M390 78 C495 156 590 254 660 366 C730 475 802 535 900 574"/>
+<path class="context-road-shadow" d="M92 485 C126 398 166 310 215 220 C256 146 305 92 360 50"/>
+<path class="context-road major" d="M93 535 C210 492 360 452 528 405 C690 360 820 300 930 246"/>
+<path class="context-road" d="M390 78 C495 156 590 254 660 366 C730 475 802 535 900 574"/>
+<path class="context-road" d="M92 485 C126 398 166 310 215 220 C256 146 305 92 360 50"/>
+<path class="context-road minor" d="M150 360 C245 312 350 250 480 198 C590 154 712 126 858 116"/>
+<path class="context-road minor" d="M180 430 C306 405 445 410 595 444 C720 474 820 505 922 528"/>
 <g class="coord-grid">
-  <line x1="260" y1="70" x2="260" y2="650"/>
-  <line x1="70" y1="300" x2="910" y2="300"/>
-  <line x1="470" y1="70" x2="470" y2="650"/>
-  <line x1="680" y1="70" x2="680" y2="650"/>
-  <line x1="70" y1="155" x2="910" y2="155"/>
-  <line x1="70" y1="445" x2="910" y2="445"/>
+  <line x1="65" y1="60" x2="65" y2="540"/><line x1="237" y1="60" x2="237" y2="540"/><line x1="409" y1="60" x2="409" y2="540"/><line x1="581" y1="60" x2="581" y2="540"/><line x1="753" y1="60" x2="753" y2="540"/><line x1="925" y1="60" x2="925" y2="540"/>
+  <line x1="65" y1="60" x2="925" y2="60"/><line x1="65" y1="156" x2="925" y2="156"/><line x1="65" y1="252" x2="925" y2="252"/><line x1="65" y1="348" x2="925" y2="348"/><line x1="65" y1="444" x2="925" y2="444"/><line x1="65" y1="540" x2="925" y2="540"/>
 </g>
-<circle class="walk" cx="260" cy="300" r="95"/><circle class="walk" cx="260" cy="300" r="180"/><circle class="walk" cx="260" cy="300" r="265"/>
-<text x="76" y="294" class="maptext">西</text>
-<text x="880" y="294" class="maptext">東</text>
-<text x="270" y="88" class="maptext">北</text>
-<text x="270" y="640" class="maptext">南</text>
-<text x="278" y="398" class="maptext" style="font-size:12px;opacity:.55">圖示按座標投影；道路為大方向參考</text>
+<line class="walk" x1="287" y1="280" x2="828" y2="440"/>
+<text x="86" y="104" class="context-label">北漢山／公園方向</text>
+<text x="88" y="520" class="context-label">인수봉로</text>
+<text x="620" y="112" class="context-label">삼양로／市場入口</text>
+<text x="746" y="558" class="context-label">美阿大路商圈</text>
+<text x="305" y="264" class="maptext" style="font-size:12px;opacity:.62">民宿 → 美阿／三陽大路方向</text>
+<g transform="translate(913,84)"><circle r="33" fill="white" stroke="#dfe6e9" stroke-width="2"/><text x="0" y="5" text-anchor="middle" font-size="15" font-weight="950" fill="#6c5ce7">N</text><path d="M0,-24 L8,10 L0,4 L-8,10 Z" fill="#6c5ce7"/></g>
 
-    <g class="label" transform="translate(300,286)">
-      <rect width="82" height="42" rx="13"/>
-      <text class="label-title" x="12" y="17">民宿</text>
-      <text class="label-sub" x="12" y="32">인수봉로 6길 9-2</text>
-    </g>
-    <line class="leader" x1="260" y1="300" x2="300" y2="307"/>
-    
-    <g class="label" transform="translate(430,210)">
-      <rect width="112" height="42" rx="13"/>
-      <text class="label-title" x="12" y="17">① GS25</text>
-      <text class="label-sub" x="12" y="32">미아벽산점</text>
-    </g>
-    <line class="leader" x1="405" y1="238" x2="430" y2="231"/>
-    
-    <g class="label" transform="translate(385,86)">
-      <rect width="82" height="42" rx="13"/>
-      <text class="label-title" x="12" y="17">② 樂天瑪特</text>
-      <text class="label-sub" x="12" y="32">롯데마트 삼양점</text>
-    </g>
-    <line class="leader" x1="525" y1="105" x2="385" y2="107"/>
-    
-    <g class="label" transform="translate(625,350)">
-      <rect width="88" height="42" rx="13"/>
-      <text class="label-title" x="12" y="17">本粥&amp;拌飯</text>
-      <text class="label-sub" x="12" y="32">삼양역점</text>
-    </g>
-    <line class="leader" x1="595" y1="382" x2="625" y2="371"/>
-    
-    <g class="label" transform="translate(735,515)">
-      <rect width="82" height="42" rx="13"/>
-      <text class="label-title" x="12" y="17">⑨ BHC</text>
-      <text class="label-sub" x="12" y="32">삼양사거리점</text>
-    </g>
-    <line class="leader" x1="735" y1="560" x2="735" y2="536"/>
-    
-    <g class="label" transform="translate(725,145)">
-      <rect width="82" height="42" rx="13"/>
-      <text class="label-title" x="12" y="17">辣年糕</text>
-      <text class="label-sub" x="12" y="32">삼양동순대떡볶이</text>
-    </g>
-    <line class="leader" x1="705" y1="180" x2="725" y2="166"/>
-    
-    <g class="label" transform="translate(655,602)">
-      <rect width="88" height="42" rx="13"/>
-      <text class="label-title" x="12" y="17">⑩ 24H零食</text>
-      <text class="label-sub" x="12" y="32">더까까주까</text>
-    </g>
-    <line class="leader" x1="630" y1="630" x2="655" y2="623"/>
-    
-    <g class="label" transform="translate(495,145)">
-      <rect width="82" height="42" rx="13"/>
-      <text class="label-title" x="12" y="17">鯛魚燒替代</text>
-      <text class="label-sub" x="12" y="32">디저트를사랑한커피</text>
-    </g>
-    <line class="leader" x1="650" y1="150" x2="495" y2="166"/>
-    
-    <g class="label" transform="translate(465,320)">
-      <rect width="82" height="42" rx="13"/>
-      <text class="label-title" x="12" y="17">⑤ 巴黎貝甜</text>
-      <text class="label-sub" x="12" y="32">파리바게뜨</text>
-    </g>
-    <line class="leader" x1="435" y1="350" x2="465" y2="341"/>
-    
-    <g class="label" transform="translate(815,465)">
-      <rect width="82" height="42" rx="13"/>
-      <text class="label-title" x="12" y="17">韓式烤肉</text>
-      <text class="label-sub" x="12" y="32">삼양돈</text>
-    </g>
-    <line class="leader" x1="805" y1="500" x2="815" y2="486"/>
-    
-    <g class="label" transform="translate(390,625)">
-      <rect width="82" height="42" rx="13"/>
-      <text class="label-title" x="12" y="17">⑪ MEGA咖啡</text>
-      <text class="label-sub" x="12" y="32">삼양시장점</text>
-    </g>
-    <line class="leader" x1="560" y1="630" x2="390" y2="646"/>
-    
-    <g class="label" transform="translate(510,250)">
-      <rect width="88" height="42" rx="13"/>
-      <text class="label-title" x="12" y="17">無人冰淇淋</text>
-      <text class="label-sub" x="12" y="32">우리동네</text>
-    </g>
-    <line class="leader" x1="475" y1="270" x2="510" y2="271"/>
-    
-    <g class="label" transform="translate(655,415)">
-      <rect width="82" height="42" rx="13"/>
-      <text class="label-title" x="12" y="17">⑧ 炸雞替代</text>
-      <text class="label-sub" x="12" y="32">쿨호프 미아점</text>
-    </g>
-    <line class="leader" x1="625" y1="440" x2="655" y2="436"/>
-    
-    <g class="label" transform="translate(345,385)">
-      <rect width="82" height="42" rx="13"/>
-      <text class="label-title" x="12" y="17">④ 大創</text>
-      <text class="label-sub" x="12" y="32">다이소</text>
-    </g>
-    <line class="leader" x1="315" y1="405" x2="345" y2="406"/>
-    
-    <g class="label" transform="translate(235,330)">
-      <rect width="88" height="42" rx="13"/>
-      <text class="label-title" x="12" y="17">③ 빽다방</text>
-      <text class="label-sub" x="12" y="32">삼양시장점</text>
-    </g>
-    <line class="leader" x1="205" y1="345" x2="235" y2="351"/>
-    
-    <g class="label" transform="translate(770,238)">
-      <rect width="112" height="42" rx="13"/>
-      <text class="label-title" x="12" y="17">三陽市場小吃</text>
-      <text class="label-sub" x="12" y="32">떡볶이순대</text>
-    </g>
-    <line class="leader" x1="760" y1="215" x2="770" y2="259"/>
-    
-
-    <a href="#poi-home"><g class="pin" transform="translate(260,300)">
-      <circle r="32" fill="#6c5ce7"/>
-      <circle r="24" fill="white" opacity=".94"/>
-      <text text-anchor="middle" dominant-baseline="central" font-size="22">🏠</text>
-      <title>民宿｜인수봉로 6길 9-2</title>
-    </g></a>
-    <a href="#poi-cu"><g class="pin" transform="translate(405,238)">
-      <circle r="21" fill="#00b894"/>
-      <circle r="15" fill="white" opacity=".94"/>
-      <text text-anchor="middle" dominant-baseline="central" font-size="16">🏪</text>
-      <title>①GS25 美阿碧山店｜GS25 미아벽산점</title>
-    </g></a>
-    <a href="#poi-seven-mia"><g class="pin" transform="translate(250,235)">
-      <circle r="19" fill="#00b894"/>
-      <circle r="13" fill="white" opacity=".94"/>
-      <text text-anchor="middle" dominant-baseline="central" font-size="14">🏪</text>
-      <title>7-Eleven Mia幸運店｜세븐일레븐 미아행운점</title>
-    </g></a>
-    <a href="#poi-bhc-mia"><g class="pin" transform="translate(355,345)">
-      <circle r="19" fill="#ee5253"/>
-      <circle r="13" fill="white" opacity=".94"/>
-      <text text-anchor="middle" dominant-baseline="central" font-size="14">🍗</text>
-      <title>BHC炸雞 Mia店｜BHC치킨 미아점</title>
-    </g></a>
-    <a href="#poi-lotte"><g class="pin" transform="translate(525,105)">
-      <circle r="21" fill="#fd79a8"/>
-      <circle r="15" fill="white" opacity=".94"/>
-      <text text-anchor="middle" dominant-baseline="central" font-size="16">🛒</text>
-      <title>②樂天瑪特美食街 &amp; 超市｜롯데마트 삼양점</title>
-    </g></a>
-    <a href="#poi-porridge"><g class="pin" transform="translate(595,382)">
-      <circle r="21" fill="#74b9ff"/>
-      <circle r="15" fill="white" opacity=".94"/>
-      <text text-anchor="middle" dominant-baseline="central" font-size="16">🍲</text>
-      <title>本粥 &amp; 拌飯（三陽站店）｜본 죽&amp;비빔밥 삼양역점</title>
-    </g></a>
-    <a href="#poi-bhc"><g class="pin" transform="translate(735,560)">
-      <circle r="21" fill="#ee5253"/>
-      <circle r="15" fill="white" opacity=".94"/>
-      <text text-anchor="middle" dominant-baseline="central" font-size="16">🐔</text>
-      <title>⑨BHC 炸雞 三陽十字路店｜BHC치킨 삼양사거리점</title>
-    </g></a>
-    <a href="#poi-tteok"><g class="pin" transform="translate(705,180)">
-      <circle r="21" fill="#ff9f43"/>
-      <circle r="15" fill="white" opacity=".94"/>
-      <text text-anchor="middle" dominant-baseline="central" font-size="16">🌶️</text>
-      <title>傳統市場老字號辣年糕｜삼양동순대떡볶이</title>
-    </g></a>
-    <a href="#poi-tanghulu"><g class="pin" transform="translate(630,630)">
-      <circle r="21" fill="#fab1a0"/>
-      <circle r="15" fill="white" opacity=".94"/>
-      <text text-anchor="middle" dominant-baseline="central" font-size="16">🍡</text>
-      <title>⑩糖葫蘆替代：24H 世界零食店｜더까까주까 삼양시장점</title>
-    </g></a>
-    <a href="#poi-fish"><g class="pin" transform="translate(650,150)">
-      <circle r="21" fill="#fab1a0"/>
-      <circle r="15" fill="white" opacity=".94"/>
-      <text text-anchor="middle" dominant-baseline="central" font-size="16">🐟</text>
-      <title>鯛魚燒替代：Dessert Love Coffee｜디저트를사랑한커피</title>
-    </g></a>
-    <a href="#poi-paris"><g class="pin" transform="translate(435,350)">
-      <circle r="21" fill="#1dd1a1"/>
-      <circle r="15" fill="white" opacity=".94"/>
-      <text text-anchor="middle" dominant-baseline="central" font-size="16">🥐</text>
-      <title>⑤巴黎貝甜三陽市場店｜파리바게뜨 삼양시장점</title>
-    </g></a>
-    <a href="#poi-bbq"><g class="pin" transform="translate(805,500)">
-      <circle r="21" fill="#cd6133"/>
-      <circle r="15" fill="white" opacity=".94"/>
-      <text text-anchor="middle" dominant-baseline="central" font-size="16">🥩</text>
-      <title>道地韓式五花肉烤肉：三陽豚｜삼양돈</title>
-    </g></a>
-    <a href="#poi-photo"><g class="pin" transform="translate(560,630)">
-      <circle r="21" fill="#706fd3"/>
-      <circle r="15" fill="white" opacity=".94"/>
-      <text text-anchor="middle" dominant-baseline="central" font-size="16">🥤</text>
-      <title>⑪飲料補給替代：MEGA MGC Coffee 三陽市場店｜메가MGC커피 삼양시장점</title>
-    </g></a>
-    <a href="#poi-ice"><g class="pin" transform="translate(475,270)">
-      <circle r="21" fill="#fab1a0"/>
-      <circle r="15" fill="white" opacity=".94"/>
-      <text text-anchor="middle" dominant-baseline="central" font-size="16">🍦</text>
-      <title>24H 無人冰淇淋零食店｜우리동네 아이스크림</title>
-    </g></a>
-    <a href="#poi-kyochon"><g class="pin" transform="translate(625,440)">
-      <circle r="21" fill="#ee5253"/>
-      <circle r="15" fill="white" opacity=".94"/>
-      <text text-anchor="middle" dominant-baseline="central" font-size="16">🍗</text>
-      <title>⑧炸雞替代：Cool Hof 美阿店｜쿨호프 미아점</title>
-    </g></a>
-    <a href="#poi-daiso"><g class="pin" transform="translate(315,405)">
-      <circle r="21" fill="#10ac84"/>
-      <circle r="15" fill="white" opacity=".94"/>
-      <text text-anchor="middle" dominant-baseline="central" font-size="16">🛍️</text>
-      <title>④大創百貨 DAISO 大地市場店｜다이소 대지시장점</title>
-    </g></a>
-    <a href="#poi-ediya"><g class="pin" transform="translate(205,345)">
-      <circle r="21" fill="#0984e3"/>
-      <circle r="15" fill="white" opacity=".94"/>
-      <text text-anchor="middle" dominant-baseline="central" font-size="16">☕</text>
-      <title>③咖啡替代：빽다방 三陽市場店｜빽다방 삼양시장점</title>
-    </g></a>
-    <a href="#poi-hotteok"><g class="pin" transform="translate(760,215)">
-      <circle r="21" fill="#ff9f43"/>
-      <circle r="15" fill="white" opacity=".94"/>
-      <text text-anchor="middle" dominant-baseline="central" font-size="16">🍢</text>
-      <title>市場小吃替代：三陽市場辣年糕順대｜삼양시장떡볶이순대</title>
-    </g></a>
-
-<!-- v3 新增：生活圈用餐備案 -->
-<a href="#poi-gimbap">
-  <line class="leader" x1="235" y1="382" x2="268" y2="392"/>
-  <g class="pin" transform="translate(235,382)">
-    <circle r="21" fill="#f6b93b"/>
-    <circle r="15" fill="white" opacity=".94"/>
-    <text text-anchor="middle" dominant-baseline="central" font-size="16">🍙</text>
-    <title>⑥早餐宵夜萬用：紫菜包飯天國（三陽洞店）｜김밥천국 삼양동점</title>
-  </g>
-</a>
-<g class="label" transform="translate(268,378)">
-  <rect width="112" height="42" rx="13"/>
-  <text class="label-title" x="12" y="17">⑥ 紫菜包飯</text>
-  <text class="label-sub" x="12" y="32">김밥천국</text>
-</g>
-
-<a href="#poi-kalguksu">
-  <line class="leader" x1="505" y1="405" x2="520" y2="462"/>
-  <g class="pin" transform="translate(505,405)">
-    <circle r="21" fill="#e58e26"/>
-    <circle r="15" fill="white" opacity=".94"/>
-    <text text-anchor="middle" dominant-baseline="central" font-size="16">🍜</text>
-    <title>⑦想吃清淡暖胃：牛耳川雞刀削麵 松泉站店｜우이천닭칼국수 솔샘역점</title>
-  </g>
-</a>
-<g class="label" transform="translate(520,448)">
-  <rect width="112" height="42" rx="13"/>
-  <text class="label-title" x="12" y="17">⑦ 刀削麵</text>
-  <text class="label-sub" x="12" y="32">칼국수</text>
-</g>
-
-<!-- v4 新增：追加推薦店家 -->
-<a href="#poi-deopbap">
-  <line class="leader" x1="690" y1="488" x2="720" y2="478"/>
-  <g class="pin" transform="translate(690,488)">
-    <circle r="21" fill="#e17055"/>
-    <circle r="15" fill="white" opacity=".94"/>
-    <text text-anchor="middle" dominant-baseline="central" font-size="16">🍚</text>
-    <title>直火豬肉蓋飯：The Poom 三陽十字路本店｜더품 삼양사거리본점</title>
-  </g>
-</a>
-<g class="label" transform="translate(720,462)">
-  <rect width="116" height="42" rx="13"/>
-  <text class="label-title" x="12" y="17">追加：蓋飯</text>
-  <text class="label-sub" x="12" y="32">더품</text>
-</g>
-
-<a href="#poi-sushi">
-  <line class="leader" x1="675" y1="535" x2="705" y2="535"/>
-  <g class="pin" transform="translate(675,535)">
-    <circle r="21" fill="#00cec9"/>
-    <circle r="15" fill="white" opacity=".94"/>
-    <text text-anchor="middle" dominant-baseline="central" font-size="16">🍣</text>
-    <title>清爽晚餐備案：主大國壽司 美阿店｜주대국초밥집 미아점</title>
-  </g>
-</a>
-<g class="label" transform="translate(705,520)">
-  <rect width="116" height="42" rx="13"/>
-  <text class="label-title" x="12" y="17">追加：壽司</text>
-  <text class="label-sub" x="12" y="32">주대국초밥집</text>
-</g>
-
-<a href="#poi-hongkong">
-  <line class="leader" x1="835" y1="385" x2="850" y2="355"/>
-  <g class="pin" transform="translate(835,385)">
-    <circle r="21" fill="#d63031"/>
-    <circle r="15" fill="white" opacity=".94"/>
-    <text text-anchor="middle" dominant-baseline="central" font-size="16">🍜</text>
-    <title>炸醬麵保底：香港飯店 0410 三陽洞十字路店｜홍콩반점0410 삼양동사거리점</title>
-  </g>
-</a>
-<g class="label" transform="translate(820,312)">
-  <rect width="120" height="42" rx="13"/>
-  <text class="label-title" x="12" y="17">追加：中式</text>
-  <text class="label-sub" x="12" y="32">香港飯店0410</text>
-</g>
-
-<a href="#poi-gamjatang">
-  <line class="leader" x1="860" y1="445" x2="872" y2="418"/>
-  <g class="pin" transform="translate(860,445)">
-    <circle r="21" fill="#6c5ce7"/>
-    <circle r="15" fill="white" opacity=".94"/>
-    <text text-anchor="middle" dominant-baseline="central" font-size="16">🍲</text>
-    <title>熱湯鍋物備案：朝鮮甘藷馬鈴薯排骨湯｜조선감저</title>
-  </g>
-</a>
-<g class="label" transform="translate(842,398)">
-  <rect width="112" height="42" rx="13"/>
-  <text class="label-title" x="12" y="17">追加：熱湯</text>
-  <text class="label-sub" x="12" y="32">조선감저</text>
-</g>
-
-<a href="#poi-mcdonalds">
-  <line class="leader" x1="890" y1="565" x2="870" y2="585"/>
-  <g class="pin" transform="translate(890,565)">
-    <circle r="21" fill="#fdcb6e"/>
-    <circle r="15" fill="white" opacity=".94"/>
-    <text text-anchor="middle" dominant-baseline="central" font-size="16">🍟</text>
-    <title>24H 速食保底：麥當勞美阿 DT 店｜맥도날드 미아DT점</title>
-  </g>
-</a>
-<g class="label" transform="translate(765,575)">
-  <rect width="112" height="42" rx="13"/>
-  <text class="label-title" x="12" y="17">追加：24H</text>
-  <text class="label-sub" x="12" y="32">맥도날드</text>
-</g>
-
-<g transform="translate(900,58)"><circle r="34" fill="white" stroke="#eadfd1" stroke-width="2"/><text x="0" y="-6" text-anchor="middle" font-size="20" font-weight="900">N</text><path d="M0,-25 L8,10 L0,5 L-8,10 Z" fill="#6c5ce7"/></g>
+<a href="#poi-home"><g class="pin" transform="translate(287,280)"><circle r="26" fill="#6c5ce7"/><circle r="19" fill="white" opacity=".94"/><text text-anchor="middle" dominant-baseline="central" font-size="18">🏠</text><title>民宿｜서울특별시 강북구 인수봉로6길 9-2</title></g></a>
+<a href="#poi-cu"><g class="pin" transform="translate(118,350)"><circle r="19" fill="#00b894"/><circle r="13" fill="white" opacity=".94"/><text text-anchor="middle" dominant-baseline="central" font-size="14">🏪</text><title>GS25 美阿碧山店｜GS25 미아벽산점</title></g></a>
+<a href="#poi-seven-mia"><g class="pin" transform="translate(232,268)"><circle r="19" fill="#00b894"/><circle r="13" fill="white" opacity=".94"/><text text-anchor="middle" dominant-baseline="central" font-size="14">🏪</text><title>7-Eleven Mia幸運店｜세븐일레븐 미아행운점</title></g></a>
+<a href="#poi-lotte"><g class="pin" transform="translate(523,121)"><circle r="19" fill="#fd79a8"/><circle r="13" fill="white" opacity=".94"/><text text-anchor="middle" dominant-baseline="central" font-size="14">🛒</text><title>樂天瑪特三陽店｜롯데마트 삼양점</title></g></a>
+<a href="#poi-porridge"><g class="pin" transform="translate(685,245)"><circle r="19" fill="#74b9ff"/><circle r="13" fill="white" opacity=".94"/><text text-anchor="middle" dominant-baseline="central" font-size="14">🍲</text><title>本粥 &amp; 拌飯｜본 죽&amp;비빔밥 삼양역점</title></g></a>
+<a href="#poi-bhc"><g class="pin" transform="translate(617,68)"><circle r="19" fill="#ee5253"/><circle r="13" fill="white" opacity=".94"/><text text-anchor="middle" dominant-baseline="central" font-size="14">🍗</text><title>BHC 三陽十字路店｜BHC치킨 삼양사거리점</title></g></a>
+<a href="#poi-bhc-mia"><g class="pin" transform="translate(175,373)"><circle r="19" fill="#ee5253"/><circle r="13" fill="white" opacity=".94"/><text text-anchor="middle" dominant-baseline="central" font-size="14">🍗</text><title>BHC Mia店｜BHC치킨 미아점</title></g></a>
+<a href="#poi-tteok"><g class="pin" transform="translate(702,138)"><circle r="19" fill="#ff9f43"/><circle r="13" fill="white" opacity=".94"/><text text-anchor="middle" dominant-baseline="central" font-size="14">🌶️</text><title>傳統市場辣年糕｜삼양동순대떡볶이</title></g></a>
+<a href="#poi-tanghulu"><g class="pin" transform="translate(642,184)"><circle r="19" fill="#fab1a0"/><circle r="13" fill="white" opacity=".94"/><text text-anchor="middle" dominant-baseline="central" font-size="14">🍬</text><title>24H 世界零食店｜더까까주까 삼양시장점</title></g></a>
+<a href="#poi-fish"><g class="pin" transform="translate(252,369)"><circle r="19" fill="#fab1a0"/><circle r="13" fill="white" opacity=".94"/><text text-anchor="middle" dominant-baseline="central" font-size="14">🐟</text><title>Dessert Love Coffee｜디저트를사랑한커피</title></g></a>
+<a href="#poi-paris"><g class="pin" transform="translate(536,202)"><circle r="19" fill="#1dd1a1"/><circle r="13" fill="white" opacity=".94"/><text text-anchor="middle" dominant-baseline="central" font-size="14">🥐</text><title>巴黎貝甜三陽市場店｜파리바게뜨 삼양시장점</title></g></a>
+<a href="#poi-bbq"><g class="pin" transform="translate(774,208)"><circle r="19" fill="#cd6133"/><circle r="13" fill="white" opacity=".94"/><text text-anchor="middle" dominant-baseline="central" font-size="14">🥩</text><title>三陽豚｜삼양돈</title></g></a>
+<a href="#poi-photo"><g class="pin" transform="translate(606,232)"><circle r="19" fill="#706fd3"/><circle r="13" fill="white" opacity=".94"/><text text-anchor="middle" dominant-baseline="central" font-size="14">🥤</text><title>MEGA咖啡｜메가MGC커피 삼양시장점</title></g></a>
+<a href="#poi-ice"><g class="pin" transform="translate(515,532)"><circle r="19" fill="#fab1a0"/><circle r="13" fill="white" opacity=".94"/><text text-anchor="middle" dominant-baseline="central" font-size="14">🍦</text><title>無人冰淇淋｜우리동네 아이스크림</title></g></a>
+<a href="#poi-kyochon"><g class="pin" transform="translate(902,158)"><circle r="19" fill="#ee5253"/><circle r="13" fill="white" opacity=".94"/><text text-anchor="middle" dominant-baseline="central" font-size="14">🍗</text><title>Cool Hof 美阿店｜쿨호프 미아점</title></g></a>
+<a href="#poi-daiso"><g class="pin" transform="translate(636,397)"><circle r="19" fill="#10ac84"/><circle r="13" fill="white" opacity=".94"/><text text-anchor="middle" dominant-baseline="central" font-size="14">🛍️</text><title>DAISO 大地市場店｜다이소 대지시장점</title></g></a>
+<a href="#poi-ediya"><g class="pin" transform="translate(476,168)"><circle r="19" fill="#0984e3"/><circle r="13" fill="white" opacity=".94"/><text text-anchor="middle" dominant-baseline="central" font-size="14">☕</text><title>빽다방 三陽市場店｜빽다방 삼양시장점</title></g></a>
+<a href="#poi-hotteok"><g class="pin" transform="translate(458,126)"><circle r="19" fill="#ff9f43"/><circle r="13" fill="white" opacity=".94"/><text text-anchor="middle" dominant-baseline="central" font-size="14">🍢</text><title>三陽市場辣年糕順대｜삼양시장떡볶이순대</title></g></a>
+<a href="#poi-deopbap"><g class="pin" transform="translate(708,428)"><circle r="19" fill="#e17055"/><circle r="13" fill="white" opacity=".94"/><text text-anchor="middle" dominant-baseline="central" font-size="14">🍚</text><title>The Poom 蓋飯｜더품 삼양사거리본점</title></g></a>
+<a href="#poi-sushi"><g class="pin" transform="translate(625,453)"><circle r="19" fill="#00cec9"/><circle r="13" fill="white" opacity=".94"/><text text-anchor="middle" dominant-baseline="central" font-size="14">🍣</text><title>主大國壽司｜주대국초밥집 미아점</title></g></a>
+<a href="#poi-hongkong"><g class="pin" transform="translate(798,455)"><circle r="19" fill="#d63031"/><circle r="13" fill="white" opacity=".94"/><text text-anchor="middle" dominant-baseline="central" font-size="14">🍜</text><title>香港飯店0410｜홍콩반점0410 삼양동사거리점</title></g></a>
+<a href="#poi-gamjatang"><g class="pin" transform="translate(449,432)"><circle r="19" fill="#6c5ce7"/><circle r="13" fill="white" opacity=".94"/><text text-anchor="middle" dominant-baseline="central" font-size="14">🍲</text><title>朝鮮甘藷馬鈴薯排骨湯｜조선감저</title></g></a>
+<a href="#poi-mcdonalds"><g class="pin" transform="translate(870,460)"><circle r="19" fill="#fdcb6e"/><circle r="13" fill="white" opacity=".94"/><text text-anchor="middle" dominant-baseline="central" font-size="14">🍟</text><title>麥當勞美阿DT｜맥도날드 미아DT점</title></g></a>
 </svg>
         </div>
-        <div class="legend"><span>🏠 民宿中心</span><span>粗線：主要道路方向</span><span>綠塊：公園／山麓方向</span><span>圓圈：相對距離圈</span><span>🍚🍣🍜 新增追加推薦</span><span>👨‍👩‍👧‍👧 下方有情境快速選</span></div>
-        <div class="note">圖示位置依經緯度投影，方向與遠近以目前座標資料為準；背景的主要道路與綠地方向是相對位置參考，不是可直接導航的精確路線。下方步行時間為「從民宿出發」的保守估算；GS25 已讀到 Naver 步行明細：5 分鐘／332m，其他仍以實際 Naver 導航為準。</div>
+        <div class="legend"><span>📍 Naver 座標校準點位</span><span>點圖示：開小卡片</span><span>點小卡片：跳下方店家卡片</span><span>色塊：生活圈群聚</span><span>線條：主要道路方向參考</span></div>
+        <div class="note">這張改回「Naver 座標校準圖」的點位，不使用前一版舊生活圈圖的投影位置。圖上只保留圖示；同區密集點已微幅錯開以避免重疊。真正導航請進入下方店家卡片後點 Naver 導航。</div>
     </div>
 
 
@@ -1832,7 +1567,7 @@ function initMap() {
     if (mapInitialized) return;
     mapInitialized = true;
 
-    var HOME = [37.6185, 127.0104];
+    var HOME = [37.6221983, 127.0134671];
     var map = L.map('map', { center: HOME, zoom: 15 });
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -1852,28 +1587,28 @@ function initMap() {
         .bindPopup('<b>🏠 我們的民宿</b><br><small>인수봉로 6길 9-2</small>').openPopup();
 
     var places = [
-        { name:'GS25 美阿碧山店', sub:'GS25 미아벽산점', walk:'民宿出發約5分（Naver 332m）', lat:37.6192, lng:127.0118, color:'#00b894', emoji:'🏪', naver:'GS25 미아벽산점 서울 강북구 솔샘로 167' },
-        { name:'7-Eleven Mia幸運店', sub:'세븐일레븐 미아행운점', walk:'民宿出發約3-4分（地圖定位推估）', lat:37.6178, lng:127.0104, color:'#00b894', emoji:'🏪', naver:'세븐일레븐 미아행운점' },
-        { name:'樂天瑪特美食街 & 超市', sub:'롯데마트 삼양점', walk:'民宿出發約9-12分', lat:37.6208, lng:127.0132, color:'#fd79a8', emoji:'🛒', naver:'롯데마트 삼양점 서울 강북구 삼양로 247' },
-        { name:'本粥 & 拌飯（三陽站店）', sub:'본 죽&비빔밥 삼양역점', walk:'民宿出發約8-11分', lat:37.6175, lng:127.0138, color:'#74b9ff', emoji:'🍲', naver:'본죽비빔밥 삼양역점 서울 강북구 삼양로 235' },
-        { name:'BHC 炸雞 三陽十字路店', sub:'BHC치킨 삼양사거리점', walk:'民宿出發約13-16分', lat:37.6155, lng:127.0158, color:'#e17055', emoji:'🍗', naver:'BHC치킨 삼양사거리점 서울 강북구 삼양로 261' },
-        { name:'BHC炸雞 Mia店', sub:'BHC치킨 미아점', walk:'比三陽十字路店更靠近民宿；以Naver實際步行為準', lat:37.6171, lng:127.0113, color:'#e17055', emoji:'🍗', naver:'BHC치킨 미아점' },
-        { name:'傳統市場老字號辣年糕', sub:'삼양동순대떡볶이', walk:'民宿出發約9-12分', lat:37.6198, lng:127.0155, color:'#ff7675', emoji:'🌶', naver:'삼양동순대떡볶이 서울 강북구 삼양로 246' },
-        { name:'糖葫蘆替代：24H世界零食店', sub:'더까까주까 삼양시장점', walk:'民宿出發約10-13分', lat:37.6148, lng:127.0145, color:'#ff9f43', emoji:'🍬', naver:'더까까주까 삼양시장점 서울 강북구 솔매로 59' },
-        { name:'鯛魚燒替代：Dessert Love Coffee', sub:'디저트를사랑한커피', walk:'民宿出發約6-9分', lat:37.6202, lng:127.0148, color:'#fdcb6e', emoji:'🐟', naver:'디저트를사랑한커피 서울 강북구 솔샘로 184' },
-        { name:'巴黎貝甜三陽市場店', sub:'파리바게뜨 삼양시장점', walk:'民宿出發約8-11分', lat:37.6178, lng:127.0122, color:'#1dd1a1', emoji:'🥐', naver:'파리바게뜨 삼양시장점 서울 강북구 삼양로 241' },
-        { name:'道地韓式五花肉烤肉：三陽豚', sub:'삼양돈', walk:'民宿出發約11-14分', lat:37.6162, lng:127.0165, color:'#cd6133', emoji:'🥩', naver:'삼양돈 서울 강북구 솔매로 64-1' },
-        { name:'飲料補給替代：MEGA MGC Coffee 三陽市場店', sub:'메가MGC커피 삼양시장점', walk:'民宿出發約10-13分', lat:37.6145, lng:127.0135, color:'#a29bfe', emoji:'🥤', naver:'메가MGC커피 삼양시장점 서울 강북구 삼양로54길 3' },
-        { name:'24H 無人冰淇淋店', sub:'우리동네 아이스크림', walk:'民宿出發約6-9分', lat:37.6188, lng:127.0125, color:'#0984e3', emoji:'🍦', naver:'우리동네 아이스크림 서울 강북구 삼양로19길 109' },
-        { name:'炸雞替代：Cool Hof 美阿店', sub:'쿨호프 미아점', walk:'民宿出發約12-15分', lat:37.6168, lng:127.0142, color:'#ee5253', emoji:'🍗', naver:'쿨호프 미아점 서울 강북구 솔매로 85' },
-        { name:'DAISO 大創 大地市場店', sub:'다이소 대지시장점', walk:'民宿出發約10-13分', lat:37.6172, lng:127.0108, color:'#10ac84', emoji:'🛍', naver:'다이소 대지시장점 서울 강북구 솔샘로 239' },
-        { name:'咖啡替代：빽다방 三陽市場店', sub:'빽다방 삼양시장점', walk:'民宿出發約9-12分', lat:37.6180, lng:127.0095, color:'#6c5ce7', emoji:'☕', naver:'빽다방 삼양시장점 서울 강북구 솔매로 52' },
-        { name:'市場小吃替代：三陽市場辣年糕順대', sub:'삼양시장떡볶이순대', walk:'民宿出發約9-12分', lat:37.6195, lng:127.0160, color:'#fd7f2a', emoji:'🍢', naver:'삼양시장떡볶이순대 서울 강북구 솔매로 46' },
-        { name:'直火豬肉蓋飯：The Poom 三陽十字路本店', sub:'더품 삼양사거리본점', walk:'民宿出發約10-14分', lat:37.6158, lng:127.0132, color:'#e17055', emoji:'🍚', naver:'더품 삼양사거리본점' },
-        { name:'清爽晚餐備案：主大國壽司 美阿店', sub:'주대국초밥집 미아점', walk:'民宿出發約11-15分', lat:37.6156, lng:127.0128, color:'#00cec9', emoji:'🍣', naver:'주대국초밥집 미아점' },
-        { name:'炸醬麵保底：香港飯店 0410 三陽洞十字路店', sub:'홍콩반점0410 삼양동사거리점', walk:'民宿出發約12-16分', lat:37.6152, lng:127.0140, color:'#d63031', emoji:'🍜', naver:'홍콩반점0410 삼양동사거리점' },
-        { name:'熱湯鍋物備案：朝鮮甘藷馬鈴薯排骨湯', sub:'조선감저', walk:'民宿出發約12-17分', lat:37.6160, lng:127.0144, color:'#6c5ce7', emoji:'🍲', naver:'조선감저 강북구 미아동' },
-        { name:'24H 速食保底：麥當勞美阿 DT 店', sub:'맥도날드 미아DT점', walk:'民宿出發約12-18分', lat:37.6166, lng:127.0172, color:'#fdcb6e', emoji:'🍟', naver:'맥도날드 미아DT점' },
+        { name:'GS25 美阿碧山店', sub:'GS25 미아벽산점', walk:'Naver座標：直線298m／估步行約5分', lat:37.6201794, lng:127.0112361, color:'#00b894', emoji:'🏪', naver:'GS25 미아벽산점 서울 강북구 솔샘로 167' },
+        { name:'7-Eleven Mia幸運店', sub:'세븐일레븐 미아행운점', walk:'Naver座標：直線69m／估步行約2分', lat:37.6227964, lng:127.0132681, color:'#00b894', emoji:'🏪', naver:'세븐일레븐 미아행운점' },
+        { name:'樂天瑪特美食街 & 超市', sub:'롯데마트 삼양점', walk:'Naver座標：直線544m／估步行約10分', lat:37.6256190, lng:127.0178854, color:'#fd79a8', emoji:'🛒', naver:'롯데마트 삼양점 서울 강북구 삼양로 247' },
+        { name:'本粥 & 拌飯（三陽站店）', sub:'본 죽&비빔밥 삼양역점', walk:'Naver座標：直線487m／估步行約9分', lat:37.6243561, lng:127.0182753, color:'#74b9ff', emoji:'🍲', naver:'본죽비빔밥 삼양역점 서울 강북구 삼양로 235' },
+        { name:'BHC 炸雞 三陽十字路店', sub:'BHC치킨 삼양사거리점', walk:'Naver座標：直線643m／估步行約12分', lat:37.6267090, lng:127.0180320, color:'#e17055', emoji:'🍗', naver:'BHC치킨 삼양사거리점 서울 강북구 삼양로 261' },
+        { name:'BHC炸雞 Mia店', sub:'BHC치킨 미아점', walk:'Naver座標：直線290m／估步行約5分', lat:37.6201482, lng:127.0114279, color:'#e17055', emoji:'🍗', naver:'BHC치킨 미아점' },
+        { name:'傳統市場老字號辣年糕', sub:'삼양동순대떡볶이', walk:'Naver座標：直線581m／估步行約10分', lat:37.6254298, lng:127.0186577, color:'#ff7675', emoji:'🌶', naver:'삼양동순대떡볶이 서울 강북구 삼양로 246' },
+        { name:'糖葫蘆替代：24H世界零食店', sub:'더까까주까 삼양시장점', walk:'Naver座標：直線566m／估步行約10分', lat:37.6249909, lng:127.0188365, color:'#ff9f43', emoji:'🍬', naver:'더까까주까 삼양시장점 서울 강북구 솔매로 59' },
+        { name:'鯛魚燒替代：Dessert Love Coffee', sub:'디저트를사랑한커피', walk:'Naver座標：直線256m／估步行約5分', lat:37.6199404, lng:127.0129250, color:'#fdcb6e', emoji:'🐟', naver:'디저트를사랑한커피 서울 강북구 솔샘로 184' },
+        { name:'巴黎貝甜三陽市場店', sub:'파리바게뜨 삼양시장점', walk:'Naver座標：直線511m／估步行約9分', lat:37.6250770, lng:127.0179926, color:'#1dd1a1', emoji:'🥐', naver:'파리바게뜨 삼양시장점 서울 강북구 삼양로 241' },
+        { name:'道地韓式五花肉烤肉：三陽豚', sub:'삼양돈', walk:'Naver座標：直線600m／估步行約11分', lat:37.6247736, lng:127.0194480, color:'#cd6133', emoji:'🥩', naver:'삼양돈 서울 강북구 솔매로 64-1' },
+        { name:'飲料補給替代：MEGA MGC Coffee 三陽市場店', sub:'메가MGC커피 삼양시장점', walk:'Naver座標：直線546m／估步行約10分', lat:37.6247991, lng:127.0187194, color:'#a29bfe', emoji:'🥤', naver:'메가MGC커피 삼양시장점 서울 강북구 삼양로54길 3' },
+        { name:'24H 無人冰淇淋店', sub:'우리동네 아이스크림', walk:'Naver座標：直線756m／估步行約14分', lat:37.6161789, lng:127.0174539, color:'#0984e3', emoji:'🍦', naver:'우리동네 아이스크림 서울 강북구 삼양로19길 109' },
+        { name:'炸雞替代：Cool Hof 美阿店', sub:'쿨호프 미아점', walk:'Naver座標：直線806m／估步行約14分', lat:37.6252281, lng:127.0217754, color:'#ee5253', emoji:'🍗', naver:'쿨호프 미아점 서울 강북구 솔매로 85' },
+        { name:'DAISO 大創 大地市場店', sub:'다이소 대지시장점', walk:'Naver座標：直線578m／估步行約10分', lat:37.6199601, lng:127.0193912, color:'#10ac84', emoji:'🛍', naver:'다이소 대지시장점 서울 강북구 솔샘로 239' },
+        { name:'咖啡替代：빽다방 三陽市場店', sub:'빽다방 삼양시장점', walk:'Naver座標：直線499m／估步行約9分', lat:37.6248889, lng:127.0179956, color:'#6c5ce7', emoji:'☕', naver:'빽다방 삼양시장점 서울 강북구 솔매로 52' },
+        { name:'市場小吃替代：三陽市場辣年糕順대', sub:'삼양시장떡볶이순대', walk:'Naver座標：直線460m／估步行約8分', lat:37.6252178, lng:127.0170402, color:'#fd7f2a', emoji:'🍢', naver:'삼양시장떡볶이순대 서울 강북구 솔매로 46' },
+        { name:'直火豬肉蓋飯：The Poom 三陽十字路本店', sub:'더품 삼양사거리본점', walk:'Naver座標：直線598m／估步行約11分', lat:37.6193148, lng:127.0191976, color:'#e17055', emoji:'🍚', naver:'더품 삼양사거리본점' },
+        { name:'清爽晚餐備案：主大國壽司 美阿店', sub:'주대국초밥집 미아점', walk:'Naver座標：直線516m／估步行約9分', lat:37.6197487, lng:127.0184367, color:'#00cec9', emoji:'🍣', naver:'주대국초밥집 미아점' },
+        { name:'炸醬麵保底：香港飯店 0410 三陽洞十字路店', sub:'홍콩반점0410 삼양동사거리점', walk:'Naver座標：直線898m／估步行約16分', lat:37.6175897, lng:127.0218371, color:'#d63031', emoji:'🍜', naver:'홍콩반점0410 삼양동사거리점' },
+        { name:'熱湯鍋物備案：朝鮮甘藷馬鈴薯排骨湯', sub:'조선감저', walk:'Naver座標：直線402m／估步行約7分', lat:37.6199241, lng:127.0170102, color:'#6c5ce7', emoji:'🍲', naver:'조선감저 강북구 미아동' },
+        { name:'24H 速食保底：麥當勞美阿 DT 店', sub:'맥도날드 미아DT점', walk:'Naver座標：直線850m／估步行約15分', lat:37.6181551, lng:127.0216628, color:'#fdcb6e', emoji:'🍟', naver:'맥도날드 미아DT점' },
     ];
 
     places.forEach(function(p) {
@@ -1909,58 +1644,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
   map.classList.add('map-compact');
 
-  var svgGeoPoints = {
-    '#poi-home': [37.6185, 127.0104],
-    '#poi-cu': [37.6192, 127.0118],
-    '#poi-lotte': [37.6208, 127.0132],
-    '#poi-porridge': [37.6175, 127.0138],
-    '#poi-bhc': [37.6155, 127.0158],
-    '#poi-tteok': [37.6198, 127.0155],
-    '#poi-tanghulu': [37.6148, 127.0145],
-    '#poi-fish': [37.6202, 127.0148],
-    '#poi-paris': [37.6178, 127.0122],
-    '#poi-bbq': [37.6162, 127.0165],
-    '#poi-photo': [37.6145, 127.0135],
-    '#poi-ice': [37.6188, 127.0125],
-    '#poi-kyochon': [37.6168, 127.0142],
-    '#poi-daiso': [37.6172, 127.0108],
-    '#poi-ediya': [37.6180, 127.0095],
-    '#poi-hotteok': [37.6195, 127.0160],
-    '#poi-gimbap': [37.6180, 127.0095],
-    '#poi-kalguksu': [37.6200, 127.0126],
-    '#poi-deopbap': [37.6158, 127.0132],
-    '#poi-sushi': [37.6156, 127.0128],
-    '#poi-hongkong': [37.6152, 127.0140],
-    '#poi-gamjatang': [37.6160, 127.0144],
-    '#poi-mcdonalds': [37.6166, 127.0172]
-  };
-  var homeLat = 37.6185;
-  var homeLng = 127.0104;
-  var homeX = 260;
-  var homeY = 300;
-  var scaleX = 90000;
-  var scaleY = 85000;
-  function projectPoint(lat, lng) {
-    return [
-      Math.max(70, Math.min(910, homeX + (lng - homeLng) * scaleX)),
-      Math.max(70, Math.min(650, homeY - (lat - homeLat) * scaleY))
-    ];
-  }
-  Object.keys(svgGeoPoints).forEach(function(href) {
-    var link = svg.querySelector('a[href="' + href + '"]');
-    if (!link) return;
-    var pin = link.querySelector('.pin');
-    if (!pin) return;
-    var point = projectPoint(svgGeoPoints[href][0], svgGeoPoints[href][1]);
-    pin.setAttribute('transform', 'translate(' + point[0].toFixed(1) + ',' + point[1].toFixed(1) + ')');
-  });
-
   var tip = document.createElement('div');
   tip.className = 'map-tip';
   tip.style.display = 'none';
   mapbox.appendChild(tip);
 
   var activeHref = '';
+  var activeCard = null;
 
   function clearActive() {
     svg.querySelectorAll('a.map-pin-active').forEach(function(a) {
@@ -1968,39 +1658,84 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 
+  function hideTip() {
+    activeHref = '';
+    activeCard = null;
+    clearActive();
+    tip.style.display = 'none';
+  }
+
+  function placeTip(clientX, clientY) {
+    var box = mapbox.getBoundingClientRect();
+    var x = clientX - box.left;
+    var y = clientY - box.top;
+    tip.style.display = 'block';
+    tip.classList.remove('tip-above', 'tip-below');
+
+    var tipW = tip.offsetWidth || 230;
+    var tipH = tip.offsetHeight || 76;
+    var margin = 14;
+    var gap = 22;
+    var left = Math.max(margin, Math.min(box.width - tipW - margin, x - tipW / 2));
+    var top = y - tipH - gap;
+    var below = false;
+    if (top < margin) {
+      top = y + gap;
+      below = true;
+    }
+    if (top + tipH > box.height - margin) {
+      top = Math.max(margin, box.height - tipH - margin);
+    }
+    tip.style.left = left + 'px';
+    tip.style.top = top + 'px';
+    tip.classList.add(below ? 'tip-below' : 'tip-above');
+  }
+
   svg.querySelectorAll('a[href^="#"]').forEach(function(link) {
     link.addEventListener('click', function(e) {
+      e.stopPropagation();
       var href = link.getAttribute('href');
       if (!href) return;
+      var card = document.querySelector(href);
 
       if (activeHref === href && link.classList.contains('map-pin-active')) {
+        e.preventDefault();
+        placeTip(e.clientX, e.clientY);
         return;
       }
 
       e.preventDefault();
       activeHref = href;
+      activeCard = card;
       clearActive();
       link.classList.add('map-pin-active');
+      document.querySelectorAll('.food-card.map-card-focus').forEach(function(el) {
+        el.classList.remove('map-card-focus');
+      });
 
       var title = link.querySelector('title');
       var text = title ? title.textContent : href.replace('#poi-', '');
       var parts = text.split('｜');
-      tip.innerHTML = parts[0] + (parts[1] ? '<small>' + parts.slice(1).join('｜') + '<br>再點一次前往卡片</small>' : '<small>再點一次前往卡片</small>');
-
-      var box = mapbox.getBoundingClientRect();
-      var x = e.clientX - box.left;
-      var y = e.clientY - box.top;
-      tip.style.left = Math.max(80, Math.min(box.width - 80, x)) + 'px';
-      tip.style.top = Math.max(40, y) + 'px';
-      tip.style.display = 'block';
+      tip.innerHTML = parts[0] + (parts[1] ? '<small>' + parts.slice(1).join('｜') + '<br>點這張小卡片看下方店家卡片</small>' : '<small>點這張小卡片看下方店家卡片</small>');
+      placeTip(e.clientX, e.clientY);
     });
   });
 
+  tip.addEventListener('click', function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!activeCard) return;
+    document.querySelectorAll('.food-card.map-card-focus').forEach(function(el) {
+      el.classList.remove('map-card-focus');
+    });
+    activeCard.classList.add('map-card-focus');
+    activeCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+
   document.addEventListener('click', function(e) {
-    if (map.contains(e.target)) return;
-    activeHref = '';
-    clearActive();
-    tip.style.display = 'none';
+    if (tip.contains(e.target)) return;
+    if (e.target.closest && e.target.closest('#nearby-map svg a[href^="#"]')) return;
+    hideTip();
   });
 });
 </script>
